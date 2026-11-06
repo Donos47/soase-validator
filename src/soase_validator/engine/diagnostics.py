@@ -39,6 +39,7 @@ V010 = "SOASE-V010"
 V020 = "SOASE-V020"
 V030 = "SOASE-V030"
 V040 = "SOASE-V040"
+V050 = "SOASE-V050"
 # Reference
 R010 = "SOASE-R010"
 # Chain / config
@@ -84,6 +85,7 @@ CODE_CATALOGUE: dict[str, CodeInfo] = {
         _info(V020, Severity.ERROR, "Unknown key for the structure"),
         _info(V030, Severity.ERROR, "Iterative count mismatch or limit exceeded"),
         _info(V040, Severity.ERROR, "Required field missing"),
+        _info(V050, Severity.ERROR, "Invalid value for the field"),
         _info(R010, Severity.ERROR, "Unresolved reference"),
         _info(C010, Severity.ERROR, "Layer chain cycle"),
         _info(C020, Severity.WARNING, "Layer missing or unusable"),

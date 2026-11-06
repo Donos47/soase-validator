@@ -613,6 +613,7 @@ class Registry:
         element_rules: Mapping[str, ElementRuleDef],
         enums: Mapping[str, EnumDef],
         warnings: Iterable[LoadWarning] = (),
+        structure_files: Mapping[str, str] | None = None,
     ) -> None:
         """Create a Registry.
 
@@ -621,6 +622,7 @@ class Registry:
             element_rules: Element rules by name.
             enums: Enumerations by name.
             warnings: Load warnings gathered while building.
+            structure_files: Structure name mapped to its source file name.
 
         Returns:
             None.
@@ -628,6 +630,7 @@ class Registry:
         Raises:
             None.
         """
+        self._structure_files = dict(structure_files or {})
         self._structures = dict(structures)
         self._element_rules = dict(element_rules)
         self._enums = dict(enums)
@@ -647,6 +650,25 @@ class Registry:
             None.
         """
         return self._structures.get(name)
+
+    def structure_file(self, name: str) -> str | None:
+        """Return the Definition file a structure was loaded from.
+
+        Args:
+            name: Structure name.
+
+        Returns:
+            The file name, or None when unknown.
+
+        Raises:
+            None.
+        """
+        return self._structure_files.get(name)
+
+    @property
+    def element_rule_names(self) -> tuple[str, ...]:
+        """Names of all loaded element rules, sorted."""
+        return tuple(sorted(self._element_rules))
 
     def element_rule(self, name: str) -> ElementRuleDef | None:
         """Look up an element rule by name.
@@ -843,7 +865,7 @@ def load_registry_from_texts(files: Mapping[str, str]) -> Registry:
             _collect(loader, data, "element_rules", loader.element_rule, rules)
 
     _check_references(structures, structure_files, warnings)
-    return Registry(structures, rules, enums, warnings)
+    return Registry(structures, rules, enums, warnings, structure_files)
 
 
 def load_registry(directory: Path | None = None) -> Registry:

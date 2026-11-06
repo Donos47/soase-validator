@@ -1,0 +1,1191 @@
+"""Structural and value validation of a parsed mod file.
+
+``validate(parsed, ctx)`` is a pure function: it walks the parsed tree
+against the Definitions in the Registry and returns Diagnostics. It does no
+I/O, never writes to stdout and does not raise for malformed input. Parser
+Diagnostics (``P`` family) stay in ``ParsedFile.diagnostics``; the caller
+merges them.
+
+Codes produced
+--------------
+``SOASE-V010``
+    Unknown ``entityType`` for the active Game Version (on the value).
+``SOASE-V020``
+    Key not defined by the governing structure or selected branch (on the
+    key). A key that exists only in a branch other than the selected one is
+    reported the same way, with a hint naming that branch.
+``SOASE-V030``
+    Iterative count differs from the number of repeats, count over the
+    ``limit``, or a repeat with no count line before it (on the count line,
+    or the repeated key).
+``SOASE-V040``
+    Required field missing (on the key of the enclosing block, or the
+    header line for the file root).
+``SOASE-V050``
+    Invalid value: a primitive checker failed, an enumeration value is not a
+    member for the Game Version, or a block/value was found where the other
+    was expected (on the value, or on the key when there is no value).
+``SOASE-R010``
+    Reference value that the ``ReferenceLookup`` reports as not found (on
+    the value). An ``Unknown`` result (incomplete Chain) reports nothing.
+
+Walk rules
+----------
+* The root structure comes from the extension; for ``.entity`` it comes from
+  the ``entityType`` value. The top-level ``entityType`` key and, in
+  ``TXT2`` files, the top-level ``SinsArchiveVersion`` key are header keys
+  that no root structure defines; they are not reported as unknown.
+* A ``StructureCursor`` holds the gate-filtered, branch-expanded Definition
+  nodes of one block, the keys seen so far and the lookup tables. A
+  ``condition_field`` is a field plus a branch: the branch for the selector
+  value is merged into the same block and the other branches are undefined.
+* An ``iterative_field`` is a count line followed by that many repeats. The
+  repeats are the consecutive siblings directly after the count line, so two
+  iterative fields that repeat the same key name stay apart. A repeat is
+  either a block named ``name`` (Definition children), a value line named
+  ``name`` (no children), or, when the first child is the selector named
+  like the iteration itself, a sequence of sibling lines (selector line then
+  the selected branch's nodes, for example particle ``EmitterType`` plus
+  ``EmitterContents``). Block extents come from indentation, never from the
+  count.
+* Definitions are not ordered: the cursor records seen keys and does not
+  enforce the order of keys (the Registry carries no ``ordered`` attribute;
+  no shipped Definition sets one).
+
+Evidence for the interpretation of the Definitions (Rebellion 1.98
+Reference Root, shapes and counts; see ``reference/primitive-survey.md``):
+642 iterative fields in the bundled Definitions; exactly 2 (particle
+``NumEmitters`` and ``NumAffectors``) are sequences of sibling lines and
+account for 8546 repeats in 872 particle files; 5 iterative fields share the
+repeat key ``SoundID`` in each entity structure and are told apart only by
+the count line before the run.
+"""
+
+from __future__ import annotations
+
+import logging
+from collections.abc import Iterable, Sequence
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Protocol
+
+from soase_validator.engine.diagnostics import (
+    CODE_CATALOGUE,
+    R010,
+    V010,
+    V020,
+    V030,
+    V040,
+    V050,
+)
+from soase_validator.engine.model import Diagnostic, Severity, Span
+from soase_validator.engine.parser import (
+    BoolValue,
+    HexValue,
+    Node,
+    NumberValue,
+    ParsedFile,
+    StringValue,
+    Value,
+)
+from soase_validator.engine.primitives import (
+    NumericPrefs,
+    PrimitiveResult,
+    check_any,
+    check_boolean,
+    check_color,
+    check_coordinate,
+    check_decimal,
+    check_integer,
+    check_orientation,
+    check_position,
+    validate_constraint,
+)
+from soase_validator.engine.registry import (
+    ConditionFieldDef,
+    ConditionReferenceDef,
+    ElementRuleDef,
+    EnumDef,
+    FieldDef,
+    IterativeFieldDef,
+    LoadWarning,
+    Registry,
+    StructureDef,
+    StructureReferenceDef,
+)
+from soase_validator.engine.registry import Node as DefNode
+from soase_validator.engine.versions import GameVersion, gate_allows
+
+_LOG = logging.getLogger(__name__)
+
+#: Validation types whose values are names resolved through a ReferenceLookup.
+#: The kind passed to ``resolve`` is the validation type itself. These map
+#: one to one onto the Reference Index kinds in design.md (entities, brushes,
+#: string IDs, sounds, sound files, meshes, particles, explosions, galaxy
+#: designs, galaxy templates, orbit body types).
+REFERENCE_KINDS = frozenset(
+    {
+        "Entity",
+        "Brush",
+        "StringInfo",
+        "Sound",
+        "SoundFile",
+        "Mesh",
+        "Particle",
+        "Explosion",
+        "GalaxyDesign",
+        "GalaxyTemplate",
+        "GalaxyOrbitBodyType",
+    }
+)
+
+#: Validation types holding a quoted name that has no Reference Index kind in
+#: design.md. They are checked for shape only and never resolved.
+UNRESOLVED_NAME_TYPES = frozenset({"Texture", "MeshPoint"})
+
+#: Enumeration listing the ``entityType`` values.
+ENTITY_TYPE_ENUM = "entityType"
+ENTITY_TYPE_KEY = "entityType"
+ARCHIVE_VERSION_KEY = "SinsArchiveVersion"
+ENTITY_EXTENSION = ".entity"
+
+
+@dataclass(frozen=True, slots=True)
+class Found:
+    """A reference that resolved.
+
+    Attributes:
+        detail: Optional payload (for example the providing Layer).
+    """
+
+    detail: object | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class NotFound:
+    """A reference that is absent from a complete Chain."""
+
+
+@dataclass(frozen=True, slots=True)
+class Unknown:
+    """A reference that cannot be decided (incomplete Chain)."""
+
+
+ResolveResult = Found | NotFound | Unknown
+
+
+class ReferenceLookup(Protocol):
+    """Resolves reference values to names in the Chain."""
+
+    def resolve(self, kind: str, name: str) -> ResolveResult:
+        """Resolve a reference.
+
+        Args:
+            kind: Reference kind, the validation type (for example ``Brush``).
+            name: The referenced name; comparison is case-insensitive.
+
+        Returns:
+            ``Found``, ``NotFound`` or ``Unknown``.
+
+        Raises:
+            None.
+        """
+        ...
+
+
+class NullReferenceLookup:
+    """Lookup used when no Chain is available: every reference is unknown."""
+
+    def resolve(self, kind: str, name: str) -> ResolveResult:
+        """Return ``Unknown`` for every reference.
+
+        Args:
+            kind: Reference kind (unused).
+            name: Referenced name (unused).
+
+        Returns:
+            Always ``Unknown``.
+
+        Raises:
+            None.
+        """
+        return Unknown()
+
+
+@dataclass(frozen=True, slots=True)
+class ValidationContext:
+    """Everything ``validate`` needs besides the parsed file.
+
+    Attributes:
+        registry: Loaded Definitions.
+        version: Active Game Version.
+        file: Path of the file being validated; its extension selects the
+            root structure and it is stamped on every Diagnostic.
+        numeric: Numeric strictness preferences.
+        lookup: Reference lookup; the default reports every reference as
+            unknown.
+    """
+
+    registry: Registry
+    version: GameVersion
+    file: Path = field(default_factory=Path)
+    numeric: NumericPrefs = field(default_factory=NumericPrefs)
+    lookup: ReferenceLookup = field(default_factory=NullReferenceLookup)
+
+
+@dataclass(frozen=True, slots=True)
+class _Rule:
+    """The value rule of a field, selector or value repeat."""
+
+    type: str | None
+    validation: str | None
+    values: tuple[str, ...] | None
+    constraint: str | None
+
+
+class StructureCursor:
+    """Definition nodes of one block plus the keys seen so far.
+
+    Attributes:
+        active: Gate-filtered, branch-expanded Definition nodes.
+        plain: Key name mapped to its non-iterative Definition node.
+        counts: Count key mapped to its iterative field.
+        repeats: Repeat key mapped to the iterative fields using it.
+        seen: Keys of Definition nodes that matched a file node.
+    """
+
+    __slots__ = ("active", "counts", "plain", "repeats", "seen")
+
+    def __init__(self, active: list[DefNode]) -> None:
+        """Index the active Definition nodes.
+
+        Args:
+            active: Gate-filtered, branch-expanded nodes in declared order.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        self.active = active
+        self.plain: dict[str, DefNode] = {}
+        self.counts: dict[str, IterativeFieldDef] = {}
+        self.repeats: dict[str, list[IterativeFieldDef]] = {}
+        self.seen: set[str] = set()
+        for node in active:
+            if isinstance(node, IterativeFieldDef):
+                self.counts.setdefault(node.count_key, node)
+                self.repeats.setdefault(node.name, []).append(node)
+            else:
+                self.plain.setdefault(node.name, node)
+
+    def missing_required(self) -> list[str]:
+        """List required keys that were not seen, in declared order.
+
+        Returns:
+            Key names (the count key for an iterative field).
+
+        Raises:
+            None.
+        """
+        missing: list[str] = []
+        for node in self.active:
+            key = node.count_key if isinstance(node, IterativeFieldDef) else node.name
+            if node.required and key not in self.seen and key not in missing:
+                missing.append(key)
+        return missing
+
+
+def definition_warnings(registry: Registry) -> tuple[LoadWarning, ...]:
+    """Report malformed ``constraint`` attributes once, at Definition load.
+
+    Uses ``validate_constraint`` for every field and element rule, so the
+    value checkers never see a malformed constraint.
+
+    Args:
+        registry: Loaded Definitions.
+
+    Returns:
+        One ``SOASE-D001`` LoadWarning per offending field or element rule,
+        naming the Definition file and the field.
+
+    Raises:
+        None.
+    """
+    warnings: list[LoadWarning] = []
+    for name in registry.structure_names:
+        struct = registry.structure(name)
+        if struct is None:
+            continue
+        file = registry.structure_file(name) or name
+        for node in _walk_defs(struct.children):
+            if isinstance(node, FieldDef) and node.constraint is not None:
+                problem = validate_constraint(node.validation or node.type or "", node.constraint)
+                if problem:
+                    warnings.append(LoadWarning(file, f"{name}.{node.name}", problem))
+    for name in registry.element_rule_names:
+        rule: ElementRuleDef | None = registry.element_rule(name)
+        if rule is not None and rule.constraint is not None:
+            problem = validate_constraint(rule.validation or rule.type or "", rule.constraint)
+            if problem:
+                warnings.append(LoadWarning("element_rules", name, problem))
+    return tuple(warnings)
+
+
+def _walk_defs(nodes: Iterable[DefNode]) -> Iterable[DefNode]:
+    """Yield every Definition node in a tree, depth first.
+
+    Args:
+        nodes: Top-level Definition nodes.
+
+    Returns:
+        An iterator over all nodes including nested ones.
+
+    Raises:
+        None.
+    """
+    for node in nodes:
+        yield node
+        if isinstance(node, IterativeFieldDef):
+            yield from _walk_defs(node.children)
+        elif isinstance(node, ConditionFieldDef):
+            for branch in (node.branches or {}).values():
+                yield from _walk_defs(branch)
+
+
+def _text_of(value: Value | None) -> str | None:
+    """Return the text a scalar value is matched by.
+
+    Args:
+        value: Parsed value or None.
+
+    Returns:
+        The quoted text, the ``TRUE``/``FALSE`` word or the raw token; None
+        for a list or a missing value.
+
+    Raises:
+        None.
+    """
+    match value:
+        case StringValue():
+            return value.text
+        case BoolValue():
+            return "TRUE" if value.value else "FALSE"
+        case NumberValue() | HexValue():
+            return value.raw
+        case _:
+            return None
+
+
+def _member_text(value: Value | None) -> str | None:
+    """Return the text an enumeration member is compared with.
+
+    The written form must match the member: ``TRUE`` and ``FALSE`` members
+    are unquoted booleans (266 uses, never quoted), words are quoted strings
+    (33645 uses, never bare), and numeric members are either an unquoted
+    number (155 uses) or a quoted string (12 uses).
+
+    Args:
+        value: Parsed value or None.
+
+    Returns:
+        The text to compare, or None when the written form is not admitted.
+
+    Raises:
+        None.
+    """
+    match value:
+        case StringValue():
+            return None if value.text in ("TRUE", "FALSE") else value.text
+        case BoolValue():
+            return "TRUE" if value.value else "FALSE"
+        case NumberValue():
+            return value.raw
+        case _:
+            return None
+
+
+def _line_span(node: Node) -> Span:
+    """Span from the start of a node's key to the end of its value.
+
+    Args:
+        node: Parsed node.
+
+    Returns:
+        The span of the node's own line.
+
+    Raises:
+        None.
+    """
+    end = node.value_span or node.key_span
+    return Span(node.key_span.line, node.key_span.col, end.end_line, end.end_col)
+
+
+def _value_span(node: Node) -> Span:
+    """Span of a node's value, or of its key when it has none.
+
+    Args:
+        node: Parsed node.
+
+    Returns:
+        The span to report a value problem on.
+
+    Raises:
+        None.
+    """
+    return node.value_span or node.key_span
+
+
+_PRIMITIVES = {
+    "Boolean": check_boolean,
+    "Integer": check_integer,
+    "Decimal": check_decimal,
+    "Color": check_color,
+    "Position": check_position,
+    "Coordinate": check_coordinate,
+    "Any": check_any,
+}
+
+
+class _Walker:
+    """Single-use state for one ``validate`` call."""
+
+    def __init__(self, ctx: ValidationContext) -> None:
+        """Create a walker.
+
+        Args:
+            ctx: Validation context.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        self.ctx = ctx
+        self.registry = ctx.registry
+        self.diags: list[Diagnostic] = []
+        self._gates: dict[str | None, bool] = {}
+
+    # ---- helpers -------------------------------------------------------
+
+    def allowed(self, gate: str | None) -> bool:
+        """Evaluate a version gate for the active Game Version (memoised).
+
+        Args:
+            gate: Gate expression or None.
+
+        Returns:
+            True when the element is defined for the active version.
+
+        Raises:
+            None.
+        """
+        cached = self._gates.get(gate)
+        if cached is None:
+            cached = gate_allows(gate, self.ctx.version)
+            self._gates[gate] = cached
+        return cached
+
+    def emit(self, span: Span, code: str, message: str) -> None:
+        """Record a Diagnostic at its catalogue severity.
+
+        Args:
+            span: Where the problem is.
+            code: Diagnostic code.
+            message: Human-readable message.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        severity = CODE_CATALOGUE[code].severity if code in CODE_CATALOGUE else Severity.ERROR
+        self.diags.append(Diagnostic(self.ctx.file, span.to_range(), severity, code, message))
+
+    def _structure_allowed(self, name: str) -> StructureDef | None:
+        """Look up a structure that is defined for the active version.
+
+        Args:
+            name: Structure name.
+
+        Returns:
+            The structure, or None when absent or gated out.
+
+        Raises:
+            None.
+        """
+        struct = self.registry.structure(name)
+        if struct is None or not self.allowed(struct.version):
+            return None
+        return struct
+
+    # ---- entry ---------------------------------------------------------
+
+    def run(self, parsed: ParsedFile) -> list[Diagnostic]:
+        """Validate a whole file.
+
+        Args:
+            parsed: The parsed file.
+
+        Returns:
+            The Diagnostics found.
+
+        Raises:
+            None.
+        """
+        ext = self.ctx.file.suffix.lower()
+        header_end = len(parsed.header) if parsed.header else 0
+        anchor = Span(0, 0, 0, header_end)
+        nodes = list(parsed.nodes)
+        if ext == ENTITY_EXTENSION:
+            root = self._entity_root(nodes, anchor)
+            if root is None:
+                return self.diags
+            nodes = [n for n in nodes if n.key != ENTITY_TYPE_KEY or n.parent is not None]
+        else:
+            root = self.registry.structure_for_extension(ext)
+            if root is None or not self.allowed(root.version):
+                return self.diags
+        if parsed.header == "TXT2" and not self._defines(root, ARCHIVE_VERSION_KEY):
+            nodes = [n for n in nodes if n.key != ARCHIVE_VERSION_KEY]
+        self._scope(root.children, nodes, None, root.name, anchor)
+        return self.diags
+
+    def _defines(self, struct: StructureDef, key: str) -> bool:
+        """Whether a structure defines a top-level key.
+
+        Args:
+            struct: The structure.
+            key: Key name.
+
+        Returns:
+            True when a child node has that name.
+
+        Raises:
+            None.
+        """
+        return any(node.name == key for node in struct.children)
+
+    def _entity_root(self, nodes: list[Node], anchor: Span) -> StructureDef | None:
+        """Pick the root structure of an ``.entity`` file from ``entityType``.
+
+        Args:
+            nodes: Top-level nodes.
+            anchor: Span for a missing-field Diagnostic.
+
+        Returns:
+            The structure, or None when it cannot be chosen (a Diagnostic has
+            been recorded).
+
+        Raises:
+            None.
+        """
+        node = next((n for n in nodes if n.key == ENTITY_TYPE_KEY), None)
+        if node is None:
+            self.emit(anchor, V040, f"Required field '{ENTITY_TYPE_KEY}' is missing in the file")
+            return None
+        text = node.value.text if isinstance(node.value, StringValue) else None
+        enum = self.registry.enum(ENTITY_TYPE_ENUM)
+        if text is None:
+            self.emit(
+                _value_span(node),
+                V010,
+                f"{ENTITY_TYPE_KEY} must be a quoted entity type name",
+            )
+            return None
+        known = enum is not None and self._enum_allows(enum, text)
+        struct = self._structure_allowed(text) if known else None
+        if struct is None:
+            self.emit(
+                _value_span(node),
+                V010,
+                f"Unknown entityType '{text}' for {self.ctx.version.value}",
+            )
+        return struct
+
+    # ---- blocks --------------------------------------------------------
+
+    def _expand(self, defs: Iterable[DefNode], nodes: Sequence[Node], out: list[DefNode]) -> None:
+        """Gate-filter Definition nodes and merge the selected branches.
+
+        Args:
+            defs: Definition nodes to expand.
+            nodes: Sibling file nodes, searched for each selector.
+            out: Receives the active nodes in declared order.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        for node in defs:
+            if not self.allowed(node.version):
+                continue
+            if isinstance(node, StructureReferenceDef):
+                struct = self.registry.structure(node.structure)
+                if struct is not None and not self.allowed(struct.version):
+                    continue
+            out.append(node)
+            if isinstance(node, ConditionFieldDef) and node.branches:
+                selector = next((n for n in nodes if n.key == node.name), None)
+                text = _text_of(selector.value) if selector is not None else None
+                if text is not None and text in node.branches:
+                    self._expand(node.branches[text], nodes, out)
+
+    def _scope(
+        self,
+        defs: Iterable[DefNode],
+        nodes: Sequence[Node],
+        owner: Node | None,
+        label: str,
+        anchor: Span,
+        skip_required: bool = False,
+    ) -> StructureCursor:
+        """Validate sibling nodes against Definition nodes.
+
+        Args:
+            defs: Definition nodes of the block.
+            nodes: The block's child nodes.
+            owner: The block's node, or None for the file root.
+            label: Name used in messages.
+            anchor: Span for missing required fields when ``owner`` is None.
+            skip_required: Do not report missing required fields.
+
+        Returns:
+            The cursor, after the walk.
+
+        Raises:
+            None.
+        """
+        active: list[DefNode] = []
+        self._expand(defs, nodes, active)
+        cursor = StructureCursor(active)
+        self._walk_nodes(cursor, defs, nodes, label)
+        if not skip_required:
+            where = owner.key_span if owner is not None else anchor
+            for key in cursor.missing_required():
+                self.emit(where, V040, f"Required field '{key}' is missing in {label}")
+        return cursor
+
+    def _walk_nodes(
+        self,
+        cursor: StructureCursor,
+        defs: Iterable[DefNode],
+        nodes: Sequence[Node],
+        label: str,
+    ) -> None:
+        """Match each sibling against the cursor's Definition nodes.
+
+        Args:
+            cursor: Cursor for the block.
+            defs: The unexpanded Definition nodes (for branch hints).
+            nodes: The block's child nodes.
+            label: Name used in messages.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        i = 0
+        while i < len(nodes):
+            node = nodes[i]
+            iterative = cursor.counts.get(node.key)
+            if iterative is not None:
+                i = self._iterate(cursor, iterative, nodes, i, label)
+                continue
+            definition = cursor.plain.get(node.key)
+            if definition is None:
+                self._unknown(cursor, defs, node, label)
+            else:
+                cursor.seen.add(node.key)
+                self._check_node(definition, node, nodes, label)
+            i += 1
+
+    def _unknown(
+        self, cursor: StructureCursor, defs: Iterable[DefNode], node: Node, label: str
+    ) -> None:
+        """Report a key that no active Definition node matches.
+
+        Args:
+            cursor: Cursor for the block.
+            defs: The unexpanded Definition nodes (for branch hints).
+            node: The unmatched node.
+            label: Name used in messages.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if not node.key:
+            self.emit(node.key_span, V020, f"Unexpected list row in {label}")
+            return
+        owners = cursor.repeats.get(node.key)
+        if owners:
+            counts = ", ".join(sorted({it.count_key for it in owners}))
+            self.emit(
+                node.key_span,
+                V030,
+                f"'{node.key}' is a repeated entry and must follow its count line ({counts})",
+            )
+            return
+        hint = self._branch_hint(defs, node.key)
+        suffix = f" ({hint})" if hint else ""
+        self.emit(node.key_span, V020, f"Unknown key '{node.key}' in {label}{suffix}")
+
+    def _branch_hint(self, defs: Iterable[DefNode], key: str) -> str | None:
+        """Name the branch that defines a key, if one does.
+
+        Args:
+            defs: Unexpanded Definition nodes of the block.
+            key: The unknown key.
+
+        Returns:
+            Text such as ``only when type is "Foo"``, or None.
+
+        Raises:
+            None.
+        """
+        for node in defs:
+            if isinstance(node, ConditionFieldDef) and node.branches:
+                for value, branch in node.branches.items():
+                    if any(d.name == key and self.allowed(d.version) for d in branch):
+                        return f"defined only when {node.name} is {value}"
+        return None
+
+    # ---- single nodes --------------------------------------------------
+
+    def _check_node(
+        self,
+        definition: DefNode,
+        node: Node,
+        siblings: Sequence[Node],
+        label: str,
+    ) -> None:
+        """Validate one node against its non-iterative Definition node.
+
+        Args:
+            definition: The matching Definition node.
+            node: The file node.
+            siblings: The block's nodes (for a condition reference selector).
+            label: Name used in messages.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if isinstance(definition, FieldDef):
+            self._check_value(node, self._field_rule(definition))
+        elif isinstance(definition, ConditionFieldDef):
+            self._check_value(node, _Rule(definition.type, definition.validation, None, None))
+        elif isinstance(definition, StructureReferenceDef):
+            self._check_block(node, definition.structure)
+        elif isinstance(definition, ConditionReferenceDef):
+            selector = next((n for n in siblings if n.key == definition.selector), None)
+            text = _text_of(selector.value) if selector is not None else None
+            target = definition.cases.get(text) if text is not None else None
+            if target is None:
+                self.emit(
+                    node.key_span,
+                    V020,
+                    f"No structure is defined for '{node.key}' when {definition.selector} "
+                    f"is {text!r}",
+                )
+            else:
+                self._check_block(node, target)
+
+    def _field_rule(self, definition: FieldDef) -> _Rule:
+        """Build the value rule of a field.
+
+        A field that names no type, validation or values takes the element
+        rule of the same name (15 such fields in the bundled Definitions, all
+        ``isDamageShared`` with a ``Boolean`` element rule).
+
+        Args:
+            definition: The field.
+
+        Returns:
+            The rule to check its value against.
+
+        Raises:
+            None.
+        """
+        if not (definition.type or definition.validation or definition.values):
+            shared = self.registry.element_rule(definition.name)
+            if shared is not None:
+                return _Rule(shared.type, shared.validation, shared.values, shared.constraint)
+        return _Rule(
+            definition.type, definition.validation, definition.values, definition.constraint
+        )
+
+    def _check_block(self, node: Node, structure_name: str) -> None:
+        """Validate a block node against a named structure.
+
+        Args:
+            node: The block node.
+            structure_name: Name of the structure describing it.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if node.value is not None:
+            self.emit(_value_span(node), V050, f"'{node.key}' must be a block, found a value")
+            return
+        struct = self.registry.structure(structure_name)
+        if struct is None:
+            return
+        self._scope(struct.children, node.children, node, struct.name, node.key_span)
+
+    # ---- iteration -----------------------------------------------------
+
+    def _iterate(
+        self,
+        cursor: StructureCursor,
+        iterative: IterativeFieldDef,
+        nodes: Sequence[Node],
+        index: int,
+        label: str,
+    ) -> int:
+        """Validate a count line and the repeats that follow it.
+
+        Args:
+            cursor: Cursor for the block.
+            iterative: The iterative field the count line belongs to.
+            nodes: The block's child nodes.
+            index: Index of the count line.
+            label: Name used in messages.
+
+        Returns:
+            Index of the first node after the repeats.
+
+        Raises:
+            None.
+        """
+        count_node = nodes[index]
+        cursor.seen.add(count_node.key)
+        count = self._count_of(count_node)
+        flat = bool(iterative.children) and iterative.children[0].name == iterative.name
+        if flat:
+            end, found = self._flat_run(iterative, nodes, index + 1)
+        else:
+            end, found = self._repeat_run(iterative, nodes, index + 1)
+        if count is not None:
+            line = _line_span(count_node)
+            if iterative.limit is not None and count > iterative.limit:
+                self.emit(
+                    line,
+                    V030,
+                    f"{count_node.key} {count} exceeds the limit of {iterative.limit}",
+                )
+            if count != found:
+                self.emit(
+                    line,
+                    V030,
+                    f"{count_node.key} is {count} but {found} '{iterative.name}' "
+                    f"{'entries' if found != 1 else 'entry'} follow",
+                )
+        return end
+
+    def _count_of(self, node: Node) -> int | None:
+        """Read a count line's value.
+
+        Args:
+            node: The count line.
+
+        Returns:
+            The count, or None after recording a Diagnostic for a bad value.
+
+        Raises:
+            None.
+        """
+        value = node.value
+        if isinstance(value, NumberValue) and value.is_integer and int(value.value) >= 0:
+            return int(value.value)
+        self.emit(
+            _value_span(node),
+            V050,
+            f"{node.key} must be a non-negative integer count",
+        )
+        return None
+
+    def _repeat_run(
+        self, iterative: IterativeFieldDef, nodes: Sequence[Node], start: int
+    ) -> tuple[int, int]:
+        """Validate the consecutive block or value repeats after a count line.
+
+        Args:
+            iterative: The iterative field.
+            nodes: The block's child nodes.
+            start: Index just after the count line.
+
+        Returns:
+            The index after the run and the number of repeats in it.
+
+        Raises:
+            None.
+        """
+        end = start
+        while end < len(nodes) and nodes[end].key == iterative.name:
+            repeat = nodes[end]
+            if iterative.children:
+                if repeat.value is not None:
+                    self.emit(
+                        _value_span(repeat),
+                        V050,
+                        f"'{repeat.key}' must be a block, found a value",
+                    )
+                else:
+                    self._scope(
+                        iterative.children,
+                        repeat.children,
+                        repeat,
+                        repeat.key,
+                        repeat.key_span,
+                    )
+            else:
+                self._check_value(repeat, _Rule(iterative.type, iterative.validation, None, None))
+            end += 1
+        return end, end - start
+
+    def _flat_run(
+        self, iterative: IterativeFieldDef, nodes: Sequence[Node], start: int
+    ) -> tuple[int, int]:
+        """Validate sequences of sibling lines after a count line.
+
+        Each sequence starts with the selector line (named like the iteration)
+        and continues with the sibling lines the selected branch and the other
+        children define.
+
+        Args:
+            iterative: The iterative field.
+            nodes: The block's child nodes.
+            start: Index just after the count line.
+
+        Returns:
+            The index after the run and the number of sequences in it.
+
+        Raises:
+            None.
+        """
+        selector_def = iterative.children[0]
+        rest = iterative.children[1:]
+        rule = _Rule(
+            getattr(selector_def, "type", None),
+            getattr(selector_def, "validation", None),
+            getattr(selector_def, "values", None),
+            getattr(selector_def, "constraint", None),
+        )
+        index = start
+        found = 0
+        while index < len(nodes) and nodes[index].key == iterative.name:
+            selector = nodes[index]
+            found += 1
+            self._check_value(selector, rule)
+            defs: list[DefNode] = []
+            self._expand(rest, nodes[index + 1 :], defs)
+            if isinstance(selector_def, ConditionFieldDef) and selector_def.branches:
+                text = _text_of(selector.value)
+                if text is not None and text in selector_def.branches:
+                    self._expand(selector_def.branches[text], nodes[index + 1 :], defs)
+            names = {d.name for d in defs}
+            end = index + 1
+            taken: set[str] = set()
+            while (
+                end < len(nodes)
+                and nodes[end].key in names
+                and nodes[end].key != iterative.name
+                and nodes[end].key not in taken
+            ):
+                taken.add(nodes[end].key)
+                end += 1
+            self._scope(defs, nodes[index + 1 : end], selector, selector.key, selector.key_span)
+            index = end
+        return index, found
+
+    # ---- values --------------------------------------------------------
+
+    def _enum_allows(self, enum: EnumDef, text: str) -> bool:
+        """Whether a text is a member of an enumeration for the version.
+
+        Args:
+            enum: The enumeration.
+            text: Candidate member.
+
+        Returns:
+            True when the enumeration and the member are defined for the
+            active Game Version.
+
+        Raises:
+            None.
+        """
+        if not self.allowed(enum.version):
+            return False
+        return any(m.name == text and self.allowed(m.version) for m in enum.values)
+
+    def _check_value(self, node: Node, rule: _Rule) -> None:
+        """Validate a node's value against a field rule.
+
+        Args:
+            node: The file node.
+            rule: The value rule.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        enum = self.registry.enum(rule.type) if rule.type else None
+        validation = rule.validation or rule.type
+        if rule.values is not None or enum is not None:
+            self._check_enum(node, rule, enum)
+            return
+        if validation == "Orientation":
+            self._report(node, check_orientation(node, self.ctx.numeric))
+            return
+        if node.children:
+            self.emit(_value_span(node), V050, f"'{node.key}' must be a value, found a block")
+            return
+        if node.value is None:
+            if validation == "Any":
+                return
+            self.emit(node.key_span, V050, f"'{node.key}' needs a value")
+            return
+        if validation in _PRIMITIVES:
+            constraint = rule.constraint
+            if constraint is not None and validate_constraint(validation or "", constraint):
+                constraint = None
+            try:
+                result = _PRIMITIVES[validation](node.value, self.ctx.numeric, constraint)
+            except ValueError as exc:  # defensive: constraint already screened
+                _LOG.debug("constraint rejected by checker: %s", exc)
+                result = PrimitiveResult(True)
+            self._report(node, result)
+        elif validation in REFERENCE_KINDS or validation in UNRESOLVED_NAME_TYPES:
+            self._check_name(node, validation or "")
+
+    def _report(self, node: Node, result: PrimitiveResult) -> None:
+        """Record a failed primitive result as ``SOASE-V050``.
+
+        Args:
+            node: The checked node.
+            result: Checker outcome.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if not result.ok:
+            self.emit(_value_span(node), V050, f"{node.key}: {result.message}")
+
+    def _check_enum(self, node: Node, rule: _Rule, enum: EnumDef | None) -> None:
+        """Validate an enumeration value.
+
+        Args:
+            node: The file node.
+            rule: The value rule.
+            enum: The named enumeration, or None for inline ``values``.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if node.children:
+            self.emit(_value_span(node), V050, f"'{node.key}' must be a value, found a block")
+            return
+        if not isinstance(node.value, StringValue | BoolValue | NumberValue | HexValue):
+            self.emit(node.key_span, V050, f"'{node.key}' needs a value")
+            return
+        text = _member_text(node.value)
+        if rule.values is not None:
+            ok = text is not None and text in rule.values
+        else:
+            ok = enum is not None and text is not None and self._enum_allows(enum, text)
+        if not ok:
+            shown = _text_of(node.value)
+            self.emit(
+                _value_span(node),
+                V050,
+                f"{node.key}: {shown!r} is not a valid value for {self.ctx.version.value}",
+            )
+
+    def _check_name(self, node: Node, kind: str) -> None:
+        """Validate a quoted reference name and resolve it.
+
+        Args:
+            node: The file node.
+            kind: The validation type.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if not isinstance(node.value, StringValue):
+            self.emit(_value_span(node), V050, f"{node.key}: expected a quoted {kind} name")
+            return
+        if kind not in REFERENCE_KINDS or not node.value.text:
+            # An empty name means "none": it is used 15000+ times in the
+            # Rebellion 1.98 files for Brush, Entity, Mesh, Particle, Sound,
+            # StringInfo and GalaxyTemplate fields and is never resolved.
+            return
+        result = self.ctx.lookup.resolve(kind, node.value.text)
+        if isinstance(result, NotFound):
+            self.emit(
+                _value_span(node),
+                R010,
+                f"Unresolved {kind} reference '{node.value.text}'",
+            )
+
+
+def validate(parsed: ParsedFile, ctx: ValidationContext) -> list[Diagnostic]:
+    """Validate a parsed file against the Definitions.
+
+    Args:
+        parsed: The parsed file.
+        ctx: Registry, Game Version, file path, numeric preferences and the
+            reference lookup.
+
+    Returns:
+        Validator Diagnostics (``V`` and ``R`` families), in walk order.
+        Parser Diagnostics stay in ``parsed.diagnostics``. A file with an
+        extension that has no Definition yields an empty list.
+
+    Raises:
+        None. Malformed input becomes Diagnostics; a malformed Definition
+        ``constraint`` is reported by :func:`definition_warnings`.
+    """
+    return _Walker(ctx).run(parsed)
+
+
+__all__ = [
+    "REFERENCE_KINDS",
+    "UNRESOLVED_NAME_TYPES",
+    "Found",
+    "NotFound",
+    "NullReferenceLookup",
+    "ReferenceLookup",
+    "ResolveResult",
+    "StructureCursor",
+    "Unknown",
+    "ValidationContext",
+    "definition_warnings",
+    "validate",
+]
