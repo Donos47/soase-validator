@@ -1151,3 +1151,106 @@ def test_entity_type_is_gated_by_the_files_version() -> None:
         )
         ctx = ValidationContext(registry, _R198, Path("x.entity"))
         assert [d.code for d in validate(parsed, ctx)] == expected
+
+
+# ---- 5.8 one accepted and one rejected example per node type and primitive --
+
+_PRIMITIVE_CASES = [
+    ("Boolean", "TRUE", "5"),
+    ("Integer", "7", '"7"'),
+    ("Decimal", "0.500000", '"0.5"'),
+    ("Color", "ffaa00ff", "ffaa0"),
+    ("Position", "[ 3 , 4 ]", "[ 3.5 , 4 ]"),
+    ("Coordinate", "[ 1.000000 2.000000 3.000000 ]", "[ 1.000000 2.000000 ]"),
+]
+
+
+@pytest.mark.parametrize(("validation", "good", "bad"), _PRIMITIVE_CASES)
+def test_each_primitive_has_accepted_and_rejected_example(
+    validation: str, good: str, bad: str
+) -> None:
+    registry = _registry([_f("v", validation)])
+    assert _run(registry, f"v {good}\n") == []
+    assert [d.code for d in _run(registry, f"v {bad}\n")] == [dg.V050]
+
+
+def test_any_primitive_accepts_every_value_shape() -> None:
+    registry = _registry([_f("v", "Any")])
+    for value in ('"text"', "5", "TRUE", "[ 1 , 2 ]", "ff00ff00"):
+        assert _run(registry, f"v {value}\n") == [], value
+
+
+def test_enum_and_reference_value_types_have_rejected_examples() -> None:
+    registry = _registry(
+        [{"node": "field", "name": "k", "type": "kind"}, _f("b", "Brush")],
+        enums=[{"name": "kind", "values": ["A"]}],
+    )
+    assert _run(registry, 'k "A"\nb "X"\n') == []
+    assert [d.code for d in _run(registry, 'k "Z"\n')] == [dg.V050]
+    lookup = _Lookup(NotFound())
+    assert [d.code for d in _run(registry, 'b "X"\n', lookup=lookup)] == [dg.R010]
+
+
+def test_field_node_accepted_and_unknown_key_rejected() -> None:
+    registry = _registry([_f("a", "Integer", required=True)])
+    assert _run(registry, "a 1\n") == []
+    assert _brief(_run(registry, "a 1\nzz 2\n")) == [(dg.V020, 2, 0, 2)]
+    assert _brief(_run(registry, "")) == [(dg.V040, 0, 0, len("TXT"))]
+
+
+def test_structure_reference_node_accepted_and_rejected() -> None:
+    registry = _registry(
+        [{"node": "structure_reference", "name": "blk", "structure": "Inner"}],
+        extra=[{"name": "Inner", "children": [_f("p", "Integer")]}],
+    )
+    assert _run(registry, "blk\n\tp 1\n") == []
+    assert [d.code for d in _run(registry, 'blk\n\tp "x"\n')] == [dg.V050]
+    assert [d.code for d in _run(registry, "blk\n\tq 1\n")] == [dg.V020]
+
+
+def test_condition_field_node_accepted_and_rejected() -> None:
+    registry = _registry(
+        [
+            {
+                "node": "condition_field",
+                "name": "sel",
+                "validation": "Any",
+                "branches": {"x": [_f("bx", "Integer")]},
+            }
+        ]
+    )
+    assert _run(registry, 'sel "x"\nbx 1\n') == []
+    assert [d.code for d in _run(registry, 'sel "y"\nbx 1\n')] == [dg.V020]
+
+
+def test_condition_reference_node_rejected_with_unmapped_selector() -> None:
+    registry = _registry(
+        [
+            _f("t", "Any"),
+            {
+                "node": "condition_reference",
+                "name": "blk",
+                "selector": "t",
+                "cases": {"x": "SX"},
+            },
+        ],
+        extra=[{"name": "SX", "children": [_f("p", "Integer")]}],
+    )
+    assert _run(registry, 't "x"\nblk\n\tp 1\n') == []
+    assert [d.code for d in _run(registry, 't "y"\nblk\n\tp 1\n')] == [dg.V020]
+
+
+def test_iterative_field_node_accepted_and_rejected() -> None:
+    registry = _registry(
+        [
+            {
+                "node": "iterative_field",
+                "name": "item",
+                "count_key": "numItems",
+                "children": [_f("p", "Integer")],
+            }
+        ]
+    )
+    assert _run(registry, "numItems 1\nitem\n\tp 1\n") == []
+    diags = _run(registry, "numItems 2\nitem\n\tp 1\n")
+    assert [d.code for d in diags] == [dg.V030]

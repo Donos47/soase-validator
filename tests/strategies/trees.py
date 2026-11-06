@@ -254,16 +254,29 @@ def _group_at_depth(depth: int) -> st.SearchStrategy[list[GenNode]]:
     return st.one_of(_leaves, _blocks(child), _repeats(child), _orientations())
 
 
-def trees() -> st.SearchStrategy[list[GenNode]]:
+_TREES = _groups(_group_at_depth(0))
+
+
+@st.composite
+def trees(draw: st.DrawFn) -> list[GenNode]:
     """Generate top-level node lists.
 
+    The composite wrapper keeps the strategy repr short. Hypothesis
+    otherwise expands the recursive ``deferred`` structure when it builds
+    the repr of the strategy (about 30 kB), which raises a
+    ``HypothesisWarning`` in every test that uses ``trees()``. The generated
+    values are unchanged.
+
+    Args:
+        draw: Hypothesis draw function.
+
     Returns:
-        A strategy of lists of ``GenNode`` up to ``MAX_DEPTH`` levels deep.
+        A list of ``GenNode`` up to ``MAX_DEPTH`` levels deep.
 
     Raises:
         None.
     """
-    return _groups(_group_at_depth(0))
+    return draw(_TREES)
 
 
 @st.composite

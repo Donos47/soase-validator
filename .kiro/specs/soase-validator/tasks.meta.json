@@ -43,6 +43,14 @@
     "4.8 Write property test for archive version handling": {
       "status": "passed",
       "lastRunTimestamp": 1793989185302
+    },
+    "5.7 Write property test for condition branch isolation": {
+      "status": "passed",
+      "lastRunTimestamp": 1794001609313
+    },
+    "5.6 Write property test for structural diagnostics": {
+      "status": "passed",
+      "lastRunTimestamp": 1794001638544
     }
   },
   "executionHistory": {
@@ -519,6 +527,69 @@
         "executionId": "f13fd64e-7f16-41b9-b139-56117f91bea6",
         "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
         "timestamp": 1794001385160
+      }
+    ],
+    "5.5 Write property test for enumeration membership": [
+      {
+        "executionId": "40304c8f-9368-4c4d-9e8f-4aa4ed5944b2",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001433626
+      },
+      {
+        "executionId": "40304c8f-9368-4c4d-9e8f-4aa4ed5944b2",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001511798
+      }
+    ],
+    "5.6 Write property test for structural diagnostics": [
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001546312
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001548260
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001683626
+      }
+    ],
+    "5.7 Write property test for condition branch isolation": [
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001546418
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001548817
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001684164
+      }
+    ],
+    "5.8 Write unit tests for validator node types and primitives": [
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001546502
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001549273
+      },
+      {
+        "executionId": "a4172912-a271-468c-bbf7-00743647d276",
+        "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
+        "timestamp": 1794001684593
       }
     ]
   }

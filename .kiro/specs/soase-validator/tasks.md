@@ -146,19 +146,19 @@ Conventions for every task:
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.15, 3.16_
 
-  - [ ] 5.5 Write property test for enumeration membership
+  - [x] 5.5 Write property test for enumeration membership
     - **Property 9: Enumeration membership is version-gated**
     - **Validates: Requirements 3.2, 3.4, 3.9**
 
-  - [ ] 5.6 Write property test for structural diagnostics
+  - [x] 5.6 Write property test for structural diagnostics
     - **Property 11: Structural diagnostics**
     - **Validates: Requirements 3.5, 3.6, 3.7**
 
-  - [ ] 5.7 Write property test for condition branch isolation
+  - [x] 5.7 Write property test for condition branch isolation
     - **Property 12: Condition branch isolation**
     - **Validates: Requirements 3.8**
 
-  - [ ] 5.8 Write unit tests for validator node types and primitives
+  - [x] 5.8 Write unit tests for validator node types and primitives
     - Add at least one example test per Definition node type and per primitive type using synthetic Definitions
     - _Requirements: 11.3_
 
