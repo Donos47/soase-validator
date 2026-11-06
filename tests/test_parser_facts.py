@@ -6,7 +6,9 @@ import inspect
 from pathlib import Path
 
 from soase_validator.engine import parser
+from soase_validator.engine.model import Span
 from soase_validator.engine.parser import (
+    HexValue,
     ListValue,
     NumberValue,
     StringValue,
@@ -77,3 +79,93 @@ def test_parse_is_extension_agnostic(tmp_path: Path) -> None:
         assert p.header == "TXT" and not p.diagnostics
         assert p.nodes[0].key == "k"
     assert "suffix" not in inspect.getsource(parser)
+
+
+def test_bare_hex_color_token_is_a_hex_value() -> None:
+    p = parse("TXT\ncolor ffffffff\nupper ffFF891D\nzero 0\n")
+    assert not p.diagnostics
+    assert p.nodes[0].value == HexValue("ffffffff")
+    assert p.nodes[1].value == HexValue("ffFF891D")
+    assert p.nodes[2].value == NumberValue("0", 0)
+
+
+def test_all_digit_token_stays_a_number_with_raw_text() -> None:
+    value = parse("TXT\ncolor 00000000\n").nodes[0].value
+    assert isinstance(value, NumberValue) and value.raw == "00000000"
+
+
+def test_space_separated_list_records_separator() -> None:
+    p = parse("TXT\nPosition [ 0.000000 0.100000 0.000000 ]\npos [ 234 , 219 ]\n")
+    assert not p.diagnostics
+    first, second = (n.value for n in p.nodes)
+    assert isinstance(first, ListValue) and first.separator == " " and len(first.items) == 3
+    assert isinstance(second, ListValue) and second.separator == ","
+
+
+def test_comma_list_without_spaces_after_bracket() -> None:
+    value = parse("TXT\narea [9, 99, 999, 99]\n").nodes[0].value
+    assert isinstance(value, ListValue) and [i.raw for i in value.items] == ["9", "99", "999", "99"]
+
+
+def test_keyless_rows_become_children_of_the_header() -> None:
+    text = (
+        "TXT\nOrientation\n"
+        "\t [ 1.000000 0.000000 0.000000 ]\n"
+        "\t [ 0.000000 1.000000 0.000000 ]\n"
+        "\t [ 0.000000 0.000000 1.000000 ]\n"
+        "next 1\n"
+    )
+    p = parse(text)
+    assert not p.diagnostics
+    header = p.nodes[0]
+    assert header.key == "Orientation" and header.value is None
+    assert [c.key for c in header.children] == ["", "", ""]
+    assert all(isinstance(c.value, ListValue) and c.value.separator == " " for c in header.children)
+    assert p.nodes[1].key == "next"
+
+
+def test_malformed_lists_are_still_rejected() -> None:
+    p = parse("TXT\na [ 1 , 2\nb [ 1 , 2 ]]\nc 1\n")
+    assert [d.code for d in p.diagnostics] == ["SOASE-P002", "SOASE-P002"]
+    assert [n.key for n in p.nodes] == ["c"]
+
+
+def test_equals_form_reads_like_plain_quoted_form() -> None:
+    # Shape of the 22 `.constants` lines in the Rebellion 1.98 reference files:
+    # `key = "value"`, whitespace on both sides of the `=`, quoted value.
+    plain = parse('TXT2\nweaponDefName "Alpha"\n')
+    equals = parse('TXT2\nweaponDefName = "Alpha"\n')
+    assert equals.complete and not equals.diagnostics
+    a, b = plain.nodes[0], equals.nodes[0]
+    assert (b.key, b.value) == (a.key, a.value) == ("weaponDefName", StringValue("Alpha"))
+
+
+def test_equals_form_spans_cover_key_and_quoted_value() -> None:
+    node = parse('TXT2\n\tkey  =  "v"\n').nodes[0]
+    assert node.key_span == Span(1, 1, 1, 4)
+    assert node.value_span == Span(1, 9, 1, 12)
+    assert node.extent == Span(1, 1, 1, 12)
+
+
+def test_equals_form_works_for_empty_and_nested_values() -> None:
+    p = parse('TXT2\nblock\n\ta = ""\n\tb = "x"\n')
+    assert not p.diagnostics
+    assert [(c.key, c.value) for c in p.nodes[0].children] == [
+        ("a", StringValue("")),
+        ("b", StringValue("x")),
+    ]
+
+
+def test_equals_form_unterminated_quote_still_reported() -> None:
+    p = parse('TXT2\nk = "oops\n')
+    assert [d.code for d in p.diagnostics] == ["SOASE-P003"]
+    assert p.nodes[0].value == StringValue("oops", terminated=False)
+
+
+def test_equals_without_quoted_value_is_still_skipped() -> None:
+    # Only the surveyed shape is accepted: no unquoted value, no missing
+    # space after `=`, no bare `=`.
+    for line in ("k = 5", 'k ="v"', "k =", "k = TRUE"):
+        p = parse(f"TXT2\n{line}\nz 1\n")
+        assert [d.code for d in p.diagnostics] == ["SOASE-P002"], line
+        assert [n.key for n in p.nodes] == ["z"], line

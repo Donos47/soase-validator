@@ -23,7 +23,8 @@
         {
           "node": "field",
           "name": "mainViewIconAreaOffsetFromCenter",
-          "validation": "Position"
+          "validation": "Position",
+          "constraint": "count=4"
         },
         {
           "node": "field",

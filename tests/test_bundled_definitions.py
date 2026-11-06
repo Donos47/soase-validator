@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from importlib import resources
 
+from soase_validator.engine.primitives import validate_constraint
 from soase_validator.engine.registry import (
     ConditionFieldDef,
     ConditionReferenceDef,
@@ -102,7 +103,70 @@ def test_provenance_content() -> None:
     assert prov["source_version"] == "1.0.0.202007231528"
     assert prov["conversion_date"]
     assert prov["origin"]
-    assert prov["audit_corrections"] == []
+    corrections = prov["audit_corrections"]
+    assert corrections
+    for entry in corrections:
+        assert entry["game_version"] == "Rebellion 1.98"
+        assert entry["structure"] and entry["field"] and entry["change"] and entry["evidence"]
+
+
+def _fields(reg: Registry, name: str):
+    """Yield (structure name, field) for every field called ``name``."""
+    for sname in reg.structure_names:
+        structure = reg.structure(sname)
+        assert structure is not None
+        for node in _walk(structure.children):
+            if isinstance(node, FieldDef) and node.name == name:
+                yield sname, node
+
+
+def test_bundled_constraints_are_valid_and_only_on_position() -> None:
+    reg = load_registry()
+    for sname in reg.structure_names:
+        structure = reg.structure(sname)
+        assert structure is not None
+        for node in _walk(structure.children):
+            if isinstance(node, FieldDef) and node.constraint is not None:
+                validation = node.validation or node.type or ""
+                assert validate_constraint(validation, node.constraint) is None, (sname, node.name)
+
+
+def test_position_counts_follow_the_survey() -> None:
+    reg = load_registry()
+    expected = {"pixelBox": "count=4", "area": "count=4", "pos": "count=2"}
+    expected_one = {"mainViewIconAreaOffsetFromCenter": "count=4"}
+    for name, constraint in {**expected, **expected_one}.items():
+        constrained = [
+            f.constraint
+            for _, f in _fields(reg, name)
+            if f.validation == "Position" and f.constraint
+        ]
+        assert constrained, name
+        assert set(constrained) == {constraint}, name
+    # Fields typed Position that the survey never reached carry no constraint.
+    unconstrained = {
+        (s, f.name)
+        for n in ("pixelBox", "area", "pos")
+        for s, f in _fields(reg, n)
+        if f.validation == "Position" and f.constraint is None
+    }
+    assert unconstrained == {
+        ("BrushType", "pixelBox"),
+        ("GalaxyStarType", "pos"),
+        ("GalaxyPlanetType", "pos"),
+        ("ResearchBlock", "area"),
+    }
+
+
+def test_group_condition_chance_param_is_any() -> None:
+    reg = load_registry()
+    structure = reg.structure("GroupType.condition")
+    assert structure is not None
+    (selector,) = structure.children
+    assert isinstance(selector, ConditionFieldDef)
+    for case in ("PlanetOwnerIsMilitiaWithChance", "NoPlanetOwnerWithChance"):
+        (param,) = selector.branches[case]
+        assert isinstance(param, FieldDef) and param.validation == "Any"
 
 
 def test_manifest_rules_content() -> None:

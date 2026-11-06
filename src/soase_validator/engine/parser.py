@@ -5,6 +5,11 @@ with exact zero-based source positions. It never raises on malformed input:
 unparseable lines are skipped with a Diagnostic and parsing continues, so the
 parsed portion of a broken file is always returned.
 
+Values are quoted strings, ``TRUE``/``FALSE``, numbers, bare hexadecimal
+tokens (colors such as ``ffffffff``) and bracket lists separated by commas or
+whitespace. A line that starts with ``[`` is a keyless row. The form
+``key = "value"`` (``.constants``) is read as ``key "value"``.
+
 Block extents are decided purely by relative indentation using an indent
 stack. Tabs and spaces each count as one unit of indentation width.
 """
@@ -24,6 +29,7 @@ VERSION_KEY = "SinsArchiveVersion"
 
 _NUMBER_RE = re.compile(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?")
 _WS = " \t"
+_HEX_RE = re.compile(r"[0-9a-fA-F]+")
 
 
 @dataclass(frozen=True, slots=True)
@@ -77,16 +83,35 @@ class BoolValue:
 
 @dataclass(frozen=True, slots=True)
 class ListValue:
-    """A bracket list of numbers such as ``[ 234 , 219 ]``.
+    """A bracket list of numbers.
+
+    Both real forms are represented: comma separated (``[ 234 , 219 ]``) and
+    whitespace separated (``[ 0.000000 0.100000 0.000000 ]``).
 
     Attributes:
         items: The numbers in order.
+        separator: ``","`` for comma separated lists, ``" "`` for whitespace
+            separated lists. Lists with fewer than two items use ``","``.
     """
 
     items: tuple[NumberValue, ...]
+    separator: str = ","
 
 
-Value = StringValue | NumberValue | BoolValue | ListValue
+@dataclass(frozen=True, slots=True)
+class HexValue:
+    """An unquoted run of hexadecimal digits that is not a number.
+
+    Colors are written this way, for example ``ffffffff``.
+
+    Attributes:
+        raw: The token exactly as written (letters in either case).
+    """
+
+    raw: str
+
+
+Value = StringValue | NumberValue | BoolValue | ListValue | HexValue
 
 
 @dataclass(slots=True)
@@ -95,6 +120,8 @@ class Node:
 
     Attributes:
         key: Key text (everything before the first run of tabs or spaces).
+            Empty for a keyless row, a line that starts with ``[`` and holds
+            only a list (the rows under an ``Orientation`` header).
         key_span: Span of the key.
         value: Parsed value, or None for block keys.
         value_span: Span of the value, or None.
@@ -191,7 +218,10 @@ def _number(raw: str) -> NumberValue | None:
 
 
 def _parse_list(text: str) -> ListValue | None:
-    """Parse a bracket list such as ``[ 1 , 2 ]``.
+    """Parse a bracket list such as ``[ 1 , 2 ]`` or ``[ 1.0 2.0 3.0 ]``.
+
+    A list containing a comma is comma separated (each part is one number);
+    otherwise items are separated by whitespace.
 
     Args:
         text: Text starting with ``[``.
@@ -208,13 +238,47 @@ def _parse_list(text: str) -> ListValue | None:
     inner = text[1:close].strip()
     if not inner:
         return ListValue(())
+    comma = "," in inner
+    parts = inner.split(",") if comma else inner.split()
     items: list[NumberValue] = []
-    for part in inner.split(","):
+    for part in parts:
         num = _number(part.strip())
         if num is None:
             return None
         items.append(num)
-    return ListValue(tuple(items))
+    separator = " " if not comma and len(items) > 1 else ","
+    return ListValue(tuple(items), separator)
+
+
+def _skip_equals(line: str, offset: int) -> int:
+    """Skip the ``=`` of the ``key = "value"`` form.
+
+    The form occurs in ``.constants`` (22 lines in the Rebellion 1.98
+    reference files, all ``key = "value"`` with whitespace on both sides of
+    the ``=`` and a quoted value). Only that shape is accepted; any other use
+    of ``=`` is left for the caller to report.
+
+    Args:
+        line: The full source line.
+        offset: Offset of the first character after the key and its
+            whitespace.
+
+    Returns:
+        The offset of the opening quote when ``= "`` starts at ``offset``,
+        otherwise ``offset`` unchanged.
+
+    Raises:
+        None.
+    """
+    if line[offset : offset + 1] != "=":
+        return offset
+    after = offset + 1
+    pos = after
+    while pos < len(line) and line[pos] in _WS:
+        pos += 1
+    if pos > after and line[pos : pos + 1] == '"':
+        return pos
+    return offset
 
 
 def parse(
@@ -268,12 +332,14 @@ def parse(
             continue
         indent = len(line) - len(line.lstrip(_WS))
         body = line[indent:]
-        key_end = next((i for i, ch in enumerate(body) if ch in _WS), len(body))
+        keyless = body.startswith("[")
+        key_end = 0 if keyless else next((i for i, ch in enumerate(body) if ch in _WS), len(body))
         key = body[:key_end]
         key_span = Span(lineno, indent, lineno, indent + key_end)
         rest_off = indent + key_end
         while rest_off < len(line) and line[rest_off] in _WS:
             rest_off += 1
+        rest_off = _skip_equals(line, rest_off) if not keyless else rest_off
         rest = line[rest_off:].rstrip(_WS)
 
         value: Value | None = None
@@ -305,6 +371,8 @@ def parse(
                 value = BoolValue(rest == "TRUE")
             else:
                 value = _number(rest)
+                if value is None and _HEX_RE.fullmatch(rest):
+                    value = HexValue(rest)
                 bad = value is None
         if bad:
             complete = False
@@ -403,8 +471,12 @@ def _format_value(value: Value) -> str:
             return raw
         case BoolValue(v):
             return "TRUE" if v else "FALSE"
-        case ListValue(items):
-            return "[ " + " , ".join(i.raw for i in items) + " ]" if items else "[ ]"
+        case HexValue(raw):
+            return raw
+        case ListValue(items, separator):
+            if not items:
+                return "[ ]"
+            return "[ " + (" , " if separator == "," else " ").join(i.raw for i in items) + " ]"
 
 
 def format_tree(parsed: ParsedFile) -> str:
@@ -430,7 +502,7 @@ def format_tree(parsed: ParsedFile) -> str:
         for n in nodes:
             line = "\t" * depth + n.key
             if n.value is not None:
-                line += " " + _format_value(n.value)
+                line += ("" if not n.key else " ") + _format_value(n.value)
             out.append(line)
             walk(n.children, depth + 1)
 
@@ -440,6 +512,7 @@ def format_tree(parsed: ParsedFile) -> str:
 
 __all__ = [
     "BoolValue",
+    "HexValue",
     "ListValue",
     "Node",
     "NumberValue",

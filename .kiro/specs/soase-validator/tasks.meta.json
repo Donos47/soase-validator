@@ -382,6 +382,54 @@
         "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
         "timestamp": 1793989211378
       }
+    ],
+    "5.1 Implement `engine/primitives.py`": [
+      {
+        "executionId": "be72a57a-9e14-457b-a48b-ca87077bbdf1",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793989270119
+      },
+      {
+        "executionId": "8cdcd7bc-344f-470a-a6a6-b4fc6ff9ae66",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793989554352
+      },
+      {
+        "executionId": "65fd8ff1-5768-400a-91e3-f2559f9e40b8",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793990819740
+      },
+      {
+        "executionId": "6eab3cda-e47d-4aec-ab96-69eeb4ad010c",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793991790203
+      },
+      {
+        "executionId": "b22e4dd9-4c80-4872-be96-6edd6da3b393",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793992495541
+      }
+    ],
+    "5.2 Write property test for primitive type acceptance": [
+      {
+        "executionId": "692cf88a-bc7c-4d44-800c-28501eb5dcb3",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793993213691
+      }
+    ],
+    "5.3 Write property test for numeric strictness": [
+      {
+        "executionId": "692cf88a-bc7c-4d44-800c-28501eb5dcb3",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793993213795
+      }
+    ],
+    "5.4 Implement `engine/validator.py`": [
+      {
+        "executionId": "692cf88a-bc7c-4d44-800c-28501eb5dcb3",
+        "chatSessionId": "sess_67f9aa13-2bd5-4e47-93ac-ceec0310102e",
+        "timestamp": 1793993214026
+      }
     ]
   }
 }

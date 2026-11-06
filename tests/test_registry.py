@@ -81,3 +81,24 @@ def test_load_from_directory_and_bundled(tmp_path: Path) -> None:
     (tmp_path / "x.json").write_text(json.dumps(GOOD), encoding="utf-8")
     assert load_registry(tmp_path).structure("Root") is not None
     assert load_registry().warnings == ()
+
+
+def test_field_constraint_is_carried() -> None:
+    data = {
+        "structures": [
+            {
+                "name": "S",
+                "children": [
+                    {"name": "box", "validation": "Position", "constraint": "count=4"},
+                    {"name": "plain", "validation": "Position"},
+                ],
+            }
+        ]
+    }
+    reg = load_registry_from_texts({"s.json": json.dumps(data)})
+    assert reg.warnings == ()
+    struct = reg.structure("S")
+    assert struct is not None
+    box, plain = struct.children
+    assert isinstance(box, FieldDef) and box.constraint == "count=4"
+    assert isinstance(plain, FieldDef) and plain.constraint is None

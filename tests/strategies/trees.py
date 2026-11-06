@@ -1,8 +1,9 @@
 """Hypothesis strategies and a renderer for parser trees.
 
 ``trees()`` generates lists of ``GenNode`` (the expected tree), including
-strings (empty too), six-place decimals, booleans, bracket lists, keys with
-colons, nested blocks and count-prefixed repeats. ``indent_style`` generates
+strings (empty too), six-place decimals, booleans, hexadecimal tokens,
+comma and whitespace separated bracket lists, keyless list rows under a
+header, keys with colons, nested blocks and count-prefixed repeats. ``indent_style`` generates
 per-depth indentation prefixes (tabs, spaces or a mix) whose widths strictly
 increase with depth. ``render_tree`` turns a generated tree into file text and
 ``matches_parsed`` compares it with the parser's output.
@@ -16,12 +17,14 @@ from hypothesis import strategies as st
 
 from soase_validator.engine.parser import (
     BoolValue,
+    HexValue,
     ListValue,
     Node,
     NumberValue,
     StringValue,
     Value,
     _format_value,
+    _number,
 )
 
 MAX_DEPTH = 4
@@ -37,7 +40,8 @@ class GenNode:
     """A generated tree node: the expected parse result for one line.
 
     Attributes:
-        key: Key text (no whitespace, may contain colons).
+        key: Key text (no whitespace, may contain colons). Empty for a
+            keyless list row.
         value: Value, or None for block keys.
         children: Nested nodes (only for block keys).
     """
@@ -133,8 +137,15 @@ _integers = st.integers(-10_000, 10_000).map(_int_value)
 _decimals = st.integers(-10_000_000_000, 10_000_000_000).map(_decimal_value)
 _numbers = st.one_of(_integers, _decimals)
 _bools = st.booleans().map(BoolValue)
-_lists = st.lists(_numbers, max_size=4).map(lambda xs: ListValue(tuple(xs)))
-_values: st.SearchStrategy[Value] = st.one_of(_strings, _numbers, _bools, _lists)
+_comma_lists = st.lists(_numbers, max_size=4).map(lambda xs: ListValue(tuple(xs)))
+_space_lists = st.lists(_decimals, min_size=2, max_size=4).map(lambda xs: ListValue(tuple(xs), " "))
+_lists = st.one_of(_comma_lists, _space_lists)
+_hex_values = (
+    st.text(alphabet="0123456789abcdefABCDEF", min_size=1, max_size=8)
+    .filter(lambda s: _number(s) is None)
+    .map(HexValue)
+)
+_values: st.SearchStrategy[Value] = st.one_of(_strings, _numbers, _bools, _lists, _hex_values)
 
 
 # ----------------------------------------------------------------- trees
@@ -205,6 +216,26 @@ def _groups(
     return st.lists(inner, max_size=4).map(lambda gs: [n for g in gs for n in g])
 
 
+def _orientations() -> st.SearchStrategy[list[GenNode]]:
+    """Build a strategy for a header block whose children are keyless rows.
+
+    Returns:
+        A strategy yielding a one-element node list: a block with three
+        keyless whitespace separated rows.
+
+    Raises:
+        None.
+    """
+    row = st.lists(_decimals, min_size=3, max_size=3).map(
+        lambda xs: GenNode("", ListValue(tuple(xs), " "))
+    )
+    return st.builds(
+        lambda k, rows: [GenNode(k, None, rows)],
+        _keys,
+        st.lists(row, min_size=1, max_size=3),
+    )
+
+
 def _group_at_depth(depth: int) -> st.SearchStrategy[list[GenNode]]:
     """Build the group strategy for nodes at a nesting depth.
 
@@ -220,7 +251,7 @@ def _group_at_depth(depth: int) -> st.SearchStrategy[list[GenNode]]:
     if depth >= MAX_DEPTH:
         return _leaves
     child = _groups(st.deferred(lambda: _group_at_depth(depth + 1)))
-    return st.one_of(_leaves, _blocks(child), _repeats(child))
+    return st.one_of(_leaves, _blocks(child), _repeats(child), _orientations())
 
 
 def trees() -> st.SearchStrategy[list[GenNode]]:
@@ -296,7 +327,7 @@ def render_tree(
         for n in group:
             line = indent.for_depth(depth) + n.key
             if n.value is not None:
-                line += separator + _format_value(n.value)
+                line += ("" if not n.key else separator) + _format_value(n.value)
             lines.append(line)
             walk(n.children, depth + 1)
 

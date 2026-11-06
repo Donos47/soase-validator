@@ -61,7 +61,7 @@ def test_archive_version_checks() -> None:
     assert _codes("TXT2\nSinsArchiveVersion 999\n", known_archive_versions={194}) == ["SOASE-P004"]
     d = parse("TXT2\nSinsArchiveVersion 1.5\n").diagnostics[0]
     assert d.severity == "error"
-    assert _codes("TXT\nSinsArchiveVersion abc\n") == ["SOASE-P002"]
+    assert _codes("TXT\nSinsArchiveVersion xyz\n") == ["SOASE-P002"]
     assert _codes("TXT\nversionNumber 193\n") == []
     assert _codes("TXT2\na 1\n") == []
 

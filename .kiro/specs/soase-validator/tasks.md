@@ -123,20 +123,24 @@ Conventions for every task:
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
 - [ ] 5. Primitives and validator
-  - [ ] 5.1 Implement `engine/primitives.py`
-    - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`
+  - [x] 5.1 Implement `engine/primitives.py`
+    - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
+    - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
+    - Read the `key = "value"` form in the parser, correct `GroupType.condition` `param` to `Any`, add the `count=N` constraints to the bundled Definitions and record each in `PROVENANCE.json`
     - _Requirements: 3.3, 3.10_
 
-  - [ ] 5.2 Write property test for primitive type acceptance
+  - [~] 5.2 Write property test for primitive type acceptance
     - **Property 7: Primitive type acceptance**
     - **Validates: Requirements 3.3**
 
-  - [ ] 5.3 Write property test for numeric strictness
+  - [~] 5.3 Write property test for numeric strictness
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 
-  - [ ] 5.4 Implement `engine/validator.py`
+  - [x] 5.4 Implement `engine/validator.py`
     - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
+    - Pass each field's `constraint` to its checker and report `validate_constraint` problems as Definition load warnings; call `check_orientation` with the header node
+    - Treat an `iterative_field` as a count line followed by that many repeats, where a repeat may be a sequence of sibling lines (for example particle `NumEmitters N` followed by N repeats of an `EmitterType "x"` line plus an `EmitterContents` block), not only a named block; block extents still come from indentation
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10_
 
@@ -155,6 +159,13 @@ Conventions for every task:
   - [ ] 5.8 Write unit tests for validator node types and primitives
     - Add at least one example test per Definition node type and per primitive type using synthetic Definitions
     - _Requirements: 11.3_
+
+  - [ ] 5.9 Correct Definitions against the Rebellion 1.98 survey
+    - Work from `reference/primitive-survey.md` and re-survey the Reference Root read-only; correct the bundled JSON for each gap below, and record every correction in `PROVENANCE.json` with game version Rebellion 1.98 and evidence (shapes and counts only)
+    - Gaps: `Starscape` structure versus the `.starscapedata` files (mismatch); `.galaxy` `star[]` keys not placed in the Definition (about 2,150 uses); `ResearchSubject` `researchModifier` keys (about 1,281 uses) and 589 selector values with no match; `Player` (about 180); `.constants` `outlawSectorsData` (12); `.randomeventdefs` (12); `Buff` (1)
+    - Also list the Position fields the survey never reached (`BrushType` `pixelBox`, `GalaxyStarType` `pos` and `planet[]` `pos`, `GalaxyPlanetType` `pos`, `ResearchBlock` `area`) and decide each constraint from evidence, or leave it unset
+    - The zombiesrus5 plugin may not have validated `.galaxy`, so weak `galaxy.xml` coverage is expected. `plugin.xml` registers a Galaxy Editor for `galaxy` and the Definitions ship `galaxy.xml`, but the builder's handling of `.galaxy` is not covered by `reference/plugin-bytecode-findings.md`; verify it before treating a gap as a plugin omission
+    - _Requirements: 12.1, 13.5_
 
 - [ ] 6. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
@@ -442,7 +453,7 @@ Conventions for every task:
     { "id": 2, "tasks": ["2.1", "2.3"] },
     { "id": 3, "tasks": ["2.2", "2.4", "3.1", "4.1", "5.1", "7.1"] },
     { "id": 4, "tasks": ["3.2", "3.5", "4.2", "4.10", "5.2", "5.3", "5.4", "7.2", "7.3", "7.4", "7.5"] },
-    { "id": 5, "tasks": ["3.3", "3.4", "3.6", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9", "5.5", "5.6", "5.7", "5.8", "7.6", "8.1"] },
+    { "id": 5, "tasks": ["3.3", "3.4", "3.6", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9", "5.5", "5.6", "5.7", "5.8", "5.9", "7.6", "8.1"] },
     { "id": 6, "tasks": ["8.2", "8.3", "8.5", "9.1"] },
     { "id": 7, "tasks": ["8.4", "8.6", "8.7", "8.8", "8.9", "8.10", "8.11", "9.2", "9.3"] },
     { "id": 8, "tasks": ["9.4", "9.5", "9.6", "9.7", "11.1"] },

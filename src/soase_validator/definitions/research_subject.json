@@ -3784,7 +3784,8 @@
         {
           "node": "field",
           "name": "pos",
-          "validation": "Position"
+          "validation": "Position",
+          "constraint": "count=2"
         }
       ]
     }

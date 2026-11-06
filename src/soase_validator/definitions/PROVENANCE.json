@@ -5,5 +5,48 @@
   "conversion_date": "2026-11-06",
   "converter": "tools/convert_definitions.py",
   "notice": "Unofficial community tool. Definitions derive from zombiesrus5's plugin; the game is by Stardock Entertainment / Ironclad Games.",
-  "audit_corrections": []
+  "audit_corrections": [
+    {
+      "structure": "GroupType.condition",
+      "field": "param (type=PlanetOwnerIsMilitiaWithChance, type=NoPlanetOwnerWithChance)",
+      "change": "validation Decimal -> Any",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".galaxyScenarioDef: 15 uses, all quoted (two distinct decimal-looking values, 7 and 8 uses). Decimal accepts unquoted numbers only, so every real use was rejected. Not a closed set, so no enumeration."
+    },
+    {
+      "structure": "Brushes:brush[]/content=Simple, Brushes:brush[]/content=Margins, StatesType",
+      "field": "pixelBox",
+      "change": "added constraint count=4",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".brushes: 10022 uses (57 Margins, 1630 Simple, 8335 StatesType), always a bracketed comma separated list of 4 integers."
+    },
+    {
+      "structure": "PipCloud",
+      "field": "mainViewIconAreaOffsetFromCenter",
+      "change": "added constraint count=4",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".entity (PipCloud): 4 uses, always 4 integers."
+    },
+    {
+      "structure": "Player.researchScreenData.{Artifact,Combat,Defense,Diplomacy,Fleet,NonCombat}/block[]",
+      "field": "area",
+      "change": "added constraint count=4",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".entity (Player): 77 uses over the 6 block lists, always 4 integers."
+    },
+    {
+      "structure": "Galaxy:useRandomGenerator=FALSE/star[], Galaxy:useRandomGenerator=FALSE/star[]/planet[]",
+      "field": "pos",
+      "change": "added constraint count=2",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".galaxy: 4014 uses (187 star, 3827 planet), always a bracketed comma separated list of 2 integers."
+    },
+    {
+      "structure": "ResearchSubject.researchWindowLocation",
+      "field": "pos",
+      "change": "added constraint count=2",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".entity (ResearchSubject): 582 uses, always 2 integers."
+    }
+  ]
 }

@@ -18,7 +18,7 @@ from tests.strategies.trees import GenNode, headers, render_tree, separators, tr
 from soase_validator.engine.diagnostics import Diagnostic
 from soase_validator.engine.parser import Node, StringValue, Value, parse
 
-_GARBAGE = ["@@@", "12abc", "[1, x]", "[1,2", "TRUEISH", "1.2.3", "{}", "-", "[1] 2"]
+_GARBAGE = ["@@@", "12xyz", "[1, x]", "[1,2", "TRUEISH", "1.2.3", "{}", "-", "[1] 2"]
 _UNQUOTED = st.text(alphabet="abc def!?", max_size=8)
 
 

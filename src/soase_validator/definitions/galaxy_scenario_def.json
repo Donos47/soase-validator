@@ -788,14 +788,14 @@
               {
                 "node": "field",
                 "name": "param",
-                "validation": "Decimal"
+                "validation": "Any"
               }
             ],
             "NoPlanetOwnerWithChance": [
               {
                 "node": "field",
                 "name": "param",
-                "validation": "Decimal"
+                "validation": "Any"
               }
             ],
             "PlanetOwnerIsMilitia": [

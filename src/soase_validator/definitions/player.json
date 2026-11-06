@@ -2982,7 +2982,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
@@ -3019,7 +3020,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
@@ -3056,7 +3058,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
@@ -3093,7 +3096,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
@@ -3130,7 +3134,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
@@ -3167,7 +3172,8 @@
             {
               "node": "field",
               "name": "area",
-              "validation": "Position"
+              "validation": "Position",
+              "constraint": "count=4"
             },
             {
               "node": "field",
