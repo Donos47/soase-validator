@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "AsteroidDef",
+      "extension": ".asteroidDef",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "meshGroup",
+          "count_key": "meshGroupCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "iterative_field",
+              "name": "meshName",
+              "count_key": "meshNameCount",
+              "validation": "Mesh"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "template",
+          "count_key": "templateCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "iterative_field",
+              "name": "cluster",
+              "count_key": "clusterCount",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "meshGroupName",
+                  "validation": "Any"
+                },
+                {
+                  "node": "field",
+                  "name": "asteroidCount",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "minDistance",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "maxDistance",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "maxZOffset",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "minAngle",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "maxAngle",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "minAngularSpeed",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "maxAngularSpeed",
+                  "validation": "Decimal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AsteroidDefMeshGroup",
+      "children": [
+        {
+          "node": "field",
+          "name": "name",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshName",
+          "count_key": "meshNameCount",
+          "validation": "Mesh"
+        }
+      ]
+    },
+    {
+      "name": "AsteroidDefTemplate",
+      "children": [
+        {
+          "node": "field",
+          "name": "name",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "cluster",
+          "count_key": "clusterCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "meshGroupName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "asteroidCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "minDistance",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxDistance",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxZOffset",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "minAngle",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxAngle",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "minAngularSpeed",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxAngularSpeed",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AsteroidDefCluster",
+      "children": [
+        {
+          "node": "field",
+          "name": "meshGroupName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "asteroidCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxZOffset",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minAngle",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxAngle",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minAngularSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAngularSpeed",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Explosiondata",
+      "extension": ".explosiondata",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "explosionEffectGroup",
+          "count_key": "explosionEffectGroupCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "groupName",
+              "validation": "Any"
+            },
+            {
+              "node": "iterative_field",
+              "name": "explosionEffectDef",
+              "count_key": "explosionEffectDefCount",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "totalPlayTime",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "makeMeshInvisibleTime",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "iterative_field",
+                  "name": "subExplosion",
+                  "count_key": "subExplosionCount",
+                  "children": [
+                    {
+                      "node": "condition_field",
+                      "name": "type",
+                      "type": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type",
+                      "branches": {
+                        "Effect": [
+                          {
+                            "node": "field",
+                            "name": "playTime",
+                            "validation": "Integer"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeMaxSize",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeStrength",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeDuration",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "location",
+                            "validation": "Simple",
+                            "values": [
+                              "Surface",
+                              "Center"
+                            ]
+                          },
+                          {
+                            "node": "field",
+                            "name": "particleSystemName",
+                            "validation": "Particle"
+                          },
+                          {
+                            "node": "structure_reference",
+                            "name": "explosionSounds",
+                            "structure": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds"
+                          }
+                        ],
+                        "Sound": [
+                          {
+                            "node": "field",
+                            "name": "playTime",
+                            "validation": "Integer"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeMaxSize",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeStrength",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "cameraShakeDuration",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "structure_reference",
+                            "name": "explosionSounds",
+                            "structure": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds#2"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ExplosionEffectGroupType",
+      "children": [
+        {
+          "node": "field",
+          "name": "groupName",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "explosionEffectDef",
+          "count_key": "explosionEffectDefCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "totalPlayTime",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "makeMeshInvisibleTime",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "subExplosion",
+              "count_key": "subExplosionCount",
+              "children": [
+                {
+                  "node": "condition_field",
+                  "name": "type",
+                  "type": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type",
+                  "branches": {
+                    "Effect": [
+                      {
+                        "node": "field",
+                        "name": "playTime",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeMaxSize",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeStrength",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeDuration",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "location",
+                        "validation": "Simple",
+                        "values": [
+                          "Surface",
+                          "Center"
+                        ]
+                      },
+                      {
+                        "node": "field",
+                        "name": "particleSystemName",
+                        "validation": "Particle"
+                      },
+                      {
+                        "node": "structure_reference",
+                        "name": "explosionSounds",
+                        "structure": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds"
+                      }
+                    ],
+                    "Sound": [
+                      {
+                        "node": "field",
+                        "name": "playTime",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeMaxSize",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeStrength",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "cameraShakeDuration",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "structure_reference",
+                        "name": "explosionSounds",
+                        "structure": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds#2"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type.explosionSounds#2",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "validation": "Sound"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

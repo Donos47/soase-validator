@@ -1,4 +1,4 @@
-# sose-validator
+# soase-validator
 
 Java-free language tooling for Sins of a Solar Empire (Sins 1) mod files. It
 provides validation, completion, hover and go-to-definition through an LSP
@@ -11,9 +11,9 @@ Entertainment / Ironclad Games (the game).
 ## Install and run
 
 ```
-uvx --from git+https://github.com/<owner>/sose-validator sose-validator --help
-uvx --from git+https://github.com/<owner>/sose-validator sose-validator-lsp
-uvx --from git+https://github.com/<owner>/sose-validator sose-validator-mcp
+uvx --from git+https://github.com/<owner>/soase-validator soase-validator --help
+uvx --from git+https://github.com/<owner>/soase-validator soase-validator-lsp
+uvx --from git+https://github.com/<owner>/soase-validator soase-validator-mcp
 ```
 
 ## Development

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Groups",
+      "extension": ".groups",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "group",
+          "count_key": "groups",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "condition",
+              "structure": "GroupType.condition"
+            },
+            {
+              "node": "field",
+              "name": "owner",
+              "validation": "GalaxyDesign"
+            },
+            {
+              "node": "field",
+              "name": "colonizeChance",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "item",
+              "count_key": "items",
+              "validation": "GalaxyDesign"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

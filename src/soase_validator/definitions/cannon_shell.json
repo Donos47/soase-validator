@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "CannonShell",
+      "children": [
+        {
+          "node": "field",
+          "name": "acceleration",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "startingSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "buffToApplyOnImpact",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "planetImpactEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetImpactSounds",
+          "structure": "CannonShell.planetImpactSounds"
+        },
+        {
+          "node": "field",
+          "name": "planetImpactCameraShakeMaxSize",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetImpactCameraShakeStrength",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetImpactCameraShakeDuration",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "meshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "nameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "descStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "renderMesh",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "CannonShell.planetImpactSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

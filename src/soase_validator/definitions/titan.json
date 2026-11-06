@@ -1,0 +1,718 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Titan",
+      "version": "Rebellion",
+      "children": [
+        {
+          "node": "field",
+          "name": "ability:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "defaultAutoAttackRange",
+          "type": "defaultAutoAttackRange"
+        },
+        {
+          "node": "field",
+          "name": "defaultAutoAttackOn",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "prefersToFocusFire",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "usesFighterAttack",
+          "version": "Entrenchment",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "autoJoinFleetDefault",
+          "validation": "Boolean"
+        },
+        {
+          "node": "condition_field",
+          "name": "canBomb",
+          "type": "canBomb",
+          "branches": {
+            "TRUE": [
+              {
+                "node": "condition_field",
+                "name": "hasBombingLevels",
+                "type": "hasBombingLevels",
+                "branches": {
+                  "FALSE": [
+                    {
+                      "node": "field",
+                      "name": "baseDamage",
+                      "required": true,
+                      "validation": "Decimal"
+                    },
+                    {
+                      "node": "field",
+                      "name": "basePopulationKilled",
+                      "required": true,
+                      "validation": "Decimal"
+                    }
+                  ],
+                  "TRUE": [
+                    {
+                      "node": "structure_reference",
+                      "name": "baseDamage",
+                      "structure": "GenericLevel"
+                    },
+                    {
+                      "node": "structure_reference",
+                      "name": "basePopulationKilled",
+                      "structure": "GenericLevel"
+                    }
+                  ]
+                },
+                "required": true
+              },
+              {
+                "node": "field",
+                "name": "bombingFreqTime",
+                "required": true,
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "baseRange",
+                "required": true,
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "bombTransitTime",
+                "required": true,
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "bombEffectCount",
+                "required": true,
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "bombEffectAngleVariance",
+                "required": true,
+                "validation": "Decimal"
+              },
+              {
+                "node": "structure_reference",
+                "name": "bombEffectsDef",
+                "structure": "weaponEffectsDef"
+              }
+            ],
+            "FALSE": []
+          }
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "structure_reference",
+          "name": "basePrice",
+          "structure": "Cost"
+        },
+        {
+          "node": "field",
+          "name": "slotCount",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BuildTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "MaxHullPoints",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "MaxShieldPoints",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "HullPointRestoreRate",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ShieldPointRestoreRate",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ArmorPointsFromExperience",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "maxMitigation",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "MaxAntiMatter",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "AntiMatterRestoreRate",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "CultureProtectRate",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "field",
+          "name": "NameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "DescriptionStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Prerequisites",
+          "structure": "researchPrerequisites"
+        },
+        {
+          "node": "field",
+          "name": "statCountType",
+          "type": "statCountType"
+        },
+        {
+          "node": "iterative_field",
+          "name": "UpgradeType",
+          "count_key": "UpgradeTypeCount",
+          "limit": 8,
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "numRandomDebrisLarge",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "numRandomDebrisSmall",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "specificDebrisMeshName",
+          "count_key": "numSpecificDebris",
+          "limit": 2,
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "armorType",
+          "type": "armorType"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "Weapon",
+          "count_key": "NumWeapons",
+          "limit": 5,
+          "children": [
+            {
+              "node": "field",
+              "name": "WeaponType",
+              "validation": "Simple",
+              "values": [
+                "Beam",
+                "Projectile",
+                "Missile"
+              ]
+            },
+            {
+              "node": "structure_reference",
+              "name": "damageEnums",
+              "structure": "Weapon.damageEnums"
+            },
+            {
+              "node": "field",
+              "name": "DamagePerBank:FRONT",
+              "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "DamagePerBank:BACK",
+              "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "DamagePerBank:LEFT",
+              "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "DamagePerBank:RIGHT",
+              "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "Range",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "PreBuffCooldownTime",
+              "help": "How long the weapon must cool down between shots. It also effects how much damage over time the weapon does. Shorter cool downs mean more DPS. While longer cool downs mean less DPS.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "CanFireAtFighter",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "SynchronizedTargeting",
+              "help": "Synchronized targetting determines if the weapon effects fire at the same spot on the target mesh or shield. If it's false then then the weapon effects can fire at random points on the target mesh or shield.",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "PointStaggerDelay",
+              "help": "Spreads effects from multiple weapon nulls so they don't all fire at the same time.",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "TravelSpeed",
+              "help": "The speed at which a projectile, or missile effect travels. Beam weapons are always zero",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "Duration",
+              "help": "How long the weapon will fire (beam, and projectile). In a missiles case how long it will stay on the map. If it goes over the duration it will disappear, and do no damage",
+              "validation": "Decimal"
+            },
+            {
+              "node": "condition_field",
+              "name": "fireConstraintType",
+              "version": "Entrenchment",
+              "type": "fireConstraintType",
+              "branches": {
+                "Research": [
+                  {
+                    "node": "structure_reference",
+                    "name": "researchPrerequisites",
+                    "structure": "researchPrerequisites"
+                  }
+                ],
+                "StarBaseUpgradeLevel": [
+                  {
+                    "node": "field",
+                    "name": "requiredStarBaseWeaponLevel",
+                    "validation": "Integer"
+                  }
+                ],
+                "CanAlwaysFire": []
+              }
+            },
+            {
+              "node": "structure_reference",
+              "name": "WeaponEffects",
+              "structure": "weaponEffectsDef"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "m_weaponIndexForRange",
+          "validation": "Integer"
+        },
+        {
+          "node": "condition_field",
+          "name": "firingAlignmentType",
+          "type": "firingAlignmentType",
+          "branches": {
+            "TiltForward": [
+              {
+                "node": "field",
+                "name": "firingTiltAngle",
+                "validation": "Decimal"
+              }
+            ],
+            "Default": []
+          },
+          "version": "Entrenchment"
+        },
+        {
+          "node": "field",
+          "name": "TargetCountPerBank:FRONT",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "TargetCountPerBank:BACK",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "TargetCountPerBank:LEFT",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "TargetCountPerBank:RIGHT",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "canOnlyTargetStructures",
+          "version": "Entrenchment",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "mass",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ShieldMeshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "renderShield",
+          "version": "Entrenchment",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationStrafe",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxSpeedLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollRate",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollAngle",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "condition_field",
+          "name": "useCustomHyperspaceEffects",
+          "type": "useCustomHyperspaceEffects",
+          "branches": {
+            "TRUE": [
+              {
+                "node": "structure_reference",
+                "name": "effects",
+                "structure": "useCustomHyperspaceEffects.effects"
+              }
+            ],
+            "FALSE": []
+          },
+          "version": "Rebellion193"
+        },
+        {
+          "node": "field",
+          "name": "squadTypeEntityDef:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "squadAntiMatterCost:0",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "squadTypeEntityDef:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "squadAntiMatterCost:1",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "squadTypeEntityDef:2",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "squadAntiMatterCost:2",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "squadTypeEntityDef:3",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "squadAntiMatterCost:3",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONATTACKORDERISSUED",
+          "limit": 6,
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONCREATION",
+          "limit": 6,
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONGENERALORDERISSUED",
+          "limit": 6,
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSELECTED",
+          "limit": 6,
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSTARTPHASEJUMP",
+          "limit": 6,
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "version": "Vanilla",
+          "validation": "Mesh"
+        },
+        {
+          "node": "iterative_field",
+          "name": "MeshNameInfo",
+          "count_key": "MeshNameInfoCount",
+          "version": "Entrenchment",
+          "limit": 12,
+          "children": [
+            {
+              "node": "field",
+              "name": "meshName",
+              "validation": "Mesh"
+            },
+            {
+              "node": "condition_field",
+              "name": "criteriaType",
+              "type": "criteriaType",
+              "branches": {
+                "None": [],
+                "Research": [
+                  {
+                    "node": "structure_reference",
+                    "name": "prerequisites",
+                    "structure": "researchPrerequisites"
+                  }
+                ],
+                "StarBaseUpgradeLevel": [
+                  {
+                    "node": "structure_reference",
+                    "name": "levelRequirements",
+                    "structure": "levelRequirements"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "meshNameIncreasedEffectName",
+          "version": "Entrenchment",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "meshNameDecreasedEffectName",
+          "version": "Entrenchment",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "ExhaustParticleSystemName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "ExplosionName",
+          "validation": "Explosion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "CommandPoints",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "weaponCooldownDecreasePerc",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "structure_reference",
+          "name": "weaponDamageIncreasePerc",
+          "structure": "LevelIncrease"
+        },
+        {
+          "node": "field",
+          "name": "HyperspaceChargingSoundID",
+          "version": "Rebellion185",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "HyperspaceTravelSoundID",
+          "version": "Rebellion185",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "EngineSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "formationRank",
+          "validation": "Integer",
+          "values": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

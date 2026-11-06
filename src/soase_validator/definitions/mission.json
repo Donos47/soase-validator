@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "MissionDefendFlagship",
+      "version": "Rebellion",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionBuildMines",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionBuildStarBase",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionCaptureResources",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionFosterRelationships",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionRaid",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionExplore",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionColonize",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionAttackPlanet",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    },
+    {
+      "name": "MissionCaptureMinorFaction",
+      "children": [
+        {
+          "node": "field",
+          "name": "missionType",
+          "type": "missionType"
+        }
+      ]
+    }
+  ],
+  "element_rules": [
+    {
+      "name": "missionType",
+      "validation": "Simple",
+      "type": "missionType"
+    }
+  ]
+}

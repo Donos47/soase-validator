@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "useCustomHyperspaceEffects.effects",
+      "children": [
+        {
+          "node": "field",
+          "name": "chargeUpEffectName",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectNameBetweenStars",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectNameDestabilized",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectSoundID",
+          "required": true,
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectName",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectNameBetweenStars",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectNameDestabilized",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectSoundID",
+          "required": true,
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "exitEffectName",
+          "required": true,
+          "version": "Rebellion193",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "exitEffectSoundID",
+          "required": true,
+          "validation": "Sound"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

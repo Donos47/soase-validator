@@ -1,0 +1,2191 @@
+{
+  "schema": 1,
+  "enums": [
+    {
+      "name": "entityBoolModifierType",
+      "values": [
+        {
+          "name": "PlanetBombingDamageAsDamageDealer",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsInvisible",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NextAbilityAmplified",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsInNonFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsFlagship",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Boarded",
+          "version": "Rebellion"
+        },
+        "ActivelyBeingConstructed",
+        "CannotBeDamaged",
+        "CanBeCaptured",
+        "CannotBeColonized",
+        "CannotBeScuttled",
+        "CancelCannotBeDamaged",
+        "CancelPhaseOut",
+        "DisableAbilities",
+        "DisableConstruction",
+        "DisablePhaseJump",
+        "DisableLinearEngines",
+        "DisableAngularEngines",
+        "DisableRegeneration",
+        "DisableWeapons",
+        "DisableModuleFunctionality",
+        "DisableWeaponsUltimate",
+        "DisableAbilitiesUltimate",
+        "DisableFighterLaunch",
+        "DetectIncomingHyperspacingEntities",
+        "ForceIsDamagedOverlayInHyperspace",
+        "HasDestabilizedHyperspaceEffect",
+        "HasShieldMeshEffect",
+        "HasTauntTarget",
+        "IsIllusionShip",
+        "IsResourceFocusActive",
+        "ImmuneToNonUltimateDisable",
+        "InstantBuildFighters",
+        "IsPhaseGateEndPoint",
+        "JumpBlockerImmune",
+        "PhaseOut",
+        "ProxySensor",
+        "WeaponsDealNoDamage",
+        "PhaseDodge"
+      ]
+    },
+    {
+      "name": "entityType",
+      "values": [
+        {
+          "name": "Cosmetic",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Titan",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TitanUpgrade",
+          "version": "Rebellion"
+        },
+        "Ability",
+        "Buff",
+        "CapitalShip",
+        "Debris",
+        "EmpireWindowNode",
+        "Frigate",
+        "CannonShell",
+        "Fighter",
+        "Fleet",
+        "Formation",
+        "PlanetConnection",
+        "PlanetModuleWeaponDefense",
+        "PlanetModuleStandard",
+        "PlanetModuleShipFactory",
+        "PlanetModuleHangarDefense",
+        "PlanetModuleTradePort",
+        "PlanetModuleRefinery",
+        "Player",
+        "ResearchSubject",
+        "Squad",
+        "StarBase",
+        "StarBaseUpgrade",
+        "EntryVehicle",
+        "Planet",
+        "PlanetBonus",
+        "ResourceAsteroid",
+        "Star",
+        "SpaceMine",
+        "MissionBuildMines",
+        "MissionBuildStarBase",
+        "MissionCaptureResources",
+        "MissionAttackPlanet",
+        "MissionColonize",
+        {
+          "name": "MissionDefendFlagship",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MissionCaptureMinorFaction",
+          "version": "Rebellion"
+        },
+        "MissionExplore",
+        "MissionRaid",
+        "MissionFosterRelationships",
+        "PipCloud",
+        "Quest",
+        {
+          "name": "Trigger",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "frigateRoleType",
+      "values": [
+        {
+          "name": "MinorFactionCapturer",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AbilityCreated",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Corvette",
+          "version": "Rebellion"
+        },
+        "AntiFighter",
+        "AntiModule",
+        "Carrier",
+        "Light",
+        "Lrm",
+        "MineLayer",
+        "Colony",
+        "Scout",
+        "Heavy",
+        "ResourceCapturer",
+        "ModuleConstructor",
+        "Cargo",
+        "AntiMine",
+        "Siege",
+        "StarBaseConstructor",
+        "Support",
+        "Envoy",
+        "Invalid",
+        "ModuleRepair",
+        "ModuleUtility",
+        "ModulePointDefense",
+        "Raider"
+      ]
+    },
+    {
+      "name": "cargoType",
+      "values": [
+        "TradeCredits",
+        "RefineryResources",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "defaultAutoAttackRange",
+      "values": [
+        "None",
+        "GravityWell"
+      ]
+    },
+    {
+      "name": "roleType",
+      "values": [
+        "Invalid",
+        "COLONY"
+      ]
+    },
+    {
+      "name": "statCountType",
+      "values": [
+        {
+          "name": "Titan",
+          "version": "Rebellion"
+        },
+        "CapitalShipBattleship",
+        "CapitalShipCarrier",
+        "CapitalShipUtility0",
+        "CapitalShipUtility1",
+        "CapitalShipUtility2",
+        "FighterBomber",
+        "FighterCombat",
+        "FrigateAntiFighter",
+        {
+          "name": "FrigateCorvette",
+          "version": "Rebellion"
+        },
+        "FrigateScout",
+        "FrigateColony",
+        "FrigateLight",
+        "FrigateLongRange",
+        "FrigateHeavy",
+        "FrigateUtility0",
+        "FrigateUtility1",
+        "FrigateAntiModule",
+        "FrigateCarrier",
+        "FrigateConstructor",
+        "FrigateRefineryShip",
+        "FrigateSiege",
+        "FrigateStarBaseConstructor",
+        "FrigateTradeShip",
+        "FrigateMineLayer",
+        "FrigateSpawnedByAbility",
+        "FrigateEnvoy",
+        "ModuleHangarDefense",
+        "ModuleRepair",
+        "ModuleUtility",
+        "ModulePointDefense",
+        "FighterMineLayer",
+        "ModuleCannon",
+        "ModuleCapitalShipFactory",
+        "ModuleCombatLab",
+        "ModuleCrystalExtractor",
+        "ModuleCultureCenter",
+        "ModuleFrigateFactory",
+        "ModuleJumpBlocker",
+        "ModuleMetalExtractor",
+        "ModuleNonCombatLab",
+        "ModuleTradePort",
+        "ModuleRefinery",
+        "SquadBomber",
+        "SquadCombat",
+        "StarBase",
+        "Invalid",
+        "SquadMineLayer"
+      ]
+    },
+    {
+      "name": "armorType",
+      "values": [
+        {
+          "name": "Titan",
+          "version": "Rebellion"
+        },
+        "Pirate",
+        "Module",
+        "CapitalShip",
+        "Heavy",
+        "Light",
+        "VeryLight",
+        "Medium",
+        "VeryHeavy"
+      ]
+    },
+    {
+      "name": "WeaponWeaponType",
+      "values": [
+        "Beam",
+        "Projectile",
+        "Missile"
+      ]
+    },
+    {
+      "name": "AttackType",
+      "values": [
+        {
+          "name": "CORVETTE",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TITAN",
+          "version": "Rebellion"
+        },
+        "COMPOSITE",
+        "ANTIMODULE",
+        "CAPITALSHIP",
+        "ANTIVERYLIGHT",
+        "ANTILIGHT",
+        "ANTIMEDIUM",
+        "ANTIHEAVY",
+        "ANTIVERYHEAVY"
+      ]
+    },
+    {
+      "name": "DamageApplyType",
+      "values": [
+        "OVERTIME",
+        "BACKLOADED"
+      ]
+    },
+    {
+      "name": "fireConstraintType",
+      "values": [
+        "CanAlwaysFire",
+        "Research",
+        "StarBaseUpgradeLevel"
+      ]
+    },
+    {
+      "name": "firingAlignmentType",
+      "values": [
+        "Default",
+        "TiltForward"
+      ]
+    },
+    {
+      "name": "criteriaType",
+      "values": [
+        "None",
+        "Research",
+        "StarBaseUpgradeLevel"
+      ]
+    },
+    {
+      "name": "onReapplyDuplicateType",
+      "values": [
+        {
+          "name": "PrioritizeOldBuffs",
+          "version": "Entrenchment"
+        },
+        {
+          "name": "PrioritizeNewBuffs",
+          "version": "Entrenchment"
+        },
+        {
+          "name": "StackNewBuff",
+          "version": "Vanilla"
+        },
+        {
+          "name": "ReplaceWithNewBuffIfSamePlayer",
+          "version": "Vanilla"
+        },
+        {
+          "name": "ReplaceWithNewBuff",
+          "version": "Vanilla"
+        },
+        {
+          "name": "KeepOldBuff",
+          "version": "Vanilla"
+        },
+        "Invalid"
+      ]
+    },
+    {
+      "name": "buffStackingLimitType",
+      "values": [
+        "PerPlayer",
+        "ForAllPlayers"
+      ]
+    },
+    {
+      "name": "buffExclusivityForAIType",
+      "values": [
+        "ExclusivePerPlayer",
+        "ExclusiveForAllPlayers",
+        "NotExclusive"
+      ]
+    },
+    {
+      "name": "instantActionTriggerType",
+      "values": [
+        "OnColonizeAbilityUsed",
+        "OnAbilityUsed",
+        "OnChance",
+        "OnHyperspaceExit",
+        "OnOwnerDeath",
+        "OnDamageTaken",
+        "AlwaysPerform",
+        "OnDelay",
+        "OnBuffFinish",
+        "OnWeaponFired",
+        {
+          "name": "OnCondition",
+          "version": "Rebellion"
+        }
+      ],
+      "help": "OnChance only valid in periodActions"
+    },
+    {
+      "name": "actionCountType",
+      "values": [
+        "Finite",
+        "Infinite"
+      ]
+    },
+    {
+      "name": "buffEntityModifierType",
+      "values": [
+        {
+          "name": "PlanetBombingDamageAsDamageDealer",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureRepelRateAdditive",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AntiModuleDamageAsDamageDealer",
+          "version": "Rebellion"
+        },
+        {
+          "name": "EnemyCultureSpread",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureSpreadModifier",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ShieldPointRestoration",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PhysicalDamageAsDamageTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "HullPointRestoration",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AntimatterRestoration",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PlanetTaxRate",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PlanetHealthMaxAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "AntimatterRestoreRate",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "PlanetUpgradeBuildRateAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "RefineryIncome",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "TradeIncome",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "CultureSpreadRateForOwner",
+          "version": "Diplomacy"
+        },
+        "FightersPerSquadron",
+        "HullPointRestoreRate",
+        "ShieldPointRestoreRate",
+        "GravityWellRangeForHyperspace",
+        "PropagateWeaponDamagePerc",
+        "ResourceExtractionRate",
+        "PlanetPopulationGrowthRate",
+        "HyperspaceSpeed",
+        "DamageSharing",
+        "MaxHullPoints",
+        "BonusMaxSquads",
+        "PlanetBombingDamageAbsorption",
+        "PlanetResourceOutput",
+        "UnderConstructionRate",
+        "HyperspaceChargeUpRate",
+        "LinearThrust",
+        "LinearMaxSpeed",
+        "EnergyWeaponCooldown",
+        "PlanetProductionStolen",
+        "ShipBuildTime",
+        "PlanetModuleBuildTime",
+        "AntimatterCostOfNonUltimates",
+        "AngularThrust",
+        "PlanetMaxPopulation",
+        "WeaponCooldown",
+        "ChanceToIgnoreShieldsAsDamageDealer",
+        "ChanceToIgnoreShieldsAsDamageTarget",
+        "DamageAsDamageTarget",
+        "CultureSpread",
+        "ChanceToBeNotOptimallyTargetted",
+        "WeaponRange",
+        "ChanceToHitAsDamageDealer",
+        "ChanceToHitAsDamageTarget",
+        "ArmorAsDamageTarget",
+        "PhysicalDamageAsDamageDealer",
+        "AbilityCooldownRate",
+        "ShieldMitigation",
+        "PlanetUpgradeCost",
+        "DamageAsDamageTargetFromForward",
+        "DamageAsDamageDealer",
+        "MaxShieldPoints",
+        "PlanetBombingCooldown"
+      ]
+    },
+    {
+      "name": "damageAffectType",
+      "values": [
+        "AFFECTS_ONLY_HULL",
+        "AFFECTS_ONLY_SHIELDS",
+        "AFFECTS_SHIELDS_AND_HULL"
+      ]
+    },
+    {
+      "name": "typeOfDamageNeeded",
+      "values": [
+        "AFFECTS_ONLY_HULL",
+        "AFFECTS_ONLY_SHIELDS",
+        "AFFECTS_SHIELDS_AND_HULL"
+      ]
+    },
+    {
+      "name": "damageType",
+      "values": [
+        "PHYSICAL",
+        "ENERGY"
+      ]
+    },
+    {
+      "name": "ownership",
+      "values": [
+        "Enemy",
+        "Friendly",
+        "NoOwner",
+        "Player",
+        "Allied",
+        {
+          "name": "AlliedOrEnemy",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "UncontrolledMinorFaction",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "object",
+      "values": [
+        {
+          "name": "EnvoyFrigate",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Titan",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Corvette",
+          "version": "Rebellion"
+        },
+        "Star",
+        "Planet",
+        "Frigate",
+        "CapitalShip",
+        "Fighter",
+        "PlanetModule",
+        "StarBase",
+        "SpaceMine",
+        "PlaceHolderPlanetModule",
+        "PlaceHolderSpaceMine"
+      ]
+    },
+    {
+      "name": "space",
+      "values": [
+        "Normal",
+        "Phase"
+      ]
+    },
+    {
+      "name": "constraint",
+      "values": [
+        {
+          "name": "NotIsTech",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsExplored",
+          "version": "Rebellion"
+        },
+        {
+          "name": "HasColonizeAbility",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsMinorFactionOwned",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsOutlaw",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsRuinable",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Invalid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsBoarded",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsBoarded",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsIllusionShip",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsHomeworld",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsHomeworld",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotFlagship",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NotIsOccupationPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsInNonFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsPetOfTargetter",
+          "version": "Rebellion"
+        },
+        {
+          "name": "HasDestabilizationProtection",
+          "version": "Rebellion"
+        },
+        {
+          "name": "DoesNotHaveDestabilizationProtection",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsInFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsControllable",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsNotStarBaseConstructor",
+          "version": "Rebellion"
+        },
+        "NotInvulnerable",
+        "CanBeCaptured",
+        "CanBeJumpBlocked",
+        "CanHaveFighters",
+        "CanHaveShields",
+        "CanPhaseDodge",
+        "CanSpreadWeaponDamage",
+        "HasAbilityWithCooldown",
+        "HasAntiMatterPool",
+        "HasAntiMatterShortage",
+        "HasEnergyWeapons",
+        "HasHullDamage",
+        "HasPhaseMissiles",
+        "HasPopulation",
+        "HasShieldDamage",
+        "HasWeapons",
+        "IsActivelyBeingConstructed",
+        "IsCargoShip",
+        "IsColonizable",
+        "IsExplored",
+        "IsMovingToLocalOrbitBody",
+        "IsPsi",
+        "IsResourceExtractor",
+        "LinkedCargoShip",
+        "LinkedSquad",
+        "ModuleUnderConstruction",
+        "NotSelf",
+        "WithinCurrentSolarSystem",
+        "NotActivelyBeingConstructed"
+      ]
+    },
+    {
+      "name": "weaponEffectOriginType",
+      "values": [
+        "Targetter",
+        "Target"
+      ]
+    },
+    {
+      "name": "weaponEffectImpactOffsetType",
+      "values": [
+        "RandomMesh",
+        "Center",
+        "CenterOffsetBySpatialRadius"
+      ]
+    },
+    {
+      "name": "weaponType",
+      "values": [
+        "Projectile",
+        "Missile",
+        "Beam"
+      ]
+    },
+    {
+      "name": "attachType",
+      "values": [
+        "Invalid",
+        "Center",
+        "Ability",
+        "Aura",
+        "Above"
+      ]
+    },
+    {
+      "name": "sourcePropertyType",
+      "values": [
+        "AbilityALevel",
+        "AbilityBLevel",
+        "AbilityCLevel"
+      ]
+    },
+    {
+      "name": "orderAcknowledgementType",
+      "values": [
+        "ONATTACKORDERISSUED",
+        "ONCREATION",
+        "ONGENERALORDERISSUED",
+        "ONSELECTED",
+        "ONSTARTPHASEJUMP",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "planetUpgradeSlotType",
+      "values": [
+        "Civilian",
+        "Tactical"
+      ]
+    },
+    {
+      "name": "planetModuleRoleType",
+      "values": [
+        {
+          "name": "TITANFACTORY",
+          "version": "Rebellion"
+        },
+        "CULTURE",
+        "FRIGATEFACTORY",
+        "RESEARCHCOMBAT",
+        "WEAPONDEFENSE",
+        "CRYSTALEXTRACTOR",
+        "CAPITALSHIPFACTORY",
+        "CANNON",
+        "JUMPBLOCKER",
+        "HANGARDEFENSE",
+        "METALEXTRACTOR",
+        "REPAIRPLATFORM",
+        "TRADEPORT",
+        "RESEARCHNONCOMBAT",
+        "REFINERY",
+        "PHASEGATE",
+        "ANTIMATTERRECHARGER",
+        "NANOWEAPONJAMMER",
+        "SPACEMINE",
+        "SHIELDGENERATOR"
+      ]
+    },
+    {
+      "name": "resourceExtractionType",
+      "values": [
+        "Crystal",
+        "Metal",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "rotateFacingType",
+      "values": [
+        "None",
+        "AwayFromOrbitBody",
+        "TowardsOrbitBody"
+      ]
+    },
+    {
+      "name": "WeaponClassType",
+      "values": [
+        {
+          "name": "POINTDEFENSELASER",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FLAK",
+          "version": "Rebellion"
+        },
+        {
+          "name": "RAILGUN",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PULSEWAVE",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PHASECANNON",
+          "version": "Rebellion"
+        },
+        "CAPITALABILITY",
+        "BEAM",
+        "FLASHBEAM",
+        "PULSEGUN",
+        "MISSILE",
+        "PHASEMISSILE",
+        "DART",
+        "AUTOCANNON",
+        "LASERTECH",
+        "LASERPSI",
+        "WAVE",
+        "PLASMA",
+        "PLANETBOMBARDMENT",
+        "ION",
+        "SPIRITBLADE",
+        "GAUSS",
+        "CHAOSBOLT",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "weaponClassForWeaponPassive",
+      "values": [
+        {
+          "name": "POINTDEFENSELASER",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FLAK",
+          "version": "Rebellion"
+        },
+        {
+          "name": "RAILGUN",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PULSEWAVE",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PHASECANNON",
+          "version": "Rebellion"
+        },
+        "CAPITALABILITY",
+        "BEAM",
+        "FLASHBEAM",
+        "PULSEGUN",
+        "MISSILE",
+        "PHASEMISSILE",
+        "DART",
+        "AUTOCANNON",
+        "LASERTECH",
+        "LASERPSI",
+        "WAVE",
+        "PLASMA",
+        "PLANETBOMBARDMENT",
+        "ION",
+        "SPIRITBLADE",
+        "GAUSS",
+        "CHAOSBOLT"
+      ]
+    },
+    {
+      "name": "spawnShipsHyperspaceSpawnType",
+      "values": [
+        {
+          "name": "MinorFactionSiegeRaid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MinorFactionDefenseRaid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MinorFactionScoutRaid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MinorFactionAntiModuleRaid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FromFactories",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MinorFactionAttackRaid",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PirateRaid",
+          "version": "Rebellion"
+        },
+        "FleetBeacon"
+      ]
+    },
+    {
+      "name": "spawnType",
+      "values": [
+        "CompletelyRandom",
+        "RandomFromUp"
+      ]
+    },
+    {
+      "name": "resourceToSteal",
+      "values": [
+        "Credits",
+        "Metal",
+        "Crystal"
+      ]
+    },
+    {
+      "name": "role",
+      "values": [
+        "Bomber",
+        "Combat",
+        "MineLayer"
+      ]
+    },
+    {
+      "name": "resource",
+      "values": [
+        "Crystal",
+        "Metal"
+      ]
+    },
+    {
+      "name": "missionType",
+      "values": [
+        {
+          "name": "DefendFlagship",
+          "version": "Rebellion"
+        },
+        "BuildMines",
+        "BuildStarBase",
+        "CaptureResources",
+        "FosterRelationships",
+        "Raid",
+        "Explore",
+        "Colonize",
+        "AttackPlanet",
+        "CaptureMinorFaction"
+      ]
+    },
+    {
+      "name": "linkedPlanetType",
+      "values": [
+        {
+          "name": "Moon",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Greenhouse",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Iron",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Barren",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Oceanic",
+          "version": "Rebellion"
+        },
+        "Asteroid",
+        "Ice",
+        "Desert",
+        "Volcanic",
+        "Terran",
+        "Uncolonizable",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "linkedPlanetUpgradeType",
+      "values": [
+        "Invalid",
+        "ArtifactLevel",
+        "CivilianModules",
+        "Infrastructure",
+        "Population",
+        "Home",
+        "TacticalModules",
+        {
+          "name": "Social",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Industry",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "allianceType",
+      "values": [
+        "Invalid",
+        {
+          "name": "EfficiencyPact",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "EnergyWeaponCooldownPact",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "MarketPact",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "MassReductionPact",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "ThrusterPact",
+          "version": "Diplomacy"
+        },
+        "AntimatterPact",
+        "ArmorPact",
+        "BeamWeaponPact",
+        "CulturePact",
+        "MetalCrystalPact",
+        "PhaseJumpPact",
+        "ResearchPact",
+        "ShieldPact",
+        "SupplyPact",
+        "TacticalSlotsPact",
+        "TradeIncomePact",
+        "WeaponCooldownPact",
+        "PlanetBombingPact"
+      ]
+    },
+    {
+      "name": "aiUseTargetCondition",
+      "values": [
+        "Any",
+        "AntimatterExceedsAmount",
+        {
+          "name": "IsCapitalShipOrStarbaseOrTitan",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IsCapitalShipOrStarbase",
+          "version": "Diplomacy"
+        },
+        "Invalid",
+        {
+          "name": "IsBoarded",
+          "version": "Rebellion"
+        },
+        "HasBuff",
+        "HasAbilityInCooldown",
+        "HasNoWeapons",
+        "IsNotWeaponDisabled",
+        "ShieldDamageExceedsAmount",
+        "HullDamageExceedsAmount",
+        "IsDifferentRoleType"
+      ]
+    },
+    {
+      "name": "aiUseTime",
+      "values": [
+        {
+          "name": "OnlyWhenHullDamageExceeds",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OnlyWhenManyTargetsInCombatDoNotHaveBuff",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OnlyIfOwnTitan",
+          "version": "Rebellion"
+        },
+        {
+          "name": "NoEnemyShipsInGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OnlyWhenDisabled",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OnlyWhenOrbitingEnemyOrAlliedPlanet",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "OnlyWhenAboutToDie",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "OnlyWhenEnemyFleetWillPrevail",
+          "version": "Diplomacy"
+        },
+        "OnlyWithNoOrderOrAutoAttackButNotIfTargettingMine",
+        "OnlyWhenAttackTargetIsInFiringSolutionAndHasAttackOrder",
+        "Anytime",
+        "Invalid",
+        "NotInCombat",
+        "OnlyInCombat",
+        "OnlyWhenAttackTargetIsInFiringSolution",
+        "OnlyWhenBombing",
+        "OnlyWhenManyTargetsHaveShieldDamage",
+        "OnlyWhenManyTargetsHyperspacingTowardsMyGravityWell",
+        "OnlyWhenMovingFar",
+        "OnlyWhenOrbitingEnemyPlanet",
+        "OnlyWhenTakingDamage",
+        "OnlyWithNoOrder",
+        {
+          "name": "OnlyWhenManyTargetsInRange",
+          "version": "Entrenchment"
+        },
+        {
+          "name": "OnlyWhenManyTargetsInRangeOfBank",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OnlyWhenMovingThresholdDistance",
+          "version": "Entrenchment"
+        },
+        "OnlyWhenManyTargetsHaveHullDamage",
+        {
+          "name": "OnlyWhenDebrisWithinRange",
+          "version": "Diplomacy"
+        }
+      ]
+    },
+    {
+      "name": "buffInstantActionType",
+      "values": [
+        {
+          "name": "DoScuttle",
+          "version": "Rebellion"
+        },
+        "SpawnShipsAtPlanetWithTarget",
+        "SpawnShipsAtPlanetWithRandomTarget",
+        "SpawnShipsAtPlanet",
+        "GiveResourceToPlayer",
+        {
+          "name": "RemovePlanetPopulation",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToAllFirstSpawnerShipsAndStructures",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToLocalOrbitBodiesWithinDistance",
+          "version": "Rebellion"
+        },
+        {
+          "name": "GiveExperience",
+          "version": "Rebellion"
+        },
+        {
+          "name": "RuinPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ClearRecordedDamage",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChangePlayerIndexToNeutral",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChangePlayerIndexToPriorMinorFaction",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CreatePlanetModule",
+          "version": "Rebellion"
+        },
+        {
+          "name": "DoAllegianceChangeToPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "GainHullEqualToTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "GainShieldEqualToTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "GainAntimatterEqualToTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToTargetsAtAdjacentOrbitBodies",
+          "version": "Rebellion"
+        },
+        {
+          "name": "DoDamagePerLastSpawnerPopulation",
+          "version": "Rebellion"
+        },
+        {
+          "name": "DoDamagePerEntityInRadius",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ConvertFrigateToResources",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyImpulseInSpawnerDirection",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToLastSpawnerNoFilterNoRange",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToFirstSpawnerNoFilterNoRange",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TeleportTowardsArbitraryTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CreateFrigateAtArbitraryTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "RestoreShieldPointsPerc",
+          "version": "Rebellion"
+        },
+        {
+          "name": "RestoreHullPointsPerc",
+          "version": "Rebellion"
+        },
+        {
+          "name": "IncreaseOwnerAbilityLevel",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AddPopulationToPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyArbitraryTargettedBuffToSelf",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToTargetsInDirectionalCone",
+          "version": "Rebellion"
+        },
+        "ApplyBuffToIncomingHyperspacers",
+        "ApplyBuffToLastSpawnerWithTravelNoFilterNoRange",
+        "ApplyBuffToLocalOrbitBody",
+        "ApplyBuffToLocalOrbitBodyWithTravel",
+        "ApplyBuffToSelf",
+        "ApplyBuffToSelfWithFilter",
+        "ApplyBuffToTarget",
+        "ApplyBuffToTargetNoFilterNoRange",
+        "ApplyBuffToTargetNoRange",
+        "ApplyBuffToTargetOnWeaponFired",
+        "ApplyBuffToTargetsAtOrbitBody",
+        "ApplyBuffToTargetsInColumn",
+        "ApplyBuffToTargetsInRadius",
+        "ApplyBuffToTargetsInRadiusOfTargetWithTravel",
+        "ApplyBuffToTargetsInRadiusWithChainTravel",
+        "ApplyBuffToTargetsInRadiusWithTravel",
+        "ApplyBuffToTargetsLinked",
+        "ApplyBuffToTargetWithEntryVehicles",
+        "ApplyBuffToTargetWithTravel",
+        "ApplyBuffToTargetWithTravelNoFilterNoRange",
+        "ApplyForceFromSpawner",
+        "ApplyImpulseFromSpawner",
+        "ApplyOrRemoveBuffToSelf",
+        "ApplyRelationshipModifierToOwnerOfPlanetInCurrentGravityWell",
+        "ApplyTargettedBuffToSelf",
+        "ApplyTargettedBuffToSelfNoFilterNoRange",
+        "ApplyTargettedBuffToSelfNoRange",
+        "AttractDebris",
+        "ChangePlayerIndexToFirstSpawner",
+        "ColonizePlanet",
+        "ConvertDamageToAntiMatter",
+        "ConvertNearbyDebrisToHull",
+        "ConvertSquadMembersToMines",
+        "CreateCannonShell",
+        "CreateClonedFrigate",
+        "CreateFrigate",
+        "CreateFrigateAtTarget",
+        "CreateIllusionFighters",
+        "CreateSpaceMine",
+        "CreateSquad",
+        "CreateStarBase",
+        "DoDamage",
+        "DoDamagePercOfCurrentHull",
+        "DoDamageToPlanet",
+        "DoInterrupt",
+        "DoInterruptUltimate",
+        "Explore",
+        "ForceAttackersToRepickAttackTarget",
+        "GiveCreditsToPlayer",
+        "InitializeMovementTowardLastSpawner",
+        "InitializeRandomMotion",
+        "MakeDead",
+        "MatchTargetVelocity",
+        "PlayAttachedEffect",
+        "PlayDetachedEffectsInRadius",
+        "PlayPersistantAttachedEffect",
+        "PlayPersistantBeamEffect",
+        "PropagateWeaponDamageReceivedToTargetsInRadius",
+        "RecordDamage",
+        "RemoveAntiMatter",
+        "RemoveAntiMatterPerc",
+        "RemoveBuffOfType",
+        "ResetPhysicsState",
+        "RestoreAntiMatter",
+        "RestoreHullPoints",
+        "RestoreShieldPoints",
+        "ResurrectCapitalShip",
+        "RetaliateBounty",
+        "RetaliateDamage",
+        "SetTauntTargetToLastSpawner",
+        "SpawnResourceExtractors",
+        "StealAntiMatterForFirstSpawner",
+        "StealResources",
+        "TeleportTowardsMoveTarget",
+        "TeleportTowardsTarget",
+        "TiltUpVectorInTargetDirection"
+      ],
+      "help": "Note: some buffInstantActionTypes are not applicable to Abilities."
+    },
+    {
+      "name": "buffOverTimeActionType",
+      "values": [
+        "StealPopulationFromAdjacentPlanets",
+        "DoDamageAndGiveResourceCostPerc",
+        "DoDamage",
+        "DoDamageToPlanet",
+        "DoDamageToTarget",
+        "DoModuleConstruction",
+        "DoPercOfMaxDamageToPlanet",
+        "DrainAntiMatter",
+        "DrainAntiMatterAndDoDamage",
+        "EarnResources",
+        "EarnCredits",
+        "Magnetize",
+        "RestoreAllegiance",
+        "RestoreAntiMatter",
+        "RestoreHull",
+        "RestorePlanetHealth",
+        "RestoreShields",
+        "StealPlanetProduction"
+      ]
+    },
+    {
+      "name": "hasBombingLevels",
+      "values": [
+        "FALSE",
+        "TRUE"
+      ]
+    },
+    {
+      "name": "canBomb",
+      "values": [
+        "TRUE",
+        "FALSE"
+      ]
+    },
+    {
+      "name": "finishConditionType",
+      "values": [
+        {
+          "name": "OwnerHullAbovePerc",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OwnerNoLongerHasBuff",
+          "version": "Rebellion"
+        },
+        "TimeElapsed",
+        "LastSpawnerNoLongerHasBuff",
+        "FirstSpawnerNoLongerHasBuff",
+        "DamageTaken",
+        "ResearchNotMet",
+        "FightersKilled",
+        {
+          "name": "AnyInstantActionWithTriggerTypeDone",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AbilityUsed",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AnyOnConditionInstantActionDone",
+          "version": "Rebellion"
+        },
+        "TargetNoLongerActivelyBeingConstructed",
+        "OwnerIsFriendlyToFirstSpawner",
+        "ShieldFailure",
+        "TargetIsConstructed",
+        "TargetConstructionCannotBeUpdated",
+        "AntiMatterDepleted",
+        "ExitHyperspace",
+        "TargetOwnerIsHostile",
+        "EnterHyperspace",
+        "TargetOwnerIsFriendly",
+        "AllPeriodicActionsDone",
+        "AllOnDelayInstantActionsDone",
+        "NoTarget",
+        "OwnerChanged",
+        "OutOfRange",
+        "TargetOwnerIsNeutral",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "hasWeaponEffects",
+      "values": [
+        "FALSE",
+        "TRUE"
+      ]
+    },
+    {
+      "name": "levelSourceType",
+      "values": [
+        "Intrinsic",
+        {
+          "name": "ResearchFloatModifierValue",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ResearchStartsAt0",
+          "version": "Rebellion"
+        },
+        "ResearchWithoutBase",
+        "FixedLevel0",
+        "StarBaseUpgradeLevel",
+        "ResearchWithBase",
+        {
+          "name": "TitanUpgradeLevel",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "modifierTypeBool",
+      "values": [
+        {
+          "name": "CapitalShipsTitansAndStarBasesCountAsPlanetForNoGameLoss",
+          "version": "Rebellion"
+        },
+        {
+          "name": "JumpBlockerImmune",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StarBasesCanHyperspaceOnlyToPhaseNodes",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FriendlyWithPiratesRebelNeutrals",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FriendlyWithPirates",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FriendlyWithRebelNeutrals",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StripPlanetsOnScuttle",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StarBasesCanHyperspace",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AllowAlliesToUsePhaseGates",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ResearchVictory",
+          "version": "Rebellion"
+        },
+        {
+          "name": "SpawnCopyOfPirateRaidsAtRandomPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "FriendlyInsurgentShipsSpawnedAtHomePlanetWhenEnemyPlanetLiberated",
+          "version": "Rebellion"
+        },
+        {
+          "name": "DestabilizationProtection",
+          "version": "Rebellion"
+        },
+        {
+          "name": "AllowUseAlliedPhaseGateWithPhaseJumpPact",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "PirateRaidsOneLevelLower",
+          "version": "Diplomacy"
+        },
+        "AllowGalaxyTravel",
+        "AllowWormHoleTravel",
+        "HyperspaceDetectionOneJump",
+        "HyperspaceDetectionTwoJumps",
+        "HyperspaceDetectionAnyJumps",
+        "AllowMissionOffers",
+        "AllowPirateMissions",
+        "PlanetsDetectedByCulture",
+        "RemoveRacialRelationPenalty",
+        "AllowResourceDemandAndGifts",
+        "CultureSpreadIsAlwaysVisible",
+        "AllowPacts",
+        "UnlockPact",
+        {
+          "name": "ApplyBuffToPlanetsAfterScuttle",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToAllOwnedShipsWhenOwnedPlanetFalls",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToShipsAfterHyperspace",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToOwnedPlanetAfterLastEnemyShipLeavesOrDies",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToPlanetAfterColonization",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ApplyBuffToPlanetAfterPlayerDestroys",
+          "version": "Rebellion"
+        },
+        {
+          "name": "SetFaction",
+          "version": "Rebellion"
+        },
+        "PlanetIsColonizable"
+      ]
+    },
+    {
+      "name": "modifierTypeFloat",
+      "values": [
+        {
+          "name": "MinorFactionAbilityLevel",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CivilianLabsPerCapitalShip",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MilitaryLabsPerCapitalShip",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OrbitalCannonMaxAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StarBaseUpgradeMaxAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OrbitalCannonPriceAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "BombingCooldownDecrease",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TradeGoodsValueAdjustmentWithNonAlliedPlayers",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PopulationTaxRateAdjustmentWhenEnemyInGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StarBasesPerGravityWellAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TitanConstructionCap",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ShipMaxSlotsWhenOnlyAlliedWithSameRaceSameFactionPlayers",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChanceToRespawnFrigateAtHomeworldUponDeath",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChanceToTemporarilyCloneEnemyFrigateWhenKilled",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChanceToTemporarilyCloneEnemyFrigateWhenKilledDuration",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureShieldRegenAmount",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CreditsGainedPerPointOfBombingDamageDealt",
+          "version": "Rebellion"
+        },
+        {
+          "name": "OrbitalCannonSlotCostAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ArmorBaseAdjustmentWhenInFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureModuleCostAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureSpreadRateBaseAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "HyperspaceAntimatterCostAdjustmentWhenGoingToFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "StarBaseUpgradeCostAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureChanceToIgnoreShieldsAsDamageTarget",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ChanceToConvertFrigatesHyperspacingFromPlanet",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ShipBuildRateAdjustmentWhenEnemyInGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CapitalShipTaxIncome",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CapitalShipAndTitanAngularThrustAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ExperienceAwardedAdjustmentWhenInFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "CultureEnemyAllegianceRateAdjustment",
+          "version": "Rebellion"
+        },
+        {
+          "name": "WeaponTargetsPerBankAdjustmentCapitalShipsOrStarbases",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "CapitalShipWeaponTargetPerBankAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "CargoShipHullPointsMaxAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "CargoShipArmorBaseAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "CapitalShipAccelerationAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "TacticalStructureWeaponDamageAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "TacticalStructureHullPointsMaxAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "TacticalStructureArmorAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "ChanceToIgnoreShieldsAsDamageTarget",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "BombingPopulationKilledAsDamageDealerAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "RefineryShipCapacityAdjustment",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "HullPointsMaxBonusPerArmorPointMax",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "HullPointsMaxBonusPerArmorPoint",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "SelfRelationshipBonus",
+          "version": "Diplomacy"
+        },
+        "PopulationTaxRateAdjustment",
+        "ShieldPointsMaxAdjustment",
+        "AntimatterCapacityAdjustment",
+        "AntimatterRegenAdjustment",
+        "ArmorBaseAdjustment",
+        "CapitalShipMaxTrainableLevel",
+        "CultureSpreadRateAdjustment",
+        "CultureShieldMitigationAdjustment",
+        "HullPointsMaxAdjustment",
+        "HullPointsRegenAdjustment",
+        "CapitalShipMaxSlots",
+        "CapitalShipMaxSlotLevel",
+        "ShipMaxSlots",
+        "IncomePercLost",
+        "ShipMaxSlotLevel",
+        "ExtractionRateFromResourceFocus",
+        "HangarFightersPerSquadAdjustment",
+        "ShieldPointsRegenAdjustment",
+        "StarBaseHullPointsMaxAdjustment",
+        "StarBaseArmorAdjustment",
+        "StarBaseWeaponTargetPerBankAdjustment",
+        "StarBaseWeaponDamageAdjustment",
+        "ExtractionRateMetalAdjustment",
+        "ExtractionRateCrystalAdjustment",
+        "TradeGoodsValueAdjustment",
+        "CultureResistPercent",
+        "CultureWeaponDamageAdjustment",
+        "StarBaseBuildRateAtEnemyOrbitBodyAdjustment",
+        "AllegianceFromCultureMaxPerc",
+        "MassReduction",
+        "RelationshipBonus",
+        "BountyBoughtAdjustment",
+        "BountyCollectedAdjustment",
+        "ModuleBuildRateAdjustment",
+        "ShipBuildRateAdjustment",
+        "CapitalShipCultureProtectRateAdjustment",
+        "CapitalShipAngularThrustAdjustment",
+        "BlackMarketBuyPriceAdjustment",
+        "PlanetSlotsCivilianIncrease",
+        "ExperienceConstantGainRate",
+        "ExperienceConstantGainLevelCap",
+        "ExperienceAwardedAdjustment",
+        "CreditCostAdjustment",
+        "DerivativeCreditsFromPurchasesPercent",
+        "DerivativeCreditsFromTradePercent",
+        "TemporaryRelationshipFromGiveResourceMaxAdjustment",
+        "TemporaryRelationshipFromGiveCrystalValueAdjustment",
+        "CultureEnemyBuildRateAdjustment",
+        "BombingDamageAsDamageTargetAdjustment",
+        "HyperspaceAntimatterCostAdjustment",
+        "HyperspaceChargeUpRateAdjustment",
+        "TemporaryRelationshipFromGiveMetalValueAdjustment",
+        "HyperspaceExitDistanceAdjustment",
+        "HyperspaceInSystemSpeedAdjustment",
+        "HyperspaceBetweenSystemSpeedAdjustment",
+        {
+          "name": "PirateStrengthAgainstYouAdjustment",
+          "version": "NotDiplomacyOrRebellion"
+        },
+        "BombingPopulationKilledPercAsDamageTarget",
+        "HyperspaceSpeedPhaseGateAdjustment",
+        "PlanetSlotsShipsAdjustment",
+        "CargoShipCapacityAdjustment",
+        "TemporaryRelationshipFromGiveCreditsValueAdjustment",
+        "QuestDeadlineAdjustment",
+        "QuestFailureHappinessAdjustment",
+        "ResearchCostAdjustment",
+        "ResearchBuildRateAdjustment",
+        "ShieldMaxMitigationAdjustment",
+        "StarBaseShieldPointsMaxAdjustment",
+        "PlanetSlotsTacticalIncrease",
+        "BombingDamageAsDamageDealerAdjustment",
+        "QuestRewardHappinessAdjustment",
+        "StarBaseShieldPointsRegenAdjustment",
+        "ResourceCostAdjustment",
+        "CultureAntimatterRegenAmount",
+        "CultureSpreadDecayAdjustment",
+        "PlanetHealthRegenRateAdjustment",
+        "BombingRangeAdjustment",
+        "RebellionLevel",
+        "SalvageWreckagePercent",
+        "ScuttleRateAdjustment",
+        "ScuttleValueAdjustment",
+        "ModuleCostForSimilarTypesAdjustment",
+        "CarrierFightersPerSquadAdjustment",
+        "PopulationGrowthRateAdjustment",
+        "PlanetPopulationCapAdjustment",
+        {
+          "name": "WeaponRateOfFireAdjustmentWhenInGravityWellBeingBombed",
+          "version": "Rebellion"
+        },
+        {
+          "name": "WeaponDamageAdjustmentWhenInGravityWellBeingBombed",
+          "version": "Rebellion"
+        },
+        {
+          "name": "WeaponDamageAdjustmentWhenInFriendlyGravityWell",
+          "version": "Rebellion"
+        },
+        {
+          "name": "WeaponDamageAdjustmentForEachAlliedPlayerInGravityWell",
+          "version": "Rebellion"
+        },
+        "WeaponRangeAdjustment",
+        "WeaponRateOfFireAdjustment",
+        "WeaponDamageAdjustment",
+        "WeaponIgnoresShieldsAdjustment",
+        "PlanetUpgradeCostAdjustment",
+        "PlanetUpgradeBuildRateAdjustment"
+      ]
+    },
+    {
+      "name": "useCostType",
+      "values": [
+        "None",
+        {
+          "name": "AntiMatterAndNotBeAtStar",
+          "version": "Rebellion"
+        },
+        "AntiMatter",
+        "Passive",
+        {
+          "name": "ResourcesAndMustHaveTitan",
+          "version": "Rebellion"
+        },
+        "Resources",
+        {
+          "name": "ResourcesAndMustHaveCapitalCrew",
+          "version": "Rebellion"
+        },
+        {
+          "name": "ResourcesAndMustHaveShipSlots",
+          "version": "Rebellion"
+        },
+        {
+          "name": "HullAndAntimatter",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "useCustomHyperspaceEffects",
+      "values": [
+        "TRUE",
+        "FALSE"
+      ]
+    },
+    {
+      "name": "instantActionTriggerType.instantActionConditionType",
+      "values": [
+        "IfOwnerIsAboutToDie",
+        "IfOwnerDoesNotHaveDestabilizationProtection",
+        "IfOwnerIsFirstPlayerOwnedStarbaseAtOrbitbody",
+        "IfOwnerHasDestabilizationProtection",
+        "IfOwnerIsNotFirstPlayerOwnedStarbaseAtOrbitbody",
+        "IfTargetIsNotMinorFactionOwned",
+        "IfFirstSpawnerHasBuff",
+        "IfOwnerHasBuff",
+        "IfFirstSpawnerDoesNotHaveBuff",
+        "IfOwnerDoesNotHaveBuff",
+        "IfOwnerHasHullLessThanPerc"
+      ]
+    },
+    {
+      "name": "BrushType.content",
+      "values": [
+        "Simple",
+        "States",
+        "MarginsAndStates",
+        "Margins"
+      ]
+    },
+    {
+      "name": "HelperProposal.entityType",
+      "values": [
+        {
+          "name": "Cosmetic",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Titan",
+          "version": "Rebellion"
+        },
+        {
+          "name": "TitanUpgrade",
+          "version": "Rebellion"
+        },
+        "Ability",
+        "Buff",
+        "CapitalShip",
+        "Debris",
+        "EmpireWindowNode",
+        "Frigate",
+        "CannonShell",
+        "Fighter",
+        "Fleet",
+        "Formation",
+        "PlanetConnection",
+        "PlanetModuleWeaponDefense",
+        "PlanetModuleStandard",
+        "PlanetModuleShipFactory",
+        "PlanetModuleHangarDefense",
+        "PlanetModuleTradePort",
+        "PlanetModuleRefinery",
+        "Player",
+        "ResearchSubject",
+        "Squad",
+        "StarBase",
+        "StarBaseUpgrade",
+        "EntryVehicle",
+        "Planet",
+        "PlanetBonus",
+        "ResourceAsteroid",
+        "Star",
+        "SpaceMine",
+        "MissionBuildMines",
+        "MissionBuildStarBase",
+        "MissionCaptureResources",
+        "MissionAttackPlanet",
+        "MissionColonize",
+        {
+          "name": "MissionDefendFlagship",
+          "version": "Rebellion"
+        },
+        {
+          "name": "MissionCaptureMinorFaction",
+          "version": "Rebellion"
+        },
+        "MissionExplore",
+        "MissionRaid",
+        "MissionFosterRelationships",
+        "PipCloud",
+        "Quest",
+        {
+          "name": "Trigger",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "ExplosionEffectGroupType.explosionEffectDefCount.explosionEffectDef.subExplosionCount.subExplosion.type",
+      "values": [
+        "Effect",
+        "Sound"
+      ]
+    },
+    {
+      "name": "Galaxy.recommendedGameTypeCount.recommendedGameType",
+      "values": [
+        "Solo",
+        "FFA",
+        "TwoTeamsOfTwo",
+        "TwoTeamsOfThree",
+        "ThreeTeamsOfThree",
+        "FourTeamsOfTwo",
+        "FiveTeamsOfTwo\"",
+        "TwoTeamsOfFive",
+        "FiveTeamsOfTwo",
+        "ThreeTeamsOfTwo",
+        "TwoTeamsOfFour"
+      ]
+    },
+    {
+      "name": "PlayerStructure.playerType",
+      "values": [
+        {
+          "name": "NPCMinorFaction",
+          "version": "Rebellion"
+        },
+        "NPCPirateRaider",
+        "NPCRebel",
+        "NPCOccupationVictory",
+        "NPCMadVasari",
+        "NPCMilitia",
+        {
+          "name": "Normal",
+          "help": "Normal is used in Galaxy Map Files"
+        }
+      ]
+    },
+    {
+      "name": "GroupType.condition.type",
+      "values": [
+        "Always",
+        "NoPlanetOwner",
+        "PlanetOwnerIsMilitiaWithChance",
+        "NoPlanetOwnerWithChance",
+        "PlanetOwnerIsMilitia",
+        "PlanetOwnerIsRaceNormalStart",
+        "PlanetOwnerIsRaceQuickStart",
+        "PlanetOwnerIsMinorFactionWithFactionName",
+        "PlanetHasAnyOwner"
+      ]
+    },
+    {
+      "name": "ParticleSimulation.NumEmitters.EmitterType",
+      "values": [
+        "Point",
+        "Ring",
+        "Sphere"
+      ]
+    },
+    {
+      "name": "ParticleSimulation.NumAffectors.AffectorType",
+      "values": [
+        "LinearInflate",
+        "Fade",
+        "LinearForceToPoint",
+        "ColorOscillator",
+        "Jitter",
+        "SizeOscillator",
+        "LinearForceInDirection",
+        "RotateAboutAxis",
+        "KillParticlesNearPoint",
+        "Drag"
+      ]
+    },
+    {
+      "name": "Planet.planetTypeForResearch",
+      "values": [
+        {
+          "name": "Moon",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Greenhouse",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Iron",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Barren",
+          "version": "Rebellion"
+        },
+        {
+          "name": "Oceanic",
+          "version": "Rebellion"
+        },
+        "Asteroid",
+        "Ice",
+        "Desert",
+        "Volcanic",
+        "Terran",
+        "Asteroid",
+        "Uncolonizable",
+        "Invalid"
+      ]
+    },
+    {
+      "name": "Quest.questType",
+      "values": [
+        "BombAnyPlanet",
+        "GiveResources",
+        "KillCivilianStructures",
+        "KillShips",
+        "KillTacticalStructures",
+        {
+          "name": "SendEnvoy",
+          "version": "Diplomacy"
+        },
+        {
+          "name": "KillCapitalShips",
+          "version": "Diplomacy"
+        }
+      ]
+    },
+    {
+      "name": "RandomEventDefType.spawnRequirement",
+      "values": [
+        "Timer",
+        "TriggerCultureFlip",
+        "TriggerLowAllegiance"
+      ]
+    },
+    {
+      "name": "ResearchSubject.ResearchField",
+      "values": [
+        {
+          "name": "ResearchUnlock",
+          "version": "Rebellion"
+        },
+        {
+          "name": "PactBonus",
+          "version": "Diplomacy"
+        },
+        "Artifact",
+        {
+          "name": "Diplomacy",
+          "version": "Diplomacy"
+        },
+        "Fleet",
+        "NonCombat",
+        {
+          "name": "Defense",
+          "version": "Entrenchment"
+        },
+        "Combat"
+      ]
+    },
+    {
+      "name": "SoundEffect.type",
+      "values": [
+        "UI",
+        "Effect",
+        "Dialogue"
+      ]
+    },
+    {
+      "name": "StarBaseUpgrade.stageCount.stage.upgradeBoolPropertyCount.upgradeBoolProperty",
+      "values": [
+        "CanPreventEnemyColonize",
+        "CanPreventPlanetLossByBombing",
+        "CanPreventEnemyColonize",
+        "CanPreventPlanetLossByBombing"
+      ]
+    },
+    {
+      "name": "TitanUpgrade.stageCount.stage.upgradeBoolPropertyCount.upgradeBoolProperty",
+      "values": [
+        "CanPreventEnemyColonize",
+        "CanPreventPlanetLossByBombing",
+        "CanPreventEnemyColonize",
+        "CanPreventPlanetLossByBombing"
+      ]
+    }
+  ]
+}

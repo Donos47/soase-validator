@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Squad",
+      "children": [
+        {
+          "node": "field",
+          "name": "defaultAutoAttackRange",
+          "type": "defaultAutoAttackRange"
+        },
+        {
+          "node": "field",
+          "name": "defaultAutoAttackOn",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "prefersToFocusFire",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "usesFighterAttack",
+          "version": "Entrenchment",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "fighterEntityDef",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "fighterIllusionEntityDef",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "scuttleTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fighterConstructionTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "decayWithoutOwnerRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseMaxNumFighters",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "role",
+          "type": "role"
+        },
+        {
+          "node": "field",
+          "name": "statCountType",
+          "type": "statCountType"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "launchIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "dockIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "nameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "descriptionStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchPrerequisites",
+          "structure": "researchPrerequisites",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONATTACKORDERISSUED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONCREATION",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONGENERALORDERISSUED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSELECTED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSTARTPHASEJUMP",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ability:0",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

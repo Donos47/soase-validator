@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "TitanUpgrade",
+      "version": "Rebellion",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "nameStringID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "descStringID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "structure_reference",
+              "name": "researchPrerequisites",
+              "structure": "researchPrerequisites"
+            },
+            {
+              "node": "field",
+              "name": "levelRequirement",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "hudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "smallHudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "infoCardIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "iterative_field",
+              "name": "upgradeProperty",
+              "count_key": "upgradePropertyCount",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "propertyType",
+                  "validation": "Simple",
+                  "values": [
+                    "WeaponDamage",
+                    "MaxHullPoints",
+                    "HullPointRestoreRate",
+                    "MaxShieldPoints",
+                    "ShieldPointRestoreRate",
+                    "BaseArmorPoints",
+                    "MaxAntiMatterPoints",
+                    "AntiMatterRestoreRate",
+                    "AbilityCooldownRate",
+                    "AbilityALevel",
+                    "AbilityBLevel",
+                    "AbilityCLevel",
+                    "AbilityDLevel",
+                    "AbilityELevel"
+                  ]
+                },
+                {
+                  "node": "field",
+                  "name": "value",
+                  "validation": "Decimal"
+                }
+              ]
+            },
+            {
+              "node": "iterative_field",
+              "name": "upgradeBoolProperty",
+              "count_key": "upgradeBoolPropertyCount",
+              "validation": "Simple",
+              "type": "TitanUpgrade.stageCount.stage.upgradeBoolPropertyCount.upgradeBoolProperty"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

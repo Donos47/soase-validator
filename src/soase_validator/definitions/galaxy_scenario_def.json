@@ -1,0 +1,842 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "GalaxyScenarioDef",
+      "extension": ".galaxyScenarioDef",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "starType",
+          "count_key": "starTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "designStringId",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "iterative_field",
+              "name": "orbitBodyType",
+              "count_key": "orbitBodyTypeCount",
+              "validation": "GalaxyOrbitBodyType"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "planetType",
+          "count_key": "planetTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "designStringId",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "iterative_field",
+              "name": "orbitBodyType",
+              "count_key": "orbitBodyTypeCount",
+              "validation": "GalaxyOrbitBodyType"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "orbitBodyType",
+          "count_key": "orbitBodyTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "typeName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "entityDefName",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "defaultTemplateName",
+              "validation": "GalaxyTemplate"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "planetItemType",
+          "count_key": "planetItemTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "entityDefName",
+              "validation": "Entity"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "playerType",
+          "count_key": "playerTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "entityDefName",
+              "validation": "Entity"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "planetItemsTemplate",
+          "count_key": "planetItemsTemplateCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "templateName",
+              "validation": "Any"
+            },
+            {
+              "node": "iterative_field",
+              "name": "template",
+              "count_key": "subTemplates",
+              "validation": "GalaxyTemplate"
+            },
+            {
+              "node": "iterative_field",
+              "name": "group",
+              "count_key": "groups",
+              "children": [
+                {
+                  "node": "structure_reference",
+                  "name": "condition",
+                  "structure": "GroupType.condition"
+                },
+                {
+                  "node": "field",
+                  "name": "owner",
+                  "validation": "GalaxyDesign"
+                },
+                {
+                  "node": "field",
+                  "name": "colonizeChance",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "iterative_field",
+                  "name": "item",
+                  "count_key": "items",
+                  "validation": "GalaxyDesign"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "pictureGroup",
+          "count_key": "validPictureGroups",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "themeGroup",
+          "count_key": "validThemeGroups",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "player",
+          "count_key": "autoAddPlayers",
+          "version": "Rebellion185",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "inGameName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "overrideRaceName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "teamIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCredits",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingMetal",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCrystal",
+              "validation": "Integer"
+            },
+            {
+              "node": "condition_field",
+              "name": "playerType",
+              "version": "Rebellion193",
+              "type": "PlayerStructure.playerType",
+              "branches": {
+                "NPCMinorFaction": [
+                  {
+                    "node": "field",
+                    "name": "minorFactionPlayerDefName",
+                    "version": "Rebellion193",
+                    "validation": "Any"
+                  }
+                ],
+                "NPCPirateRaider": [],
+                "NPCRebel": [],
+                "NPCOccupationVictory": [],
+                "NPCMadVasari": [],
+                "NPCMilitia": [],
+                "Normal": []
+              }
+            },
+            {
+              "node": "field",
+              "name": "isNormalPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isRaidingPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isInsurgentPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isOccupationPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isMadVasariPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "themeGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "themeIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "pictureGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "pictureIndex",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "player",
+          "count_key": "npcPlayers",
+          "version": "Rebellion193",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "inGameName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "overrideRaceName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "teamIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCredits",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingMetal",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCrystal",
+              "validation": "Integer"
+            },
+            {
+              "node": "condition_field",
+              "name": "playerType",
+              "version": "Rebellion193",
+              "type": "PlayerStructure.playerType",
+              "branches": {
+                "NPCMinorFaction": [
+                  {
+                    "node": "field",
+                    "name": "minorFactionPlayerDefName",
+                    "version": "Rebellion193",
+                    "validation": "Any"
+                  }
+                ],
+                "NPCPirateRaider": [],
+                "NPCRebel": [],
+                "NPCOccupationVictory": [],
+                "NPCMadVasari": [],
+                "NPCMilitia": [],
+                "Normal": []
+              }
+            },
+            {
+              "node": "field",
+              "name": "isNormalPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isRaidingPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isInsurgentPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isOccupationPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isMadVasariPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "themeGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "themeIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "pictureGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "pictureIndex",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "npcMiltiaPlayerCountPerGalaxy",
+          "version": "Rebellion193",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "autoAddMiltiaPlayerCountPerGalaxy",
+          "version": "Rebellion185",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "player",
+          "count_key": "autoAddMilitiaPlayers",
+          "version": "Rebellion185",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "inGameName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "overrideRaceName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "teamIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCredits",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingMetal",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "startingCrystal",
+              "validation": "Integer"
+            },
+            {
+              "node": "condition_field",
+              "name": "playerType",
+              "version": "Rebellion193",
+              "type": "PlayerStructure.playerType",
+              "branches": {
+                "NPCMinorFaction": [
+                  {
+                    "node": "field",
+                    "name": "minorFactionPlayerDefName",
+                    "version": "Rebellion193",
+                    "validation": "Any"
+                  }
+                ],
+                "NPCPirateRaider": [],
+                "NPCRebel": [],
+                "NPCOccupationVictory": [],
+                "NPCMadVasari": [],
+                "NPCMilitia": [],
+                "Normal": []
+              }
+            },
+            {
+              "node": "field",
+              "name": "isNormalPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isRaidingPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isInsurgentPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isOccupationPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "isMadVasariPlayer",
+              "version": "Rebellion185",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "themeGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "themeIndex",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "pictureGroup",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "pictureIndex",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OrbitBodyDesign",
+      "children": [
+        {
+          "node": "field",
+          "name": "designName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "designStringId",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "iterative_field",
+          "name": "orbitBodyType",
+          "count_key": "orbitBodyTypeCount",
+          "validation": "GalaxyOrbitBodyType"
+        }
+      ]
+    },
+    {
+      "name": "OrbitBodyType",
+      "children": [
+        {
+          "node": "field",
+          "name": "typeName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "entityDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "defaultTemplateName",
+          "validation": "GalaxyTemplate"
+        }
+      ]
+    },
+    {
+      "name": "EntityDesign",
+      "children": [
+        {
+          "node": "field",
+          "name": "designName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "entityDefName",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "TemplateType",
+      "children": [
+        {
+          "node": "field",
+          "name": "templateName",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "template",
+          "count_key": "subTemplates",
+          "validation": "GalaxyTemplate"
+        },
+        {
+          "node": "iterative_field",
+          "name": "group",
+          "count_key": "groups",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "condition",
+              "structure": "GroupType.condition"
+            },
+            {
+              "node": "field",
+              "name": "owner",
+              "validation": "GalaxyDesign"
+            },
+            {
+              "node": "field",
+              "name": "colonizeChance",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "item",
+              "count_key": "items",
+              "validation": "GalaxyDesign"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GroupType",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "condition",
+          "structure": "GroupType.condition"
+        },
+        {
+          "node": "field",
+          "name": "owner",
+          "validation": "GalaxyDesign"
+        },
+        {
+          "node": "field",
+          "name": "colonizeChance",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "item",
+          "count_key": "items",
+          "validation": "GalaxyDesign"
+        }
+      ]
+    },
+    {
+      "name": "PlayerStructure",
+      "children": [
+        {
+          "node": "field",
+          "name": "designName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "inGameName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "overrideRaceName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "teamIndex",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "startingCredits",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "startingMetal",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "startingCrystal",
+          "validation": "Integer"
+        },
+        {
+          "node": "condition_field",
+          "name": "playerType",
+          "version": "Rebellion193",
+          "type": "PlayerStructure.playerType",
+          "branches": {
+            "NPCMinorFaction": [
+              {
+                "node": "field",
+                "name": "minorFactionPlayerDefName",
+                "version": "Rebellion193",
+                "validation": "Any"
+              }
+            ],
+            "NPCPirateRaider": [],
+            "NPCRebel": [],
+            "NPCOccupationVictory": [],
+            "NPCMadVasari": [],
+            "NPCMilitia": [],
+            "Normal": []
+          }
+        },
+        {
+          "node": "field",
+          "name": "isNormalPlayer",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isRaidingPlayer",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isInsurgentPlayer",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isOccupationPlayer",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isMadVasariPlayer",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "themeGroup",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "themeIndex",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "pictureGroup",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "pictureIndex",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GroupType.condition",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "type",
+          "type": "GroupType.condition.type",
+          "branches": {
+            "Always": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Any"
+              }
+            ],
+            "NoPlanetOwner": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Any"
+              }
+            ],
+            "PlanetOwnerIsMilitiaWithChance": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Decimal"
+              }
+            ],
+            "NoPlanetOwnerWithChance": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetOwnerIsMilitia": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Any"
+              }
+            ],
+            "PlanetOwnerIsRaceNormalStart": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "GalaxyDesign"
+              }
+            ],
+            "PlanetOwnerIsRaceQuickStart": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "GalaxyDesign"
+              }
+            ],
+            "PlanetOwnerIsMinorFactionWithFactionName": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "GalaxyDesign"
+              }
+            ],
+            "PlanetHasAnyOwner": [
+              {
+                "node": "field",
+                "name": "param",
+                "validation": "Any"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

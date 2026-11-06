@@ -1,5 +1,5 @@
 [project]
-name = "sose-validator"
+name = "soase-validator"
 version = "0.1.0"
 description = "Java-free language tooling for Sins of a Solar Empire mod files."
 readme = "README.md"
@@ -14,9 +14,9 @@ dependencies = [
 ]
 
 [project.scripts]
-sose-validator = "sose_validator.cli.main:main"
-sose-validator-lsp = "sose_validator.lsp.server:main"
-sose-validator-mcp = "sose_validator.mcp_server.app:main"
+soase-validator = "soase_validator.cli.main:main"
+soase-validator-lsp = "soase_validator.lsp.server:main"
+soase-validator-mcp = "soase_validator.mcp_server.app:main"
 
 [dependency-groups]
 dev = [
@@ -30,7 +30,7 @@ dev = [
 requires = ["uv_build>=0.13,<0.14"]
 build-backend = "uv_build"
 
-# Bundled JSON Definitions (src/sose_validator/definitions/*.json) live inside
+# Bundled JSON Definitions (src/soase_validator/definitions/*.json) live inside
 # the package, so uv_build includes them in wheels and sdists by default.
 
 [tool.ruff]
@@ -56,6 +56,7 @@ indent-style = "space"
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-m 'not perf' -ra"
 markers = [
     "perf: performance checks excluded from the default run",

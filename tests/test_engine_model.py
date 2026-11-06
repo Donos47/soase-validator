@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from sose_validator.engine import diagnostics as dg
-from sose_validator.engine.model import Diagnostic, Position, Range, Severity, Span
+from soase_validator.engine import diagnostics as dg
+from soase_validator.engine.model import Diagnostic, Position, Range, Severity, Span
 
 
 def _diag(code: str) -> Diagnostic:
@@ -30,14 +30,14 @@ def test_span_to_range_is_zero_based() -> None:
 
 def test_catalogue_contains_required_codes() -> None:
     expected = {
-        "SOSE-P001", "SOSE-P002", "SOSE-P003", "SOSE-P004",
-        "SOSE-V010", "SOSE-V020", "SOSE-V030", "SOSE-V040",
-        "SOSE-R010", "SOSE-C010", "SOSE-C020", "SOSE-C030",
-        "SOSE-M010", "SOSE-M020", "SOSE-M030", "SOSE-M040",
-        "SOSE-D001", "SOSE-X001",
+        "SOASE-P001", "SOASE-P002", "SOASE-P003", "SOASE-P004",
+        "SOASE-V010", "SOASE-V020", "SOASE-V030", "SOASE-V040",
+        "SOASE-R010", "SOASE-C010", "SOASE-C020", "SOASE-C030",
+        "SOASE-M010", "SOASE-M020", "SOASE-M030", "SOASE-M040",
+        "SOASE-D001", "SOASE-X001",
     }  # fmt: skip
     assert set(dg.CODE_CATALOGUE) == expected
-    assert all(i.code[5] == i.family for i in dg.CODE_CATALOGUE.values())
+    assert all(i.code.removeprefix("SOASE-")[0] == i.family for i in dg.CODE_CATALOGUE.values())
 
 
 def test_filter_disabled_removes_only_disabled_codes() -> None:

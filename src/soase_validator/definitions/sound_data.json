@@ -1,0 +1,488 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Sounddata",
+      "extension": ".sounddata",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "effect",
+          "count_key": "numEffects",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "fileName",
+              "validation": "SoundFile"
+            },
+            {
+              "node": "condition_field",
+              "name": "type",
+              "type": "SoundEffect.type",
+              "branches": {
+                "UI": [
+                  {
+                    "node": "field",
+                    "name": "is3D",
+                    "help": "tells the engine to play the sound based on where the unit is on the screen",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "priority",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "threshold",
+                    "help": "Theshold is the maximum distance the sound will play at",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minAttenuationDist",
+                    "help": "MinAttenuationDist is the game distance from the camera when the sound starts to fade out, until it reaches Threshold and you cannot hear it anymore.",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "maxNumPlayingSimultaneously",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isLooping",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isResident",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minRespawnTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeInTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeOutTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "alternateGroup",
+                    "validation": "Any"
+                  }
+                ],
+                "Effect": [
+                  {
+                    "node": "field",
+                    "name": "is3D",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "priority",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "threshold",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minAttenuationDist",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "maxNumPlayingSimultaneously",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isLooping",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isResident",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minRespawnTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeInTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeOutTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "alternateGroup",
+                    "validation": "Any"
+                  }
+                ],
+                "Dialogue": [
+                  {
+                    "node": "field",
+                    "name": "is3D",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "priority",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "threshold",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minAttenuationDist",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "maxNumPlayingSimultaneously",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isLooping",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isResident",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "minRespawnTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeInTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fadeOutTime",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "alternateGroup",
+                    "validation": "Any"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "music",
+          "count_key": "numMusic",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "fileName",
+              "validation": "SoundFile"
+            },
+            {
+              "node": "field",
+              "name": "isLooping",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "actionLevel",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "actionRange",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "emotionLevel",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "emotionRange",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Music",
+      "children": [
+        {
+          "node": "field",
+          "name": "name",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "fileName",
+          "validation": "SoundFile"
+        },
+        {
+          "node": "field",
+          "name": "isLooping",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "actionLevel",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "actionRange",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "emotionLevel",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "emotionRange",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "SoundEffect",
+      "children": [
+        {
+          "node": "field",
+          "name": "name",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "fileName",
+          "validation": "SoundFile"
+        },
+        {
+          "node": "condition_field",
+          "name": "type",
+          "type": "SoundEffect.type",
+          "branches": {
+            "UI": [
+              {
+                "node": "field",
+                "name": "is3D",
+                "help": "tells the engine to play the sound based on where the unit is on the screen",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "priority",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "threshold",
+                "help": "Theshold is the maximum distance the sound will play at",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "minAttenuationDist",
+                "help": "MinAttenuationDist is the game distance from the camera when the sound starts to fade out, until it reaches Threshold and you cannot hear it anymore.",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "maxNumPlayingSimultaneously",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "isLooping",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "isResident",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "minRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeInTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeOutTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "alternateGroup",
+                "validation": "Any"
+              }
+            ],
+            "Effect": [
+              {
+                "node": "field",
+                "name": "is3D",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "priority",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "threshold",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "minAttenuationDist",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "maxNumPlayingSimultaneously",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "isLooping",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "isResident",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "minRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeInTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeOutTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "alternateGroup",
+                "validation": "Any"
+              }
+            ],
+            "Dialogue": [
+              {
+                "node": "field",
+                "name": "is3D",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "priority",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "threshold",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "minAttenuationDist",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "maxNumPlayingSimultaneously",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "isLooping",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "isResident",
+                "validation": "Boolean"
+              },
+              {
+                "node": "field",
+                "name": "minRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeInTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fadeOutTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "alternateGroup",
+                "validation": "Any"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

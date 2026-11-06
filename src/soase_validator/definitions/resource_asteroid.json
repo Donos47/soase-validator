@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "ResourceAsteroid",
+      "children": [
+        {
+          "node": "field",
+          "name": "resource",
+          "type": "resource"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshName",
+          "count_key": "meshNameCount",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "nameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "descStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "nearPlacementDistOffset",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "farPlacementDistOffset",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

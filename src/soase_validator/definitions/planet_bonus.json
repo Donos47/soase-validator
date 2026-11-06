@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "PlanetBonus",
+      "children": [
+        {
+          "node": "field",
+          "name": "minUpgradeLevelNeeded",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxUpgradeLevelNeeded",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "nameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "descStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditiveCultureSpreadPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditivePopulation",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditivePlanetHealth",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditiveSlotsCivilian",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditiveSlotsTactical",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditiveTaxIncome",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:AdditiveTradeIncomePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:BombingDamageAsDamageTargetAdjustment",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:MaxAllegiancePercBonus",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:MetalIncomePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:CrystalIncomePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:GravityWellRadiusPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:ModuleBuildCostPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:ModuleBuildRatePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:PlanetUpgradeBuildCostPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:PlanetUpgradeBuildRatePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:PopulationGrowthPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:ShipBuildCostAdjustment",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "floatBonus:WeaponDamageAtGravityWellMultiplier",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "intBonus:MaxSpaceMines",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "intBonus:MaxStarbases",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "intBonus:ModuleConstructors",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "intBonus:SpacePonies",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "dlcId",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

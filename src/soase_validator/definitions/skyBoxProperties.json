@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "SkyBoxProperties",
+      "extension": ".skyboxbackdropdata",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "properties",
+          "count_key": "numProperties",
+          "required": true,
+          "children": [
+            {
+              "node": "field",
+              "name": "meshName",
+              "type": "Mesh"
+            },
+            {
+              "node": "field",
+              "name": "diffuseLiteColor",
+              "type": "Color"
+            },
+            {
+              "node": "field",
+              "name": "diffuseDarkColor",
+              "type": "Color"
+            },
+            {
+              "node": "field",
+              "name": "ambientLiteColor",
+              "type": "Color"
+            },
+            {
+              "node": "field",
+              "name": "ambientDarkColor",
+              "type": "Color"
+            },
+            {
+              "node": "field",
+              "name": "specularColor",
+              "type": "Color"
+            },
+            {
+              "node": "field",
+              "name": "dustCloudColor",
+              "type": "Color"
+            },
+            {
+              "node": "iterative_field",
+              "name": "textureName",
+              "count_key": "numFarStarIconCloudTextureNames",
+              "type": "Texture"
+            },
+            {
+              "node": "field",
+              "name": "environmentMapName",
+              "type": "Texture"
+            },
+            {
+              "node": "field",
+              "name": "environmentIlluminationMapName",
+              "type": "Texture"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

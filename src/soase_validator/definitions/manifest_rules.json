@@ -1,0 +1,45 @@
+{
+  "entity.manifest": {
+    "countKey": "entityNameCount",
+    "nameKey": "entityName",
+    "includesExtension": true,
+    "example": "X.entity",
+    "governs": {"directory": "GameInfo", "extensions": [".entity"]},
+    "unlistedByBaseGame": []
+  },
+  "brush.manifest": {
+    "countKey": "brushFileCount",
+    "nameKey": "brushFile",
+    "includesExtension": true,
+    "example": "X.brushes",
+    "governs": {"extensions": [".brushes"]}
+  },
+  "galaxy.manifest": {
+    "countKey": "fileCount",
+    "nameKey": "fileName",
+    "includesExtension": false,
+    "example": "Name",
+    "governs": {"directory": "Galaxy", "extensions": [".galaxy"]}
+  },
+  "playerPictures.manifest": {
+    "countKey": "fileCount",
+    "nameKey": "fileName",
+    "includesExtension": true,
+    "example": "X.playerPictures",
+    "governs": {"extensions": [".playerPictures"]}
+  },
+  "playerThemes.manifest": {
+    "countKey": "fileCount",
+    "nameKey": "fileName",
+    "includesExtension": true,
+    "example": "X.playerThemes",
+    "governs": {"extensions": [".playerThemes"]}
+  },
+  "skybox.manifest": {
+    "countKey": "meshFileCount",
+    "nameKey": "meshFileName",
+    "includesExtension": true,
+    "example": "SkyboxBackdrop2.MESH",
+    "governs": {"identifiedBy": "skyboxbackdropdata.meshName"}
+  }
+}

@@ -1,0 +1,753 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Planet",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "meshInfo",
+          "count_key": "meshInfoCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "typeNameStringID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "asteroidTemplate",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "dustCloudTemplate",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "meshName",
+              "validation": "Mesh"
+            },
+            {
+              "node": "field",
+              "name": "cloudColor",
+              "validation": "Color"
+            },
+            {
+              "node": "field",
+              "name": "nullMeshRadius",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "nullMeshParticleEffect",
+              "validation": "Particle"
+            },
+            {
+              "node": "field",
+              "name": "hudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "smallHudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "infoCardIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "mainViewIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "undetectedMainViewIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "shouldPrefer",
+              "version": "Rebellion",
+              "validation": "Boolean"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "glowColor",
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "ringColor",
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "cloudLayerTextureName",
+          "validation": "Texture"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetResourceSetupInfo",
+          "structure": "Planet.planetResourceSetupInfo"
+        },
+        {
+          "node": "field",
+          "name": "isAsteroid",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "healthRegenRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetUpgradeDef",
+          "structure": "Planet.planetUpgradeDef"
+        },
+        {
+          "node": "field",
+          "name": "ringsChance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "isColonizable",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "planetTypeForResearch",
+          "validation": "Simple",
+          "type": "Planet.planetTypeForResearch"
+        },
+        {
+          "node": "iterative_field",
+          "name": "skyboxScalars",
+          "count_key": "skyboxScalarsCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "diffuseScalar",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "ambientScalar",
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "bonus",
+          "count_key": "requiredPlanetBonusesCount",
+          "validation": "Entity"
+        },
+        {
+          "node": "iterative_field",
+          "name": "bonus",
+          "count_key": "possibleRandomPlanetBonusesCount",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ambienceSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "renderAsVolcanic",
+          "validation": "Boolean"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetRuinDef",
+          "structure": "Planet.planetRuinDef",
+          "version": "Rebellion"
+        },
+        {
+          "node": "field",
+          "name": "dlcId",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "ShieldMeshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "renderShield",
+          "version": "Entrenchment",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "moveAreaRadius",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceExitRadius",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "isWormhole",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "maxStarBaseCountPerPlayer",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxSpaceMineCountPerPlayer",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ability:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "AsteroidSetup",
+      "children": [
+        {
+          "node": "field",
+          "name": "minCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "extractionRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "refineryRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRefineryCount",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetResourceSetupInfo",
+      "children": [
+        {
+          "node": "field",
+          "name": "asteroidSpawnAngleVariance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "totalMaxResourceAsteroids",
+          "validation": "Integer"
+        },
+        {
+          "node": "structure_reference",
+          "name": "metalResourceAsteroidSetup",
+          "structure": "AsteroidSetup"
+        },
+        {
+          "node": "structure_reference",
+          "name": "crystalResourceAsteroidSetup",
+          "structure": "AsteroidSetup"
+        },
+        {
+          "node": "structure_reference",
+          "name": "neutralMetalResourceAsteroidSetup",
+          "structure": "AsteroidSetup"
+        },
+        {
+          "node": "structure_reference",
+          "name": "neutralCrystalResourceAsteroidSetup",
+          "structure": "AsteroidSetup"
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Population",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxPopulation",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "populationGrowthRate",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "developmentTaxPenalty",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:CivilianModules",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxModuleSlotCount:Civilian",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxModuleConstructorCount",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:TacticalModules",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxModuleSlotCount:Tactical",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxModuleConstructorCount",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Home",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "isHomePlanet",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "homePlanetTaxRateBonus",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "homePlanetMetalIncomeBonus",
+              "version": "Entrenchment",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "homePlanetCrystalIncomeBonus",
+              "version": "Entrenchment",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:ArtifactLevel",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Infrastructure",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxHealth",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Social",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxPopulation",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "populationGrowthRate",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "tradeIncomeModifier",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "shipBuildRateModifier",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "cultureSpreadRateModifier",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Industry",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxPopulation",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "tradeIncomeModifier",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "shipBuildRateModifier",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "cultureSpreadRateModifier",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef.path:Smuggler",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "corruptionPercent",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "smugglingPercent",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetUpgradeDef",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "path:Population",
+          "structure": "Planet.planetUpgradeDef.path:Population"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:CivilianModules",
+          "structure": "Planet.planetUpgradeDef.path:CivilianModules"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:TacticalModules",
+          "structure": "Planet.planetUpgradeDef.path:TacticalModules"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:Home",
+          "structure": "Planet.planetUpgradeDef.path:Home"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:ArtifactLevel",
+          "structure": "Planet.planetUpgradeDef.path:ArtifactLevel"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:Infrastructure",
+          "structure": "Planet.planetUpgradeDef.path:Infrastructure"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:Social",
+          "structure": "Planet.planetUpgradeDef.path:Social",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:Industry",
+          "structure": "Planet.planetUpgradeDef.path:Industry",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "path:Smuggler",
+          "structure": "Planet.planetUpgradeDef.path:Smuggler",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "Planet.planetRuinDef",
+      "children": [
+        {
+          "node": "field",
+          "name": "ruinPlanetType",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "attachType",
+          "type": "attachType"
+        },
+        {
+          "node": "field",
+          "name": "effectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "startTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "soundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "creditsOnStrippedToTheCore",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "metalOnStrippedToTheCore",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "crystalOnStrippedToTheCore",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "extraScuttleTimeOnStrip",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

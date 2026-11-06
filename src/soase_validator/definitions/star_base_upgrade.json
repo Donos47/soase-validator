@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "StarBaseUpgrade",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "stage",
+          "count_key": "stageCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "price",
+              "structure": "Cost"
+            },
+            {
+              "node": "field",
+              "name": "upgradeTime",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "nameStringID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "descStringID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "structure_reference",
+              "name": "researchPrerequisites",
+              "structure": "researchPrerequisites"
+            },
+            {
+              "node": "field",
+              "name": "hudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "smallHudIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "infoCardIcon",
+              "validation": "Brush"
+            },
+            {
+              "node": "iterative_field",
+              "name": "upgradeProperty",
+              "count_key": "upgradePropertyCount",
+              "limit": 10,
+              "children": [
+                {
+                  "node": "field",
+                  "name": "propertyType",
+                  "validation": "Simple",
+                  "values": [
+                    "Population",
+                    "MaxAntiMatterPoints",
+                    "AntiMatterRestoreRate",
+                    "AbilityALevel",
+                    "AbilityBLevel",
+                    "AbilityCLevel",
+                    "AbilityDLevel",
+                    "MaxNumSquads",
+                    "MaxHullPoints",
+                    "HullPointRestoreRate",
+                    "MaxShieldPoints",
+                    "BaseArmorPoints",
+                    "MaxShieldMitigation",
+                    "BaseTradeIncomeRate",
+                    "WeaponUpgradeLevel",
+                    "WeaponDamage",
+                    "ShieldPointRestoreRate",
+                    "TradePortMeshLevel",
+                    "CultureSpreadRate",
+                    "EnemyCultureRepelRate",
+                    "CultureMeshLevel",
+                    "MaxAllegianceBonus",
+                    "FrigateBuildRate"
+                  ]
+                },
+                {
+                  "node": "field",
+                  "name": "value",
+                  "validation": "Decimal"
+                }
+              ]
+            },
+            {
+              "node": "iterative_field",
+              "name": "upgradeBoolProperty",
+              "count_key": "upgradeBoolPropertyCount",
+              "validation": "Simple",
+              "type": "StarBaseUpgrade.stageCount.stage.upgradeBoolPropertyCount.upgradeBoolProperty"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "xpModifier",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

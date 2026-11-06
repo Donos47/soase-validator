@@ -1,0 +1,3809 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "ResearchSubject",
+      "children": [
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "NameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "DescriptionStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchWindowLocation",
+          "structure": "ResearchSubject.researchWindowLocation"
+        },
+        {
+          "node": "field",
+          "name": "ResearchField",
+          "validation": "Simple",
+          "type": "ResearchSubject.ResearchField"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Prerequisites",
+          "structure": "researchPrerequisites"
+        },
+        {
+          "node": "field",
+          "name": "MinimumArtifactLevel",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "BaseUpgradeTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "PerLevelUpgradeTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "BaseCost",
+          "structure": "Cost"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PerLevelCostIncrease",
+          "structure": "Cost"
+        },
+        {
+          "node": "field",
+          "name": "Tier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "onlyWorksIfTierLabsExist",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MaxNumResearchLevels",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "priority",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "researchModifier",
+          "count_key": "researchBoolModifiers",
+          "children": [
+            {
+              "node": "condition_field",
+              "name": "modifierType",
+              "type": "modifierTypeBool",
+              "branches": {
+                "CapitalShipsTitansAndStarBasesCountAsPlanetForNoGameLoss": [],
+                "JumpBlockerImmune": [],
+                "StarBasesCanHyperspaceOnlyToPhaseNodes": [],
+                "FriendlyWithPiratesRebelNeutrals": [],
+                "FriendlyWithPirates": [],
+                "FriendlyWithRebelNeutrals": [],
+                "StripPlanetsOnScuttle": [],
+                "StarBasesCanHyperspace": [],
+                "AllowAlliesToUsePhaseGates": [],
+                "ResearchVictory": [],
+                "SpawnCopyOfPirateRaidsAtRandomPlanet": [],
+                "FriendlyInsurgentShipsSpawnedAtHomePlanetWhenEnemyPlanetLiberated": [],
+                "DestabilizationProtection": [],
+                "AllowUseAlliedPhaseGateWithPhaseJumpPact": [],
+                "PirateRaidsOneLevelLower": [],
+                "AllowGalaxyTravel": [],
+                "AllowWormHoleTravel": [],
+                "HyperspaceDetectionOneJump": [],
+                "HyperspaceDetectionTwoJumps": [],
+                "HyperspaceDetectionAnyJumps": [],
+                "AllowMissionOffers": [],
+                "AllowPirateMissions": [],
+                "PlanetsDetectedByCulture": [],
+                "RemoveRacialRelationPenalty": [],
+                "AllowResourceDemandAndGifts": [],
+                "CultureSpreadIsAlwaysVisible": [],
+                "AllowPacts": [],
+                "UnlockPact": [
+                  {
+                    "node": "field",
+                    "name": "allianceType",
+                    "type": "allianceType"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pactUnlockEntityDefName",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToPlanetsAfterScuttle": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToAllOwnedShipsWhenOwnedPlanetFalls": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToShipsAfterHyperspace": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToOwnedPlanetAfterLastEnemyShipLeavesOrDies": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToPlanetAfterColonization": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "ApplyBuffToPlanetAfterPlayerDestroys": [
+                  {
+                    "node": "field",
+                    "name": "buffToApply",
+                    "validation": "Entity"
+                  }
+                ],
+                "SetFaction": [
+                  {
+                    "node": "field",
+                    "name": "factionNameID",
+                    "validation": "StringInfo"
+                  }
+                ],
+                "PlanetIsColonizable": [
+                  {
+                    "node": "field",
+                    "name": "linkedPlanetType",
+                    "type": "linkedPlanetType"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "researchModifier",
+          "count_key": "researchFloatModifiers",
+          "children": [
+            {
+              "node": "condition_field",
+              "name": "modifierType",
+              "type": "modifierTypeFloat",
+              "branches": {
+                "MinorFactionAbilityLevel": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CivilianLabsPerCapitalShip": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "MilitaryLabsPerCapitalShip": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "OrbitalCannonMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseUpgradeMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "OrbitalCannonPriceAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingCooldownDecrease": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TradeGoodsValueAdjustmentWithNonAlliedPlayers": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PopulationTaxRateAdjustmentWhenEnemyInGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBasesPerGravityWellAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TitanConstructionCap": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShipMaxSlotsWhenOnlyAlliedWithSameRaceSameFactionPlayers": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ChanceToRespawnFrigateAtHomeworldUponDeath": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ChanceToTemporarilyCloneEnemyFrigateWhenKilled": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ChanceToTemporarilyCloneEnemyFrigateWhenKilledDuration": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureShieldRegenAmount": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CreditsGainedPerPointOfBombingDamageDealt": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "OrbitalCannonSlotCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ArmorBaseAdjustmentWhenInFriendlyGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureModuleCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureSpreadRateBaseAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceAntimatterCostAdjustmentWhenGoingToFriendlyGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseUpgradeCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureChanceToIgnoreShieldsAsDamageTarget": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ChanceToConvertFrigatesHyperspacingFromPlanet": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShipBuildRateAdjustmentWhenEnemyInGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipTaxIncome": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipAndTitanAngularThrustAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExperienceAwardedAdjustmentWhenInFriendlyGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureEnemyAllegianceRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "WeaponTargetsPerBankAdjustmentCapitalShipsOrStarbases": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipWeaponTargetPerBankAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CargoShipHullPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CargoShipArmorBaseAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipAccelerationAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TacticalStructureWeaponDamageAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TacticalStructureHullPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TacticalStructureArmorAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ChanceToIgnoreShieldsAsDamageTarget": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingPopulationKilledAsDamageDealerAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "RefineryShipCapacityAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HullPointsMaxBonusPerArmorPointMax": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HullPointsMaxBonusPerArmorPoint": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "SelfRelationshipBonus": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PopulationTaxRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShieldPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "AntimatterCapacityAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "AntimatterRegenAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ArmorBaseAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipMaxTrainableLevel": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureSpreadRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureShieldMitigationAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HullPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HullPointsRegenAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipMaxSlots": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipMaxSlotLevel": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShipMaxSlots": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "IncomePercLost": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShipMaxSlotLevel": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExtractionRateFromResourceFocus": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HangarFightersPerSquadAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShieldPointsRegenAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseHullPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseArmorAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseWeaponTargetPerBankAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseWeaponDamageAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExtractionRateMetalAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExtractionRateCrystalAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TradeGoodsValueAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureResistPercent": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureWeaponDamageAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseBuildRateAtEnemyOrbitBodyAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "AllegianceFromCultureMaxPerc": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "MassReduction": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "RelationshipBonus": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BountyBoughtAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BountyCollectedAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ModuleBuildRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShipBuildRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipCultureProtectRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CapitalShipAngularThrustAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BlackMarketBuyPriceAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PlanetSlotsCivilianIncrease": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExperienceConstantGainRate": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExperienceConstantGainLevelCap": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ExperienceAwardedAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CreditCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "DerivativeCreditsFromPurchasesPercent": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "DerivativeCreditsFromTradePercent": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TemporaryRelationshipFromGiveResourceMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TemporaryRelationshipFromGiveCrystalValueAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureEnemyBuildRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingDamageAsDamageTargetAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceAntimatterCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceChargeUpRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TemporaryRelationshipFromGiveMetalValueAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceExitDistanceAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceInSystemSpeedAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceBetweenSystemSpeedAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PirateStrengthAgainstYouAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingPopulationKilledPercAsDamageTarget": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "HyperspaceSpeedPhaseGateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PlanetSlotsShipsAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CargoShipCapacityAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TemporaryRelationshipFromGiveCreditsValueAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "QuestDeadlineAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "QuestFailureHappinessAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ResearchCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ResearchBuildRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ShieldMaxMitigationAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseShieldPointsMaxAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PlanetSlotsTacticalIncrease": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingDamageAsDamageDealerAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "QuestRewardHappinessAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "StarBaseShieldPointsRegenAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ResourceCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureAntimatterRegenAmount": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CultureSpreadDecayAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PlanetHealthRegenRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "BombingRangeAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "RebellionLevel": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "SalvageWreckagePercent": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ScuttleRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ScuttleValueAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "ModuleCostForSimilarTypesAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "CarrierFightersPerSquadAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PopulationGrowthRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  }
+                ],
+                "PlanetPopulationCapAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedPlanetType",
+                    "type": "linkedPlanetType"
+                  }
+                ],
+                "WeaponRateOfFireAdjustmentWhenInGravityWellBeingBombed": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponDamageAdjustmentWhenInGravityWellBeingBombed": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponDamageAdjustmentWhenInFriendlyGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponDamageAdjustmentForEachAlliedPlayerInGravityWell": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponRangeAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponRateOfFireAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponDamageAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "WeaponIgnoresShieldsAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedWeaponClass",
+                    "type": "WeaponClassType"
+                  }
+                ],
+                "PlanetUpgradeCostAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedPlanetUpgradeType",
+                    "type": "linkedPlanetUpgradeType"
+                  }
+                ],
+                "PlanetUpgradeBuildRateAdjustment": [
+                  {
+                    "node": "field",
+                    "name": "baseValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "perLevelValue",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "linkedPlanetUpgradeType",
+                    "type": "linkedPlanetUpgradeType"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "artifactPicture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "uniqueOverlayBrush",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "dlcId",
+          "version": "Rebellion",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "ResearchBoolModifierType",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "modifierType",
+          "type": "modifierTypeBool",
+          "branches": {
+            "CapitalShipsTitansAndStarBasesCountAsPlanetForNoGameLoss": [],
+            "JumpBlockerImmune": [],
+            "StarBasesCanHyperspaceOnlyToPhaseNodes": [],
+            "FriendlyWithPiratesRebelNeutrals": [],
+            "FriendlyWithPirates": [],
+            "FriendlyWithRebelNeutrals": [],
+            "StripPlanetsOnScuttle": [],
+            "StarBasesCanHyperspace": [],
+            "AllowAlliesToUsePhaseGates": [],
+            "ResearchVictory": [],
+            "SpawnCopyOfPirateRaidsAtRandomPlanet": [],
+            "FriendlyInsurgentShipsSpawnedAtHomePlanetWhenEnemyPlanetLiberated": [],
+            "DestabilizationProtection": [],
+            "AllowUseAlliedPhaseGateWithPhaseJumpPact": [],
+            "PirateRaidsOneLevelLower": [],
+            "AllowGalaxyTravel": [],
+            "AllowWormHoleTravel": [],
+            "HyperspaceDetectionOneJump": [],
+            "HyperspaceDetectionTwoJumps": [],
+            "HyperspaceDetectionAnyJumps": [],
+            "AllowMissionOffers": [],
+            "AllowPirateMissions": [],
+            "PlanetsDetectedByCulture": [],
+            "RemoveRacialRelationPenalty": [],
+            "AllowResourceDemandAndGifts": [],
+            "CultureSpreadIsAlwaysVisible": [],
+            "AllowPacts": [],
+            "UnlockPact": [
+              {
+                "node": "field",
+                "name": "allianceType",
+                "type": "allianceType"
+              },
+              {
+                "node": "field",
+                "name": "pactUnlockEntityDefName",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToPlanetsAfterScuttle": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToAllOwnedShipsWhenOwnedPlanetFalls": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToShipsAfterHyperspace": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToOwnedPlanetAfterLastEnemyShipLeavesOrDies": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToPlanetAfterColonization": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "ApplyBuffToPlanetAfterPlayerDestroys": [
+              {
+                "node": "field",
+                "name": "buffToApply",
+                "validation": "Entity"
+              }
+            ],
+            "SetFaction": [
+              {
+                "node": "field",
+                "name": "factionNameID",
+                "validation": "StringInfo"
+              }
+            ],
+            "PlanetIsColonizable": [
+              {
+                "node": "field",
+                "name": "linkedPlanetType",
+                "type": "linkedPlanetType"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ResearchFloatModifierType",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "modifierType",
+          "type": "modifierTypeFloat",
+          "branches": {
+            "MinorFactionAbilityLevel": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CivilianLabsPerCapitalShip": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "MilitaryLabsPerCapitalShip": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "OrbitalCannonMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseUpgradeMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "OrbitalCannonPriceAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingCooldownDecrease": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TradeGoodsValueAdjustmentWithNonAlliedPlayers": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PopulationTaxRateAdjustmentWhenEnemyInGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBasesPerGravityWellAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TitanConstructionCap": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShipMaxSlotsWhenOnlyAlliedWithSameRaceSameFactionPlayers": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ChanceToRespawnFrigateAtHomeworldUponDeath": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ChanceToTemporarilyCloneEnemyFrigateWhenKilled": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ChanceToTemporarilyCloneEnemyFrigateWhenKilledDuration": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureShieldRegenAmount": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CreditsGainedPerPointOfBombingDamageDealt": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "OrbitalCannonSlotCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ArmorBaseAdjustmentWhenInFriendlyGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureModuleCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureSpreadRateBaseAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceAntimatterCostAdjustmentWhenGoingToFriendlyGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseUpgradeCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureChanceToIgnoreShieldsAsDamageTarget": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ChanceToConvertFrigatesHyperspacingFromPlanet": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShipBuildRateAdjustmentWhenEnemyInGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipTaxIncome": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipAndTitanAngularThrustAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExperienceAwardedAdjustmentWhenInFriendlyGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureEnemyAllegianceRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "WeaponTargetsPerBankAdjustmentCapitalShipsOrStarbases": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipWeaponTargetPerBankAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CargoShipHullPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CargoShipArmorBaseAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipAccelerationAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TacticalStructureWeaponDamageAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TacticalStructureHullPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TacticalStructureArmorAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ChanceToIgnoreShieldsAsDamageTarget": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingPopulationKilledAsDamageDealerAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "RefineryShipCapacityAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HullPointsMaxBonusPerArmorPointMax": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HullPointsMaxBonusPerArmorPoint": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "SelfRelationshipBonus": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PopulationTaxRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShieldPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "AntimatterCapacityAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "AntimatterRegenAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ArmorBaseAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipMaxTrainableLevel": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureSpreadRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureShieldMitigationAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HullPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HullPointsRegenAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipMaxSlots": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipMaxSlotLevel": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShipMaxSlots": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "IncomePercLost": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShipMaxSlotLevel": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExtractionRateFromResourceFocus": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HangarFightersPerSquadAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShieldPointsRegenAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseHullPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseArmorAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseWeaponTargetPerBankAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseWeaponDamageAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExtractionRateMetalAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExtractionRateCrystalAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TradeGoodsValueAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureResistPercent": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureWeaponDamageAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseBuildRateAtEnemyOrbitBodyAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "AllegianceFromCultureMaxPerc": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "MassReduction": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "RelationshipBonus": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BountyBoughtAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BountyCollectedAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ModuleBuildRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShipBuildRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipCultureProtectRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CapitalShipAngularThrustAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BlackMarketBuyPriceAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetSlotsCivilianIncrease": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExperienceConstantGainRate": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExperienceConstantGainLevelCap": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ExperienceAwardedAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CreditCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "DerivativeCreditsFromPurchasesPercent": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "DerivativeCreditsFromTradePercent": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TemporaryRelationshipFromGiveResourceMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TemporaryRelationshipFromGiveCrystalValueAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureEnemyBuildRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingDamageAsDamageTargetAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceAntimatterCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceChargeUpRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TemporaryRelationshipFromGiveMetalValueAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceExitDistanceAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceInSystemSpeedAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceBetweenSystemSpeedAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PirateStrengthAgainstYouAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingPopulationKilledPercAsDamageTarget": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "HyperspaceSpeedPhaseGateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetSlotsShipsAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CargoShipCapacityAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "TemporaryRelationshipFromGiveCreditsValueAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "QuestDeadlineAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "QuestFailureHappinessAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ResearchCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ResearchBuildRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ShieldMaxMitigationAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseShieldPointsMaxAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetSlotsTacticalIncrease": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingDamageAsDamageDealerAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "QuestRewardHappinessAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "StarBaseShieldPointsRegenAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ResourceCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureAntimatterRegenAmount": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CultureSpreadDecayAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetHealthRegenRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "BombingRangeAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "RebellionLevel": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "SalvageWreckagePercent": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ScuttleRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ScuttleValueAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "ModuleCostForSimilarTypesAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "CarrierFightersPerSquadAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PopulationGrowthRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              }
+            ],
+            "PlanetPopulationCapAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedPlanetType",
+                "type": "linkedPlanetType"
+              }
+            ],
+            "WeaponRateOfFireAdjustmentWhenInGravityWellBeingBombed": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponDamageAdjustmentWhenInGravityWellBeingBombed": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponDamageAdjustmentWhenInFriendlyGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponDamageAdjustmentForEachAlliedPlayerInGravityWell": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponRangeAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponRateOfFireAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponDamageAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "WeaponIgnoresShieldsAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedWeaponClass",
+                "type": "WeaponClassType"
+              }
+            ],
+            "PlanetUpgradeCostAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedPlanetUpgradeType",
+                "type": "linkedPlanetUpgradeType"
+              }
+            ],
+            "PlanetUpgradeBuildRateAdjustment": [
+              {
+                "node": "field",
+                "name": "baseValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "perLevelValue",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "linkedPlanetUpgradeType",
+                "type": "linkedPlanetUpgradeType"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ResearchSubject.researchWindowLocation",
+      "children": [
+        {
+          "node": "field",
+          "name": "block",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "pos",
+          "validation": "Position"
+        }
+      ]
+    }
+  ],
+  "element_rules": [
+    {
+      "name": "linkedPlanetType",
+      "validation": "Simple",
+      "type": "linkedPlanetType"
+    },
+    {
+      "name": "linkedPlanetUpgradeType",
+      "validation": "Simple",
+      "type": "linkedPlanetUpgradeType"
+    },
+    {
+      "name": "allianceType",
+      "validation": "Simple",
+      "type": "allianceType"
+    }
+  ]
+}

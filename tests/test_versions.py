@@ -1,7 +1,7 @@
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from sose_validator.engine.versions import (
+from soase_validator.engine.versions import (
     GATE_TOKENS,
     GameVersion,
     VersionData,

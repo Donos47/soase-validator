@@ -1,0 +1,3548 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Player",
+      "children": [
+        {
+          "node": "field",
+          "name": "raceNameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "canColonize",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isPsi",
+          "version": "Rebellion185",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "playerRaceType",
+          "version": "Rebellion193",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "isSelectable",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "selectablePriorty",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipNameType",
+          "version": "Vanilla",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "randomCapitalShipNamePrefix",
+          "version": "Entrenchment",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "randomStarBaseNamePrefix",
+          "version": "Entrenchment",
+          "validation": "Any"
+        },
+        {
+          "node": "structure_reference",
+          "name": "entities",
+          "structure": "Player.entities"
+        },
+        {
+          "node": "structure_reference",
+          "name": "debrisData",
+          "structure": "Player.debrisData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "hyperspaceData",
+          "structure": "Player.hyperspaceData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "shieldData",
+          "structure": "Player.shieldData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "gameEventData",
+          "structure": "Player.gameEventData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetElevatorData",
+          "structure": "Player.planetElevatorData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "musicThemeData",
+          "structure": "Player.musicThemeData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "hudSkinData",
+          "structure": "Player.hudSkinData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchScreenData",
+          "structure": "Player.researchScreenData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "gameOverWindowData",
+          "structure": "Player.gameOverWindowData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "aiNameData",
+          "structure": "Player.aiNameData"
+        },
+        {
+          "node": "field",
+          "name": "raceNameParsePrefix",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "raceNameParsePrefixFallback",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "field",
+          "count_key": "numResearchFields",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "playerThemeGroupName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "playerPictureGroupName",
+          "validation": "Any"
+        },
+        {
+          "node": "iterative_field",
+          "name": "raceRelationsModifier",
+          "count_key": "raceRelationsModCount",
+          "version": "DiplomacyOnly",
+          "children": [
+            {
+              "node": "field",
+              "name": "raceRelationsModRace",
+              "version": "Diplomacy",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "raceRelationsModMin",
+              "version": "Diplomacy",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "raceRelationsModMax",
+              "version": "Diplomacy",
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "raceRelationsModifier",
+          "count_key": "raceRelationsModCount",
+          "version": "Rebellion",
+          "children": [
+            {
+              "node": "field",
+              "name": "raceNameID",
+              "version": "Rebellion",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "modifierMin",
+              "version": "Rebellion",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "modifierMax",
+              "version": "Rebellion",
+              "validation": "Decimal"
+            },
+            {
+              "node": "iterative_field",
+              "name": "factionRelationsModifier",
+              "count_key": "factionRelationsModCount",
+              "version": "Rebellion",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "factionNameID",
+                  "version": "Rebellion",
+                  "validation": "StringInfo"
+                },
+                {
+                  "node": "field",
+                  "name": "otherFactionNameID",
+                  "version": "Rebellion",
+                  "validation": "StringInfo"
+                },
+                {
+                  "node": "field",
+                  "name": "modifierMin",
+                  "version": "Rebellion",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "modifierMax",
+                  "version": "Rebellion",
+                  "validation": "Decimal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "defaultFactionNameID",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        }
+      ]
+    },
+    {
+      "name": "EntityDefPage",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "entityDefName",
+          "count_key": "count",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "ResearchBlock",
+      "children": [
+        {
+          "node": "field",
+          "name": "area",
+          "validation": "Position"
+        },
+        {
+          "node": "field",
+          "name": "backdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "tierIndicatorBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "title",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        }
+      ]
+    },
+    {
+      "name": "Player.entities.planetModuleInfo",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Page:0",
+          "structure": "EntityDefPage"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Page:1",
+          "structure": "EntityDefPage"
+        }
+      ]
+    },
+    {
+      "name": "Player.entities.titanInfo",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Page:0",
+          "structure": "EntityDefPage"
+        }
+      ]
+    },
+    {
+      "name": "Player.entities.capitalShipInfo",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Page:0",
+          "structure": "EntityDefPage"
+        }
+      ]
+    },
+    {
+      "name": "Player.entities.frigateInfo",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Page:0",
+          "structure": "EntityDefPage"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Page:1",
+          "structure": "EntityDefPage"
+        },
+        {
+          "node": "structure_reference",
+          "name": "NotOnPage",
+          "structure": "EntityDefPage"
+        }
+      ]
+    },
+    {
+      "name": "Player.entities",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "planetModuleInfo",
+          "structure": "Player.entities.planetModuleInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "titanInfo",
+          "structure": "Player.entities.titanInfo",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "capitalShipInfo",
+          "structure": "Player.entities.capitalShipInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "frigateInfo",
+          "structure": "Player.entities.frigateInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchInfo",
+          "structure": "EntityDefPage"
+        },
+        {
+          "node": "structure_reference",
+          "name": "starBaseInfo",
+          "structure": "EntityDefPage",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "field",
+          "name": "flagship",
+          "version": "Rebellion",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "Player.debrisData",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "randomMeshName",
+          "count_key": "numRandomMeshNamesLarge",
+          "validation": "Mesh"
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomMeshName",
+          "count_key": "numRandomMeshNamesSmall",
+          "validation": "Mesh"
+        }
+      ]
+    },
+    {
+      "name": "Player.hyperspaceData",
+      "children": [
+        {
+          "node": "field",
+          "name": "frigateChargeUpEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateChargeUpEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateChargeUpEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateChargeUpEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "frigateTravelEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateTravelEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateTravelEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateTravelEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "frigateExitEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "frigateExitEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipChargeUpEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipChargeUpEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipChargeUpEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipChargeUpEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipTravelEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipTravelEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipTravelEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipTravelEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipExitEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipExitEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "titanChargeUpEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanChargeUpEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanChargeUpEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanChargeUpEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "titanTravelEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanTravelEffectNameBetweenStars",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanTravelEffectNameDestabilized",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanTravelEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "titanExitEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "titanExitEffectSoundID",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectNameBetweenStars",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectNameDestabilized",
+          "version": "Entrenchment",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "chargeUpEffectSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectNameBetweenStars",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectNameDestabilized",
+          "version": "Entrenchment",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "travelEffectSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "exitEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "exitEffectSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "baseHyperspaceSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceSpeedBetweenStarsMultiplier",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceSpeedToFriendlyOrbitBodiesMultiplier",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseHyperspaceAntiMatterCost",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseHyperspaceChargeUpTime",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "Player.shieldData",
+      "children": [
+        {
+          "node": "field",
+          "name": "shieldAbsorbGrowthPerDamage",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shieldAbsorbDecayRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shieldAbsorbBaseMin",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shieldColor",
+          "validation": "Color"
+        }
+      ]
+    },
+    {
+      "name": "Player.gameEventData",
+      "children": [
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceCeaseFireBroken",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceCeaseFireFormed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceCeaseFireOffered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceOtherBroken",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceOtherFormed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllianceOtherOffered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyBackUpArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyBackUpEnRoute",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyTitanQueued",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyTitanCompleted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyTitanQueued",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyTitanCompleted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyTitanLost",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyCapitalShipLost",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyFleetArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyPlanetLost",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyPlanetUnderAttack",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyRequestAttackPlanet",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyRequestDefendPlanet",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyUnitUnderAttack",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BountyAllDepleted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BountyIncreasedOther",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BountyIncreasedPlayer",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoCommand",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoCredits",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoMetal",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoCrystal",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoFrigateFactory",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoCapitalShipFactory",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoTitanFactory",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoAvailableShipSlots",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyNoAvailableCapitalShipSlots",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BuyAlreadyHasTitan",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:CannonShellDetected",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:RandomEventDetected",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:CannonUnderConstruction",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetAlreadyOwned",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetNotColonizable",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetAlreadyBeingColonized",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizeNeedPrerequisiteResearch",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetHasTakeoverCulture",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetHasDebuff",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ColonizePlanetBlockedByEnemyStarBase",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:RuinPlanetNotRuinable",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PirateFleetArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PirateRaidImminent",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PirateRaidLaunched",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:HostileFleetArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:HostileFleetEnRoute",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:HostilePlanetDestroyed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ModuleComplete",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:MoveCannotTravelBetweenPlanets",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NoValidPath",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NoValidPathObserved",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NoValidPathBetweenStars",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NoValidPathDueToBuff",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:Ping",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlanetUpgradeAlreadyMaxLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlanetUpgradeComplete",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlanetUpgradeMaxLevelQueued",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NewPlanetDiscovered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ArtifactDiscovered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ArtifactDiscoveredOther",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:BonusDiscovered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:NothingDiscovered",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:LaunchSquadsDisabledByDebuff",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerBackUpArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerTitanCreated",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerTitanLost",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalShipCreated",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalShipLost",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerStarbaseLost",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFleetArrived",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFleetArrivedToFleetBeacon",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFleetDeparted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFrigateCreated",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerPlanetColonized",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalPlanetChanged",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalPlanetLost",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyCapitalPlanetLost",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyCapitalPlanetLost",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerPlanetLost",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerPlanetLostToCulture",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerPlanetSoonLostToCulture",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerPlanetUnderAttack",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerReceivedResourcesFromAlly",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerUnitUnderAttack",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFlagshipUnderAttack",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFlagshipShieldsDown",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFlagshipHullSeverelyDamaged",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerFlagshipDestroyed",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyFlagshipDestroyed",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyFlagshipDestroyed",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerTitanShieldsDown",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerTitanHullSeverelyDamaged",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalShipShieldsDown",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCapitalShipHullSeverelyDamaged",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AchievementCompleted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:QuestAdded",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:QuestCompleted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:QuestFailed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:QuestEnded",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:QuestRejected",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerQuestAdded",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerQuestCompleted",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerQuestFailed",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:DiplomaticVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:DiplomaticVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyDiplomaticVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyDiplomaticVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyDiplomaticVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyDiplomaticVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:OccupationVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:OccupationVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:OccupationVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyOccupationVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyOccupationVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyOccupationVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyOccupationVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyOccupationVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyOccupationVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchComplete",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyResearchVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyResearchVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyResearchVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyResearchVictoryStarted",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyResearchVictoryHalfway",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnemyResearchVictoryComplete",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchAlreadyMaxLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchMaxLevelQueued",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchNotEnoughPointsInTier",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchNeedMoreLabModules",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ResearchNeedPrerequisite",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:MoreModuleSlotsNeeded",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:SpaceMineLimitReached",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:StarBaseUpgradeNotEnoughUpgradePoints",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:StarBaseUpgradeAlreadyMaxLevel",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:StarBaseUpgradeMaxLevelQueued",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:TitanUpgradeNotEnoughUpgradePoints",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:TitanUpgradeAlreadyMaxLevel",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:InvalidModulePlacementPosition",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AbilityUpgradeAlreadyMaxLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AbilityUpgradeRequiresHigherLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AbilityUpgradeNoUnspentPoints",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ShipUpgradeAlreadyMaxLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ShipUpgradeAlreadyQueuedMaxLevel",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityCooldownNotExpired",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityDisabledByDebuff",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityNoAntimatter",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityNoUndockedSquadMembers",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityNotEnoughRoomForStarBase",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityCannotUseAbitraryLocationOnEntity",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityTooManyStarBases",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityMineIsNotActivated",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityTargetNotInRange",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityNoValidObjectType",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityPhaseSpaceTarget",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityNormalSpaceTarget",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintCanBeCaptured",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintCanHaveFighters",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintCanHaveShields",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintCanSpreadWeaponDamage",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintCanPhaseDodge",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasAbilityWithCooldown",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasColonizeAbility",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasAntimatter",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasPhaseMissiles",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasPopulation",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasEnergyWeapons",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasHullDamage",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasShieldDamage",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasAntiMatterShortage",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintHasWeapons",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsCargoShip",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsExplored",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotIsExplored",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsResourceExtractor",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsMovingToLocalOrbitBody",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsPsi",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotIsTech",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintLinkedCargoShip",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintLinkedSquad",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotSelf",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintWithinSolarSystem",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintModuleUnderConstruction",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintModuleIsActivelyBeingConstructed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintModuleNotActivelyBeingConstructed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsNotHomeworld",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotInvulnerable",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsInFriendlyGravityWell",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintIsInNonFriendlyGravityWell",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotIsMinorFactionOwned",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetConstraintNotIsOutlaw",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerLinked",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerPlayer",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerFriendly",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerHostile",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerNoOwner",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerAlliedOrEnemy",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:UseAbilityUnmetOwnerUncontrolledMinorFaction",
+          "version": "Rebellion193",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:GameStart",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:GameWin",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AllyGameWin",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:CapitalShipLevelUp",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidWithNoReason",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsNotDamagableDueToBuffs",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsNotEnemy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsCantFireAtFighters",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsCantMoveAndTargetNotInRange",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsCantMoveToTarget",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsCanOnlyAttackStructures",
+          "version": "Entrenchment",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsMustBeInSameOrbitWell",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsNoWeaponsToBombPlanet",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:AttackTargetInvalidAsPlanetCantBeBombed",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ScuttleShipStarted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ScuttleShipStopped",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ScuttlePlanetStarted",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:ScuttlePlanetStopped",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:MarketBoom",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:MarketCrash",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:PlayerCultureFlippedEnemyPlanet",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:EnvoyTargetPlanetIsNowInvalid",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:OffensiveMissionDiscovered",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "GameEventSound:MissionDiscovered",
+          "version": "Diplomacy",
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "Player.planetElevatorData",
+      "children": [
+        {
+          "node": "field",
+          "name": "elevatorMeshName:TaxCenter",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:CultureCenter",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:MetalExtractor",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:CrystalExtractor",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:Bunker",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:GoodsFactory",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "elevatorMeshName:ProductionCenter",
+          "validation": "Mesh"
+        }
+      ]
+    },
+    {
+      "name": "Player.musicThemeData",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "musicTheme",
+          "count_key": "startupMusicThemeCount",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "musicTheme",
+          "count_key": "neutralMusicThemeCount",
+          "version": "Rebellion",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "musicTheme",
+          "count_key": "musicThemeCount",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "musicTheme",
+          "count_key": "scareThemeCount",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "musicTheme",
+          "count_key": "announcementCount",
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "Player.hudSkinData",
+      "children": [
+        {
+          "node": "field",
+          "name": "loadScreenCharacterBrush",
+          "validation": "Brush"
+        },
+        {
+          "node": "iterative_field",
+          "name": "fleetIcon",
+          "count_key": "fleetIconCount",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "Bandbox",
+          "validation": "Simple",
+          "values": [
+            "BANDBOX"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "FogOfWar",
+          "validation": "Simple",
+          "values": [
+            "FogOfWar"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "ActionGridSlotBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "BottomWindowBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "BottomWindowOverlay",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowOverlay",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardAttachedToBottomBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardAttachedToScreenEdgeBackdrop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowLeftCapLowRes",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowLeftCapHighRes",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowRightCapLowRes",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "TopWindowRightCapHighRes",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowBackdrop",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowHighResBackdrop",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuickMarketBackdrop",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuickMarketBackdropNoPirates",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UnknownPlanetHUDIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UnknownPlanetHUDSmallIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UnknownPlanetInfoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UnknownPlanetMainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UnknownPlanetPicture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AutoAttackRangeStateMixed",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AutoAttackRangeStateAllNone",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AutoAttackRangeStateAllLocalArea",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AutoAttackRangeStateAllGravityWell",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "CohesionRangeStateMixed",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "CohesionRangeStateAllNone",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "CohesionRangeStateAllNear",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "CohesionRangeStateAllFar",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GroupMoveStateNone",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GroupMoveStateSome",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GroupMoveStateAll",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ZoomInstantContextNear",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ZoomInstantContextFar",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GameEventCategoryPing",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GameEventCategoryProduction",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GameEventCategoryAlliance",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "GameEventCategoryThreat",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconQuest",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconHappiness",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayNotEnoughCredits",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayNotEnoughMetal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayNotEnoughCrystal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayNotResearched",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetUpgradePathLastStageUpgraded",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetModuleNoAvailableResourceAsteroids",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetModuleNoTacticalSlotsAvailable",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetModuleNoCivilianSlotsAvailable",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetBuildShipNoFrigateFactories",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetBuildShipNoCapitalShipFactories",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetBuildShipNotEnoughShipSlots",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayPlanetBuildShipNotEnoughCapitalShipSlots",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayStarBaseUpgradeNotEnoughUpgradePoints",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayStarBaseUpgradePathLastStageUpgraded",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "HUDIconOverlayInFleet",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconTrade",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconExternalVision",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconInternalVision",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconCeaseFire",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconPeaceTreaty",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconResearchPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconEfficiencyPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconAntimatterPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconArmorPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconBeamWeaponPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconCulturePact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconMetalCrystlPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconThrusterPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconPhaseJumpPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconPlanetBombingPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconShieldPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconMarketPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconEnergyWeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconMassReductionPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconSupplyPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconTacticalSlotsPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconWeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "AllianceHUDIconTradeIncomePact",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceHUDIconCredits",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceHUDIconMetal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceHUDIconCrystal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceInfoCardIconCredits",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceInfoCardIconMetal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResourceInfoCardIconCrystal",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconCombat",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconDefense",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconNonCombat",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconDiplomacy",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconFleet",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "ResearchFieldButtonIconArtifact",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconBombAnyPlanet",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconKillShips",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconKillCapitalShips",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconKillCivilianStructures",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconKillTacticalStructures",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "QuestStatusIconSendEnvoy",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "OrderInfoCardIconNone",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "OrderInfoCardIconAttack",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "OrderInfoCardIconMove",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "OrderInfoCardIconAbility",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "OrderInfoCardIconRetreat",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconAutoCast",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconCombinedPlanetIncome",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconCombinedStarBaseIncome",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconFleetUpkeep",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconCapitalShip",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconFrigate",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconTradeShip",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "InfoCardIconRefineryShip",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel2",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel3",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel4",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel5",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel6",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel7",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel8",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MainViewIconOverlayCapitalShipLevel9",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedColonyShips",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedScoutShips",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedCapitalShips",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedStarbases",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedEnvoys",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedPlanetsWithResourceAsteroids",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedPlanetsWithFactories",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedPlanetsWithUpgrades",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconOwnedPlanetsWithCivilianSlots",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowFindIconPlanetsWithArtifacts",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconAttack",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconStop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCreateFleet",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconDisbandFleet",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconRetreat",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconSetRallyPoint",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenModulePage0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenModulePage1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseModulePage0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseModulePage1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlanetTitanManagement",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconClosePlanetTitanManagement",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlanetCapitalShipManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconClosePlanetCapitalShipManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlanetFrigateManagement0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlanetFrigateManagement1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconClosePlanetFrigateManagement0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconClosePlanetFrigateManagement1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenSquadManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseSquadManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenShipAbilityManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseShipAbilityManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenShipTacticsManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseShipTacticsManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconPurchaseCapitalShipLevel",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlanetUpgradeManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconClosePlanetUpgradeManagement",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenStarBaseUpgradeManagement",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconCloseStarBaseUpgradeManagement",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetPopulation",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpdatePlanetInfrastructure",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetArtifactLevel",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetHome",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetCivilianModules",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetTacticalModules",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetSocial",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetIndustry",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconUpgradePlanetSmuggler",
+          "version": "Rebellion",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconBuildResourceAsteroidExtractor",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconPing",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconPingAllyAttack",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconPingAllyDefend",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconPingAllyStop",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconToggleZoomToCursor",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconToggleScuttle",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenRenameWindow",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconChangeAutoAttackRange",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconChangeCohesionRange",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenEscapeMenuScreen",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenNPCScreen",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenRelationshipsScreen",
+          "version": "Diplomacy",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenResearchScreen",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconOpenPlayerScreen",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconToggleEmpireWindowStacked",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconToggleIsAutoPlaceModuleActive",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconIncreaseGameSpeed",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "UserActionIconDecreaseGameSpeed",
+          "version": "Entrenchment",
+          "validation": "Brush"
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.Combat",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.Defense",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.NonCombat",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.Diplomacy",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.Artifact",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData.Fleet",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "block",
+          "count_key": "blockCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "area",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "backdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "tierIndicatorBackdrop",
+              "validation": "Brush"
+            },
+            {
+              "node": "field",
+              "name": "title",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "picture",
+              "validation": "Brush"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Player.researchScreenData",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Combat",
+          "structure": "Player.researchScreenData.Combat"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Defense",
+          "structure": "Player.researchScreenData.Defense",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "structure_reference",
+          "name": "NonCombat",
+          "structure": "Player.researchScreenData.NonCombat"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Diplomacy",
+          "structure": "Player.researchScreenData.Diplomacy",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Artifact",
+          "structure": "Player.researchScreenData.Artifact"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Fleet",
+          "structure": "Player.researchScreenData.Fleet"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-2",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-3",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-4",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-5",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-6",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-7",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "capitalShipSlotLevelPicture-8",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-0",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-1",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-2",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-3",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-4",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-5",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-6",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-7",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "shipSlotLevelPicture-8",
+          "validation": "Brush"
+        }
+      ]
+    },
+    {
+      "name": "Player.gameOverWindowData",
+      "children": [
+        {
+          "node": "field",
+          "name": "hasWonPicture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "hasLostPicture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "themeBackdropBrush",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "hasWonStatusFormatStringId",
+          "version": "Vanilla",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostStatusFormatStringId",
+          "version": "Vanilla",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonPhraseStringId",
+          "version": "Vanilla",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostPhraseStringId",
+          "version": "Vanilla",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonStatusFormatStringId",
+          "version": "EntrenchmentOnly",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostStatusFormatStringId",
+          "version": "EntrenchmentOnly",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonPhraseStringId",
+          "version": "EntrenchmentOnly",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostPhraseStringId",
+          "version": "EntrenchmentOnly",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonMilitaryStatusFormatStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostMilitaryStatusFormatStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonFlagshipStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostFlagshipStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonHomeworldStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostHomeworldStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonDiplomaticStatusFormatStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostDiplomaticStatusFormatStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonResearchStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostResearchStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonOccupationStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostOccupationStatusFormatStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonMilitaryPhraseStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostMilitaryPhraseStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonFlagshipPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostFlagshipPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonHomeworldPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostHomeworldPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonDiplomaticPhraseStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostDiplomaticPhraseStringId",
+          "version": "Diplomacy",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonResearchPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostResearchPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasWonOccupationPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "hasLostOccupationPhraseStringId",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        }
+      ]
+    },
+    {
+      "name": "Player.aiNameData",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "name",
+          "count_key": "nameCount",
+          "validation": "StringInfo"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

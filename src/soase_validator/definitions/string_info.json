@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Str",
+      "extension": ".str",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "StringInfo",
+          "count_key": "NumStrings",
+          "children": [
+            {
+              "node": "field",
+              "name": "ID",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "Value",
+              "validation": "Any"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StringInfo",
+      "children": [
+        {
+          "node": "field",
+          "name": "ID",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Value",
+          "validation": "Any"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

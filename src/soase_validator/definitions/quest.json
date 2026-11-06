@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Quest",
+      "children": [
+        {
+          "node": "field",
+          "name": "titleStringId",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "infoCardDescStringId",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "questType",
+          "validation": "Simple",
+          "type": "Quest.questType"
+        },
+        {
+          "node": "field",
+          "name": "duration",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipDecayRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "happinessChangeForSuccess",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "happinessChangeForFailure",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "reward",
+          "structure": "Cost"
+        },
+        {
+          "node": "structure_reference",
+          "name": "priceDemanded",
+          "structure": "Cost"
+        },
+        {
+          "node": "field",
+          "name": "valueToKill",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "ReceiverConstraint",
+          "count_key": "numReceiverConstraints",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Simple",
+              "values": [
+                "TargetHappiness",
+                "TargetDist",
+                "TargetShipSlots",
+                "TargetCreditIncome",
+                "TargetCrystalIncome",
+                "TargetMetalIncome",
+                "TargetCivilianSlots",
+                "TargetTacticalSlots"
+              ]
+            },
+            {
+              "node": "field",
+              "name": "min",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "max",
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "TargetConstraint",
+          "count_key": "numTargetConstraints",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Simple",
+              "values": [
+                "TargetHappiness",
+                "TargetDist",
+                "TargetShipSlots",
+                "TargetCreditIncome",
+                "TargetCrystalIncome",
+                "TargetMetalIncome",
+                "TargetCivilianSlots",
+                "TargetTacticalSlots"
+              ]
+            },
+            {
+              "node": "field",
+              "name": "min",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "max",
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "weight",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "QuestTarget",
+      "children": [
+        {
+          "node": "field",
+          "name": "type",
+          "validation": "Simple",
+          "values": [
+            "TargetHappiness",
+            "TargetDist",
+            "TargetShipSlots",
+            "TargetCreditIncome",
+            "TargetCrystalIncome",
+            "TargetMetalIncome",
+            "TargetCivilianSlots",
+            "TargetTacticalSlots"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "min",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "max",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

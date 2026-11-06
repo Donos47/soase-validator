@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "buffInstantActionType.debrisCleanupSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

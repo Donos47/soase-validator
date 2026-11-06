@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Star",
+      "children": [
+        {
+          "node": "field",
+          "name": "coronaStartColor",
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "coronaEndColor",
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "coronaStartColorDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "coronaEndColorDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "farIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshInfo",
+          "count_key": "coloredSkyboxMeshInfoCount",
+          "version": "Rebellion",
+          "children": [
+            {
+              "node": "field",
+              "name": "meshName",
+              "required": true,
+              "validation": "Mesh"
+            },
+            {
+              "node": "field",
+              "name": "shouldPrefer",
+              "required": true,
+              "validation": "Boolean"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshInfo",
+          "count_key": "deepSpaceSkyboxMeshInfoCount",
+          "version": "Rebellion",
+          "children": [
+            {
+              "node": "field",
+              "name": "meshName",
+              "required": true,
+              "validation": "Mesh"
+            },
+            {
+              "node": "field",
+              "name": "shouldPrefer",
+              "required": true,
+              "validation": "Boolean"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshName",
+          "count_key": "coloredSkyboxMeshNameCount",
+          "version": "NotRebellion",
+          "validation": "Mesh"
+        },
+        {
+          "node": "iterative_field",
+          "name": "meshName",
+          "count_key": "deepSpaceSkyboxMeshNameCount",
+          "version": "NotRebellion",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "iconTextureName",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "dlcID",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "ability:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "version": "Entrenchment",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "moveAreaRadius",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceExitRadius",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "isWormhole",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "maxStarBaseCountPerPlayer",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxSpaceMineCountPerPlayer",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "MaxMeshVisibilityDistanceToCamera",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

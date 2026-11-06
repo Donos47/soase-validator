@@ -6,10 +6,10 @@ inclusion: always
 
 ## Language and tooling
 
-- Python 3.14+ (`requires-python = ">=3.14"`), `src/` layout, package `sose_validator`.
+- Python 3.14+ (`requires-python = ">=3.14"`), `src/` layout, package `soase_validator`.
 - `uv` manages the environment. Never install packages globally.
-- Distributed from GitHub and run via `uvx --from git+https://github.com/<owner>/sose-validator <entry-point>`. No PyPI publication.
-- Entry points: `sose-validator` (CLI), `sose-validator-lsp`, `sose-validator-mcp`.
+- Distributed from GitHub and run via `uvx --from git+https://github.com/<owner>/soase-validator <entry-point>`. No PyPI publication.
+- Entry points: `soase-validator` (CLI), `soase-validator-lsp`, `soase-validator-mcp`.
 
 ## Libraries
 
@@ -25,11 +25,11 @@ inclusion: always
 - All logic lives in the Engine (`engine/`). Front ends (`lsp/`, `mcp_server/`, `cli/`, `audit/`) only translate types and call `engine/facade.py`.
 - Core modules (parser, primitives, versions, manifest parsing and `plan_sync`) are pure functions; side effects live in `manifest_apply`, the layer cache and config writers.
 - The parser is hand-written and tolerant: always return Diagnostics for the parsed portion of a broken file.
-- Unexpected exceptions are caught at the facade, logged to stderr, and returned as partial Diagnostics plus `SOSE-X001`.
+- Unexpected exceptions are caught at the facade, logged to stderr, and returned as partial Diagnostics plus `SOASE-X001`.
 - stdout must stay clean in the MCP stdio server and LSP; log to stderr only.
 - Positions are zero-based internally; MCP output uses one-based line and column.
-- Diagnostic codes are stable: `SOSE-` plus family letter `P` parser, `V` validator, `R` reference, `C` chain/config, `M` manifest, `D` definition load, `X` internal.
-- Settings precedence: project `sose.json` (nearest) > environment > editor settings > user file > defaults.
+- Diagnostic codes are stable: `SOASE-` plus family letter `P` parser, `V` validator, `R` reference, `C` chain/config, `M` manifest, `D` definition load, `X` internal.
+- Settings precedence: project `soase.json` (nearest) > environment > editor settings > user file > defaults.
 - Never read `EnabledMods.txt`. Chains come from configuration only.
 
 ## Code style (Python)
@@ -43,9 +43,9 @@ inclusion: always
 ## Testing
 
 - pytest plus Hypothesis (`@given`, `settings(max_examples=100)` minimum).
-- Property tests: one file each at `tests/properties/test_pNN_<name>.py`, tagged `# Feature: sose-validator, Property N: <text>`.
+- Property tests: one file each at `tests/properties/test_pNN_<name>.py`, tagged `# Feature: soase-validator, Property N: <text>`.
 - Strategies live in `tests/strategies/`. Shared fixtures in `tests/conftest.py`.
-- Tests needing game files read the path from config or `SOSE_REFERENCE_ROOT_<VERSION>` (for example `SOSE_REFERENCE_ROOT_REBELLION_196`) and `pytest.skip` when absent. Other tests build small synthetic mod trees under `tmp_path`.
+- Tests needing game files read the path from config or `SOASE_REFERENCE_ROOT_<VERSION>` (for example `SOASE_REFERENCE_ROOT_REBELLION_196`) and `pytest.skip` when absent. Other tests build small synthetic mod trees under `tmp_path`.
 - Performance test is marked `perf` and excluded by default.
 
 ## Common commands
@@ -58,7 +58,7 @@ uv run ruff format --check
 uv run pytest
 uv run pytest -m perf
 uv run pip-audit
-uv run sose-validator audit --reference-root <path>
+uv run soase-validator audit --reference-root <path>
 ```
 
 Run `ruff check`, `ruff format --check` and `pytest` before finishing a task.

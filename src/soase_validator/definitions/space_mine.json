@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "SpaceMine",
+      "children": [
+        {
+          "node": "field",
+          "name": "ability:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "numRandomDebrisLarge",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "numRandomDebrisSmall",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "specificDebrisMeshName",
+          "count_key": "numSpecificDebris",
+          "limit": 2,
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "armorType",
+          "type": "armorType"
+        },
+        {
+          "node": "field",
+          "name": "hudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "smallHudIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "infoCardIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "picture",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "minZoomDistanceMult",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "spawnActivationDelay",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "targetStartFollowRange",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "targetMaxFollowRange",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "nameStringID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "structure_reference",
+          "name": "scuttleValue",
+          "structure": "Cost"
+        },
+        {
+          "node": "field",
+          "name": "baseScuttleTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ExplosionName",
+          "validation": "Explosion"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "mass",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationStrafe",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxSpeedLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollAngle",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONATTACKORDERISSUED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONCREATION",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONGENERALORDERISSUED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSELECTED",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumSoundsFor:ONSTARTPHASEJUMP",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "maxHullPoints",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hullPointRestoreRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShieldPoints",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shieldPointRestoreRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShieldMitigation",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "armorPoints",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "experiencePointsForDestroying",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseMaxAntiMatter",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseAntiMatterRestoreRate",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

@@ -1,4 +1,4 @@
-"""Shared pytest fixtures and helpers for sose-validator tests."""
+"""Shared pytest fixtures and helpers for soase-validator tests."""
 
 import os
 from collections.abc import Callable, Mapping
@@ -9,11 +9,11 @@ from hypothesis import HealthCheck, settings
 
 # Hypothesis profile: every property test runs at least 100 examples.
 settings.register_profile(
-    "sose",
+    "soase",
     max_examples=100,
     suppress_health_check=[HealthCheck.function_scoped_fixture],
 )
-settings.load_profile("sose")
+settings.load_profile("soase")
 
 DEFAULT_REFERENCE_VERSION = "REBELLION_196"
 
@@ -25,9 +25,9 @@ def reference_root_env_var(version: str) -> str:
         version: Game Version token such as ``REBELLION_196``.
 
     Returns:
-        The variable name, for example ``SOSE_REFERENCE_ROOT_REBELLION_196``.
+        The variable name, for example ``SOASE_REFERENCE_ROOT_REBELLION_196``.
     """
-    return f"SOSE_REFERENCE_ROOT_{version.upper()}"
+    return f"SOASE_REFERENCE_ROOT_{version.upper()}"
 
 
 def find_reference_root(version: str = DEFAULT_REFERENCE_VERSION) -> Path | None:

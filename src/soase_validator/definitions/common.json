@@ -1,0 +1,1104 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Trigger",
+      "version": "Rebellion",
+      "children": []
+    },
+    {
+      "name": "Debris",
+      "children": [
+        {
+          "node": "field",
+          "name": "averageLifetime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "lifetimeVariancePerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minLinearSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxLinearSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minAngularSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAngularSpeed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "dragRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "EmpireWindowNode",
+      "children": [
+        {
+          "node": "field",
+          "name": "hyperspaceNodeIcon",
+          "version": "Vanilla",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "EmpireWindowHyperspaceNodeIcon",
+          "validation": "Brush"
+        }
+      ]
+    },
+    {
+      "name": "Fleet",
+      "children": [
+        {
+          "node": "field",
+          "name": "defaultCohesionRange",
+          "validation": "Simple",
+          "values": [
+            "Near"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Formation",
+      "children": []
+    },
+    {
+      "name": "PlanetConnection",
+      "children": []
+    },
+    {
+      "name": "spawnShips",
+      "children": [
+        {
+          "node": "field",
+          "name": "minFleetPoints",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetPoints",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MeshNameInfo",
+      "children": [
+        {
+          "node": "field",
+          "name": "meshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "condition_field",
+          "name": "criteriaType",
+          "type": "criteriaType",
+          "branches": {
+            "None": [],
+            "Research": [
+              {
+                "node": "structure_reference",
+                "name": "prerequisites",
+                "structure": "researchPrerequisites"
+              }
+            ],
+            "StarBaseUpgradeLevel": [
+              {
+                "node": "structure_reference",
+                "name": "levelRequirements",
+                "structure": "levelRequirements"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "levelRequirements",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "levelRequirement",
+          "count_key": "levelRequirementCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "upgradePropertyType",
+              "validation": "Simple",
+              "values": [
+                "TradePortMeshLevel",
+                "WeaponUpgradeLevel",
+                "CultureMeshLevel"
+              ]
+            },
+            {
+              "node": "field",
+              "name": "upgradeLevel",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weapon",
+      "children": [
+        {
+          "node": "field",
+          "name": "WeaponType",
+          "validation": "Simple",
+          "values": [
+            "Beam",
+            "Projectile",
+            "Missile"
+          ]
+        },
+        {
+          "node": "structure_reference",
+          "name": "damageEnums",
+          "structure": "Weapon.damageEnums"
+        },
+        {
+          "node": "field",
+          "name": "DamagePerBank:FRONT",
+          "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePerBank:BACK",
+          "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePerBank:LEFT",
+          "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePerBank:RIGHT",
+          "help": "This is the damage done per volley by the this bank. This is not the same as weapon null points on the mesh which are only visual and not used in any weapon calculations.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Range",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "PreBuffCooldownTime",
+          "help": "How long the weapon must cool down between shots. It also effects how much damage over time the weapon does. Shorter cool downs mean more DPS. While longer cool downs mean less DPS.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "CanFireAtFighter",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "SynchronizedTargeting",
+          "help": "Synchronized targetting determines if the weapon effects fire at the same spot on the target mesh or shield. If it's false then then the weapon effects can fire at random points on the target mesh or shield.",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "PointStaggerDelay",
+          "help": "Spreads effects from multiple weapon nulls so they don't all fire at the same time.",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "TravelSpeed",
+          "help": "The speed at which a projectile, or missile effect travels. Beam weapons are always zero",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Duration",
+          "help": "How long the weapon will fire (beam, and projectile). In a missiles case how long it will stay on the map. If it goes over the duration it will disappear, and do no damage",
+          "validation": "Decimal"
+        },
+        {
+          "node": "condition_field",
+          "name": "fireConstraintType",
+          "version": "Entrenchment",
+          "type": "fireConstraintType",
+          "branches": {
+            "Research": [
+              {
+                "node": "structure_reference",
+                "name": "researchPrerequisites",
+                "structure": "researchPrerequisites"
+              }
+            ],
+            "StarBaseUpgradeLevel": [
+              {
+                "node": "field",
+                "name": "requiredStarBaseWeaponLevel",
+                "validation": "Integer"
+              }
+            ],
+            "CanAlwaysFire": []
+          }
+        },
+        {
+          "node": "structure_reference",
+          "name": "WeaponEffects",
+          "structure": "weaponEffectsDef"
+        }
+      ]
+    },
+    {
+      "name": "LevelIncrease",
+      "children": [
+        {
+          "node": "field",
+          "name": "StartValue",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ValueIncreasePerLevel",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "Cost",
+      "children": [
+        {
+          "node": "field",
+          "name": "credits",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "metal",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "crystal",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "weaponType",
+          "type": "weaponType",
+          "branches": {
+            "Projectile": [
+              {
+                "node": "field",
+                "name": "burstCount",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "burstDelay",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fireDelay",
+                "version": "Rebellion",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "muzzleEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "field",
+                "name": "muzzleSoundMinRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "structure_reference",
+                "name": "muzzleSounds",
+                "structure": "weaponEffectsDef.weaponType.muzzleSounds"
+              },
+              {
+                "node": "field",
+                "name": "hitEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitHullEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitHullEffectSounds"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitShieldsEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitShieldsEffectSounds"
+              },
+              {
+                "node": "field",
+                "name": "projectileTravelEffectName",
+                "validation": "Particle"
+              }
+            ],
+            "Missile": [
+              {
+                "node": "field",
+                "name": "burstCount",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "burstDelay",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fireDelay",
+                "version": "Rebellion",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "muzzleEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "field",
+                "name": "muzzleSoundMinRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "structure_reference",
+                "name": "muzzleSounds",
+                "structure": "weaponEffectsDef.weaponType.muzzleSounds#2"
+              },
+              {
+                "node": "field",
+                "name": "hitEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitHullEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitHullEffectSounds#2"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitShieldsEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitShieldsEffectSounds#2"
+              },
+              {
+                "node": "field",
+                "name": "missileTravelEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "field",
+                "name": "missileStartTurningDistance",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "missileSlowTurnRate",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "missileMaxSlowTurnTime",
+                "validation": "Decimal"
+              }
+            ],
+            "Beam": [
+              {
+                "node": "field",
+                "name": "burstCount",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "burstDelay",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "fireDelay",
+                "version": "Rebellion",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "muzzleEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "field",
+                "name": "muzzleSoundMinRespawnTime",
+                "validation": "Decimal"
+              },
+              {
+                "node": "structure_reference",
+                "name": "muzzleSounds",
+                "structure": "weaponEffectsDef.weaponType.muzzleSounds#3"
+              },
+              {
+                "node": "field",
+                "name": "hitEffectName",
+                "validation": "Particle"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitHullEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitHullEffectSounds#3"
+              },
+              {
+                "node": "structure_reference",
+                "name": "hitShieldsEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.hitShieldsEffectSounds#3"
+              },
+              {
+                "node": "structure_reference",
+                "name": "beamEffectSounds",
+                "structure": "weaponEffectsDef.weaponType.beamEffectSounds"
+              },
+              {
+                "node": "field",
+                "name": "beamGlowTextureName",
+                "validation": "Texture"
+              },
+              {
+                "node": "field",
+                "name": "beamCoreTextureName",
+                "validation": "Texture"
+              },
+              {
+                "node": "field",
+                "name": "beamWidth",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "beamGlowColor",
+                "validation": "Color"
+              },
+              {
+                "node": "field",
+                "name": "beamCoreColor",
+                "validation": "Color"
+              },
+              {
+                "node": "field",
+                "name": "beamTilingRate",
+                "validation": "Decimal"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "researchPrerequisites",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "ResearchPrerequisite",
+          "count_key": "NumResearchPrerequisites",
+          "limit": 2,
+          "children": [
+            {
+              "node": "field",
+              "name": "Subject",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "Level",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "RequiredFactionNameID",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "RequiredCompletedResearchSubjects",
+          "version": "Rebellion",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "targetFilter",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "ownership",
+          "count_key": "numOwnerships",
+          "type": "ownership"
+        },
+        {
+          "node": "iterative_field",
+          "name": "object",
+          "count_key": "numObjects",
+          "type": "object"
+        },
+        {
+          "node": "iterative_field",
+          "name": "space",
+          "count_key": "numSpaces",
+          "version": "Entrenchment",
+          "type": "space"
+        },
+        {
+          "node": "iterative_field",
+          "name": "constraint",
+          "count_key": "numConstraints",
+          "type": "constraint"
+        }
+      ]
+    },
+    {
+      "name": "GenericLevel",
+      "children": [
+        {
+          "node": "field",
+          "name": "Level:0",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Level:1",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Level:2",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Level:3",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AttachInfo",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "attachType",
+          "type": "attachType",
+          "branches": {
+            "Invalid": [],
+            "Center": [],
+            "Ability": [
+              {
+                "node": "field",
+                "name": "abilityIndex",
+                "validation": "Integer"
+              }
+            ],
+            "Aura": [],
+            "Above": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "effectInfo",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "effectAttachInfo",
+          "structure": "AttachInfo"
+        },
+        {
+          "node": "field",
+          "name": "smallEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "mediumEffectName",
+          "version": "Rebellion",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "largeEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "soundID",
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "HelperProposal",
+      "help": "Used to create abilities.",
+      "children": [
+        {
+          "node": "field",
+          "name": "SinsArchiveVersion",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "entityType",
+          "required": true,
+          "validation": "Simple",
+          "type": "HelperProposal.entityType"
+        }
+      ]
+    },
+    {
+      "name": "Weapon.damageEnums",
+      "children": [
+        {
+          "node": "field",
+          "name": "AttackType",
+          "type": "AttackType"
+        },
+        {
+          "node": "field",
+          "name": "DamageAffectType",
+          "type": "damageAffectType"
+        },
+        {
+          "node": "field",
+          "name": "DamageApplyType",
+          "type": "DamageApplyType"
+        },
+        {
+          "node": "field",
+          "name": "DamageType",
+          "type": "damageType"
+        },
+        {
+          "node": "field",
+          "name": "WeaponClassType",
+          "type": "WeaponClassType"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.muzzleSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitHullEffectSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitShieldsEffectSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.muzzleSounds#2",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitHullEffectSounds#2",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitShieldsEffectSounds#2",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.muzzleSounds#3",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitHullEffectSounds#3",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.hitShieldsEffectSounds#3",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    },
+    {
+      "name": "weaponEffectsDef.weaponType.beamEffectSounds",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "sound",
+          "count_key": "soundCount",
+          "limit": 6,
+          "validation": "Sound"
+        }
+      ]
+    }
+  ],
+  "element_rules": [
+    {
+      "name": "entityType",
+      "validation": "Structure",
+      "type": "entityType"
+    },
+    {
+      "name": "frigateRoleType",
+      "validation": "Simple",
+      "type": "frigateRoleType"
+    },
+    {
+      "name": "cargoType",
+      "validation": "Simple",
+      "type": "cargoType"
+    },
+    {
+      "name": "defaultAutoAttackRange",
+      "validation": "Simple",
+      "type": "defaultAutoAttackRange"
+    },
+    {
+      "name": "roleType",
+      "validation": "Simple",
+      "type": "roleType"
+    },
+    {
+      "name": "statCountType",
+      "validation": "Simple",
+      "type": "statCountType"
+    },
+    {
+      "name": "armorType",
+      "validation": "Simple",
+      "type": "armorType"
+    },
+    {
+      "name": "WeaponWeaponType",
+      "validation": "Simple",
+      "type": "WeaponWeaponType"
+    },
+    {
+      "name": "AttackType",
+      "validation": "Simple",
+      "type": "AttackType"
+    },
+    {
+      "name": "DamageApplyType",
+      "validation": "Simple",
+      "type": "DamageApplyType"
+    },
+    {
+      "name": "fireConstraintType",
+      "validation": "Simple",
+      "type": "fireConstraintType"
+    },
+    {
+      "name": "firingAlignmentType",
+      "validation": "Simple",
+      "type": "firingAlignmentType"
+    },
+    {
+      "name": "criteriaType",
+      "validation": "Simple",
+      "type": "criteriaType"
+    },
+    {
+      "name": "onReapplyDuplicateType",
+      "validation": "Simple",
+      "type": "onReapplyDuplicateType"
+    },
+    {
+      "name": "buffStackingLimitType",
+      "validation": "Simple",
+      "type": "buffStackingLimitType"
+    },
+    {
+      "name": "buffExclusivityForAIType",
+      "validation": "Simple",
+      "type": "buffExclusivityForAIType"
+    },
+    {
+      "name": "instantActionTriggerType",
+      "validation": "Simple",
+      "type": "instantActionTriggerType"
+    },
+    {
+      "name": "actionCountType",
+      "validation": "Simple",
+      "type": "actionCountType"
+    },
+    {
+      "name": "buffEntityModifierType",
+      "validation": "Simple",
+      "type": "buffEntityModifierType"
+    },
+    {
+      "name": "damageAffectType",
+      "validation": "Simple",
+      "type": "damageAffectType"
+    },
+    {
+      "name": "typeOfDamageNeeded",
+      "validation": "Simple",
+      "type": "typeOfDamageNeeded"
+    },
+    {
+      "name": "damageType",
+      "validation": "Simple",
+      "type": "damageType"
+    },
+    {
+      "name": "ownership",
+      "validation": "Simple",
+      "type": "ownership"
+    },
+    {
+      "name": "object",
+      "validation": "Simple",
+      "type": "object"
+    },
+    {
+      "name": "space",
+      "validation": "Simple",
+      "type": "space"
+    },
+    {
+      "name": "constraint",
+      "validation": "Simple",
+      "type": "constraint"
+    },
+    {
+      "name": "weaponEffectOriginType",
+      "validation": "Simple",
+      "type": "weaponEffectOriginType"
+    },
+    {
+      "name": "weaponEffectImpactOffsetType",
+      "validation": "Simple",
+      "type": "weaponEffectImpactOffsetType"
+    },
+    {
+      "name": "weaponType",
+      "validation": "Simple",
+      "type": "weaponType"
+    },
+    {
+      "name": "attachType",
+      "validation": "Simple",
+      "type": "attachType"
+    },
+    {
+      "name": "sourcePropertyType",
+      "validation": "Simple",
+      "type": "sourcePropertyType"
+    },
+    {
+      "name": "orderAcknowledgementType",
+      "validation": "Simple",
+      "type": "orderAcknowledgementType"
+    },
+    {
+      "name": "planetUpgradeSlotType",
+      "validation": "Simple",
+      "type": "planetUpgradeSlotType"
+    },
+    {
+      "name": "planetModuleRoleType",
+      "validation": "Simple",
+      "type": "planetModuleRoleType"
+    },
+    {
+      "name": "resourceExtractionType",
+      "validation": "Simple",
+      "type": "resourceExtractionType"
+    },
+    {
+      "name": "rotateFacingType",
+      "validation": "Simple",
+      "type": "rotateFacingType"
+    },
+    {
+      "name": "WeaponClassType",
+      "validation": "Simple",
+      "type": "WeaponClassType"
+    },
+    {
+      "name": "weaponClassForWeaponPassive",
+      "validation": "Simple",
+      "type": "weaponClassForWeaponPassive"
+    },
+    {
+      "name": "spawnShipsHyperspaceSpawnType",
+      "validation": "Simple",
+      "type": "spawnShipsHyperspaceSpawnType"
+    },
+    {
+      "name": "spawnType",
+      "validation": "Simple",
+      "type": "spawnType"
+    },
+    {
+      "name": "resourceToSteal",
+      "validation": "Simple",
+      "type": "resourceToSteal"
+    },
+    {
+      "name": "role",
+      "validation": "Simple",
+      "type": "role"
+    },
+    {
+      "name": "resource",
+      "validation": "Simple",
+      "type": "resource"
+    }
+  ]
+}

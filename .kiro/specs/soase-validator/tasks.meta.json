@@ -1,0 +1,222 @@
+{
+  "pbtResults": {
+    "2.4 Write property test for gate monotonicity": {
+      "status": "passed",
+      "lastRunTimestamp": 1793984641660
+    },
+    "2.2 Write property test for disabled-code filtering": {
+      "status": "passed",
+      "lastRunTimestamp": 1793984661029
+    },
+    "3.4 Write property test for Definition load round trip": {
+      "status": "passed",
+      "lastRunTimestamp": 1793985246504
+    },
+    "3.3 Write property test for malformed Definitions": {
+      "status": "passed",
+      "lastRunTimestamp": 1793985248844
+    }
+  },
+  "executionHistory": {
+    "1.1 Create the Python project with uv": [
+      {
+        "executionId": "de1f9792-f794-49d0-b060-a6647309454f",
+        "chatSessionId": "sess_a300befe-4c2a-49ed-aefd-030b9a251a86",
+        "timestamp": 1793984174602
+      },
+      {
+        "executionId": "de1f9792-f794-49d0-b060-a6647309454f",
+        "chatSessionId": "sess_a300befe-4c2a-49ed-aefd-030b9a251a86",
+        "timestamp": 1793984306349
+      }
+    ],
+    "1.2 Set up shared test infrastructure": [
+      {
+        "executionId": "de1f9792-f794-49d0-b060-a6647309454f",
+        "chatSessionId": "sess_a300befe-4c2a-49ed-aefd-030b9a251a86",
+        "timestamp": 1793984306674
+      },
+      {
+        "executionId": "de1f9792-f794-49d0-b060-a6647309454f",
+        "chatSessionId": "sess_a300befe-4c2a-49ed-aefd-030b9a251a86",
+        "timestamp": 1793984368420
+      }
+    ],
+    "1. Project scaffolding": [
+      {
+        "executionId": "de1f9792-f794-49d0-b060-a6647309454f",
+        "chatSessionId": "sess_a300befe-4c2a-49ed-aefd-030b9a251a86",
+        "timestamp": 1793984368503
+      }
+    ],
+    "2.1 Implement `engine/model.py` and `engine/diagnostics.py`": [
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984469741
+      },
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984607806
+      }
+    ],
+    "2.3 Implement `engine/versions.py`": [
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984469822
+      },
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984607905
+      }
+    ],
+    "2.2 Write property test for disabled-code filtering": [
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984609767
+      },
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984669786
+      }
+    ],
+    "2.4 Write property test for gate monotonicity": [
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984610220
+      },
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984670143
+      }
+    ],
+    "2. Model, diagnostics and version gating": [
+      {
+        "executionId": "a226f152-ab4f-4acb-856d-e68224dd899e",
+        "chatSessionId": "sess_b549285e-c68e-43ca-aafe-b4fbe335d681",
+        "timestamp": 1793984670212
+      }
+    ],
+    "3.1 Implement `engine/registry.py`": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984743100
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984882179
+      }
+    ],
+    "3.2 Write Hypothesis strategies for Definitions": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984892274
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984897982
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985148458
+      }
+    ],
+    "3.3 Write property test for malformed Definitions": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984892354
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985148983
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985257828
+      }
+    ],
+    "3.4 Write property test for Definition load round trip": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984892741
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985149474
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985257904
+      }
+    ],
+    "3.5 Implement `tools/convert_definitions.py`": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984893546
+      },
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985257978
+      },
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985468499
+      },
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985471733
+      },
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985933256
+      }
+    ],
+    "3.6 Add bundled data files and a registry smoke test": [
+      {
+        "executionId": "674e52e7-9d5c-4316-a680-ef1322e9eb2e",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793984893900
+      },
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793985933574
+      },
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793986049753
+      }
+    ],
+    "3. Definitions: registry, converter and bundled data": [
+      {
+        "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
+        "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
+        "timestamp": 1793986049824
+      }
+    ]
+  }
+}

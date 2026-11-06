@@ -1,0 +1,372 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Randomeventdefs",
+      "extension": ".randomeventdefs",
+      "children": [
+        {
+          "node": "field",
+          "name": "initialSpawnTimeMin",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "initialSpawnTimeMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "failedRespawnTimeMin",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "failedRespawnTimeMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "lowAllegianceCheckPeriod",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "lowAllegianceThreshold",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomEventDef",
+          "count_key": "randomEventDefCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "id",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "nameID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "field",
+              "name": "warningID",
+              "validation": "StringInfo"
+            },
+            {
+              "node": "condition_field",
+              "name": "spawnType",
+              "type": "spawnType",
+              "branches": {
+                "Projectile": [
+                  {
+                    "node": "field",
+                    "name": "projectileTarget",
+                    "validation": "Simple",
+                    "values": [
+                      "RandomConnectedLocation"
+                    ]
+                  },
+                  {
+                    "node": "field",
+                    "name": "spawnEntity",
+                    "validation": "Entity"
+                  }
+                ],
+                "BuffAtLocation": [
+                  {
+                    "node": "field",
+                    "name": "spawnEntity",
+                    "validation": "Entity"
+                  }
+                ],
+                "RacialBuffAtLocation": [
+                  {
+                    "node": "iterative_field",
+                    "name": "racialBuff",
+                    "count_key": "racialBuffCount",
+                    "children": [
+                      {
+                        "node": "field",
+                        "name": "race",
+                        "validation": "StringInfo"
+                      },
+                      {
+                        "node": "field",
+                        "name": "buff",
+                        "validation": "Entity"
+                      }
+                    ]
+                  }
+                ],
+                "PeriodicBuffAtLocation": [
+                  {
+                    "node": "field",
+                    "name": "spawnEntity",
+                    "validation": "Entity"
+                  },
+                  {
+                    "node": "field",
+                    "name": "duration",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "period",
+                    "validation": "Decimal"
+                  }
+                ]
+              }
+            },
+            {
+              "node": "field",
+              "name": "playerOwnerType",
+              "validation": "Simple",
+              "values": [
+                "Invalid",
+                "LocationOwner",
+                "Pirate",
+                "Rebel",
+                "Occupation",
+                "MadVasari",
+                "Null"
+              ]
+            },
+            {
+              "node": "field",
+              "name": "spawnLocation",
+              "validation": "Simple",
+              "values": [
+                "Invalid",
+                "RandomStar",
+                "RandomLocation",
+                "RandomPirateBase",
+                "TriggerLocation",
+                "AllLocations",
+                "RandomPlayerAllLocations",
+                "RandomNonHomeworld",
+                "RandomLocationSpace"
+              ]
+            },
+            {
+              "node": "iterative_field",
+              "name": "excludedSpawnLocation",
+              "count_key": "excludedSpawnLocationCount",
+              "validation": "Entity"
+            },
+            {
+              "node": "condition_field",
+              "name": "spawnRequirement",
+              "type": "RandomEventDefType.spawnRequirement",
+              "branches": {
+                "Timer": [
+                  {
+                    "node": "field",
+                    "name": "respawnCount",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "nextSpawnTimeMin",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "nextSpawnTimeMax",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TriggerCultureFlip": [
+                  {
+                    "node": "field",
+                    "name": "triggerWeight",
+                    "validation": "Decimal"
+                  }
+                ],
+                "TriggerLowAllegiance": [
+                  {
+                    "node": "field",
+                    "name": "triggerWeight",
+                    "validation": "Decimal"
+                  }
+                ]
+              }
+            },
+            {
+              "node": "field",
+              "name": "spawnWeight",
+              "validation": "Decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RandomEventDefType",
+      "children": [
+        {
+          "node": "field",
+          "name": "id",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "nameID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "field",
+          "name": "warningID",
+          "validation": "StringInfo"
+        },
+        {
+          "node": "condition_field",
+          "name": "spawnType",
+          "type": "spawnType",
+          "branches": {
+            "Projectile": [
+              {
+                "node": "field",
+                "name": "projectileTarget",
+                "validation": "Simple",
+                "values": [
+                  "RandomConnectedLocation"
+                ]
+              },
+              {
+                "node": "field",
+                "name": "spawnEntity",
+                "validation": "Entity"
+              }
+            ],
+            "BuffAtLocation": [
+              {
+                "node": "field",
+                "name": "spawnEntity",
+                "validation": "Entity"
+              }
+            ],
+            "RacialBuffAtLocation": [
+              {
+                "node": "iterative_field",
+                "name": "racialBuff",
+                "count_key": "racialBuffCount",
+                "children": [
+                  {
+                    "node": "field",
+                    "name": "race",
+                    "validation": "StringInfo"
+                  },
+                  {
+                    "node": "field",
+                    "name": "buff",
+                    "validation": "Entity"
+                  }
+                ]
+              }
+            ],
+            "PeriodicBuffAtLocation": [
+              {
+                "node": "field",
+                "name": "spawnEntity",
+                "validation": "Entity"
+              },
+              {
+                "node": "field",
+                "name": "duration",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "period",
+                "validation": "Decimal"
+              }
+            ]
+          }
+        },
+        {
+          "node": "field",
+          "name": "playerOwnerType",
+          "validation": "Simple",
+          "values": [
+            "Invalid",
+            "LocationOwner",
+            "Pirate",
+            "Rebel",
+            "Occupation",
+            "MadVasari",
+            "Null"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "spawnLocation",
+          "validation": "Simple",
+          "values": [
+            "Invalid",
+            "RandomStar",
+            "RandomLocation",
+            "RandomPirateBase",
+            "TriggerLocation",
+            "AllLocations",
+            "RandomPlayerAllLocations",
+            "RandomNonHomeworld",
+            "RandomLocationSpace"
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "excludedSpawnLocation",
+          "count_key": "excludedSpawnLocationCount",
+          "validation": "Entity"
+        },
+        {
+          "node": "condition_field",
+          "name": "spawnRequirement",
+          "type": "RandomEventDefType.spawnRequirement",
+          "branches": {
+            "Timer": [
+              {
+                "node": "field",
+                "name": "respawnCount",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "nextSpawnTimeMin",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "nextSpawnTimeMax",
+                "validation": "Decimal"
+              }
+            ],
+            "TriggerCultureFlip": [
+              {
+                "node": "field",
+                "name": "triggerWeight",
+                "validation": "Decimal"
+              }
+            ],
+            "TriggerLowAllegiance": [
+              {
+                "node": "field",
+                "name": "triggerWeight",
+                "validation": "Decimal"
+              }
+            ]
+          }
+        },
+        {
+          "node": "field",
+          "name": "spawnWeight",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

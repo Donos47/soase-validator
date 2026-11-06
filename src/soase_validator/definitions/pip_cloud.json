@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "PipCloud",
+      "children": [
+        {
+          "node": "field",
+          "name": "pipCloudType",
+          "validation": "Simple",
+          "values": [
+            "EnemyShips",
+            "FriendlyShips",
+            "Modules",
+            "Planets"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "empireWindowPipIcon",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIconAreaOffsetFromCenter",
+          "validation": "Position"
+        },
+        {
+          "node": "field",
+          "name": "mainViewOverlay",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "mainViewOverlayUnderCursor",
+          "validation": "Brush"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIconMaxEntityCount",
+          "validation": "Integer"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

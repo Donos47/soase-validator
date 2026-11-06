@@ -7,8 +7,8 @@ from pathlib import Path
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from sose_validator.engine.diagnostics import CODE_CATALOGUE, filter_disabled
-from sose_validator.engine.model import Diagnostic, Position, Range, Severity
+from soase_validator.engine.diagnostics import CODE_CATALOGUE, filter_disabled
+from soase_validator.engine.model import Diagnostic, Position, Range, Severity
 
 _CODES = sorted(CODE_CATALOGUE)
 
@@ -44,7 +44,7 @@ def _mixed_case(code: str, flips: list[bool]) -> str:
     return "".join(c.swapcase() if i < len(flips) and flips[i] else c for i, c in enumerate(code))
 
 
-# Feature: sose-validator, Property 23: Disabled codes are filtered
+# Feature: soase-validator, Property 23: Disabled codes are filtered
 # **Validates: Requirements 8.5**
 @settings(max_examples=100)
 @given(

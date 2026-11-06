@@ -1,0 +1,1476 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Galaxy",
+      "extension": ".galaxy",
+      "children": [
+        {
+          "node": "field",
+          "name": "isBrowsable",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "browsePictureName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "browseName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "browseDescription",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "isFirstCapitalShipIsFlagship",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "randomizeStartingPositions",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "planetArtifactDensity",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetBonusDensity",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:Population",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:CivilianModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:TacticalModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:Home",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:ArtifactLevel",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartHomePlanetUpgradeLevel:Infrastructure",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:Population",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:CivilianModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:TacticalModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:Home",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:ArtifactLevel",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartHomePlanetUpgradeLevel:Infrastructure",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "recommendedGameType",
+          "count_key": "recommendedGameTypeCount",
+          "validation": "Simple",
+          "type": "Galaxy.recommendedGameTypeCount.recommendedGameType"
+        },
+        {
+          "node": "field",
+          "name": "metersPerGalaxyUnit",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "pixelsPerGalaxyUnit",
+          "validation": "Decimal"
+        },
+        {
+          "node": "condition_field",
+          "name": "useRandomGenerator",
+          "validation": "Boolean",
+          "branches": {
+            "TRUE": [
+              {
+                "node": "structure_reference",
+                "name": "randomizerParams",
+                "structure": "Galaxy.useRandomGenerator.randomizerParams"
+              }
+            ],
+            "FALSE": [
+              {
+                "node": "field",
+                "name": "galaxyWidth",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "galaxyHeight",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "nextStarNameUniqueId",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "nextPlanetNameUniqueId",
+                "validation": "Integer"
+              },
+              {
+                "node": "field",
+                "name": "triggerCount",
+                "version": "Rebellion",
+                "validation": "Integer"
+              },
+              {
+                "node": "iterative_field",
+                "name": "star",
+                "count_key": "starCount",
+                "children": [
+                  {
+                    "node": "field",
+                    "name": "designName",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "inGameName",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "type",
+                    "validation": "GalaxyDesign"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pos",
+                    "validation": "Position"
+                  },
+                  {
+                    "node": "field",
+                    "name": "radius",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "moveAreaRadius",
+                    "help": "deprecated with Version 5",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "hyperspaceExitRadius",
+                    "help": "deprecated with Version 5",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "iterative_field",
+                    "name": "planet",
+                    "count_key": "planetCount",
+                    "children": [
+                      {
+                        "node": "field",
+                        "name": "designName",
+                        "validation": "Any"
+                      },
+                      {
+                        "node": "field",
+                        "name": "inGameName",
+                        "validation": "Any"
+                      },
+                      {
+                        "node": "field",
+                        "name": "type",
+                        "validation": "GalaxyDesign"
+                      },
+                      {
+                        "node": "field",
+                        "name": "pos",
+                        "validation": "Position"
+                      },
+                      {
+                        "node": "field",
+                        "name": "moveAreaRadius",
+                        "help": "deprecated with Version 5",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "hyperspaceExitRadius",
+                        "help": "deprecated with Version 5",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "owner",
+                        "validation": "Any",
+                        "values": [
+                          "Player-0",
+                          "Player-1",
+                          "Player-2",
+                          "Player-3",
+                          "Player-4",
+                          "Player-5",
+                          "Player-6",
+                          "Player-7",
+                          "Player-8",
+                          "Player-9",
+                          "NewPlayer",
+                          "NewPlayer0",
+                          "NewPlayer1",
+                          "NewPlayer2",
+                          "NewPlayer3",
+                          "NewPlayer4",
+                          "NewPlayer5",
+                          "NewPlayer6",
+                          "NewPlayer7",
+                          "NewPlayer8",
+                          "NewPlayer9",
+                          "Player0",
+                          "Player1",
+                          "Player2",
+                          "Player3",
+                          "Player4",
+                          "Player5",
+                          "Player6",
+                          "Player7",
+                          "Player8",
+                          "Player9",
+                          "0",
+                          "1",
+                          "2",
+                          "3",
+                          "4",
+                          "5",
+                          "6",
+                          "7",
+                          "8",
+                          "9",
+                          "Pirate"
+                        ]
+                      },
+                      {
+                        "node": "field",
+                        "name": "isHomePlanet",
+                        "validation": "Boolean"
+                      },
+                      {
+                        "node": "field",
+                        "name": "normalStartUpgradeLevelForPopulation",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "normalStartUpgradeLevelForCivilianModules",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "normalStartUpgradeLevelForTacticalModules",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "normalStartUpgradeLevelForArtifacts",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "normalStartUpgradeLevelForInfrastructure",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "quickStartUpgradeLevelForPopulation",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "quickStartUpgradeLevelForCivilianModules",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "quickStartUpgradeLevelForTacticalModules",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "quickStartUpgradeLevelForArtifacts",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "quickStartUpgradeLevelForInfrastructure",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "structure_reference",
+                        "name": "planetItems",
+                        "structure": "TemplateType"
+                      },
+                      {
+                        "node": "field",
+                        "name": "spawnProbability",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "useDefaultTemplate",
+                        "validation": "Boolean"
+                      },
+                      {
+                        "node": "field",
+                        "name": "entityCount",
+                        "version": "Rebellion",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "iterative_field",
+                        "name": "asteroid",
+                        "count_key": "asteroidCount",
+                        "children": [
+                          {
+                            "node": "field",
+                            "name": "maxRefineryCount",
+                            "validation": "Integer"
+                          },
+                          {
+                            "node": "field",
+                            "name": "extractionRate",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "refineryRate",
+                            "validation": "Decimal"
+                          },
+                          {
+                            "node": "field",
+                            "name": "pos",
+                            "validation": "Coordinate"
+                          },
+                          {
+                            "node": "field",
+                            "name": "type",
+                            "validation": "Simple",
+                            "values": [
+                              "ResourceAsteroidMetal",
+                              "ResourceAsteroidCrystal"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "node": "iterative_field",
+                    "name": "connection",
+                    "count_key": "connectionCount",
+                    "children": [
+                      {
+                        "node": "field",
+                        "name": "planetIndexA",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "planetIndexB",
+                        "validation": "Integer"
+                      },
+                      {
+                        "node": "field",
+                        "name": "spawnProbability",
+                        "validation": "Decimal"
+                      },
+                      {
+                        "node": "field",
+                        "name": "type",
+                        "validation": "Simple",
+                        "values": [
+                          "PhaseLane",
+                          "Wormhole"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "node": "field",
+                    "name": "entityCount",
+                    "version": "Rebellion",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "spawnProbability",
+                    "validation": "Decimal"
+                  }
+                ]
+              },
+              {
+                "node": "iterative_field",
+                "name": "interStarConnection",
+                "count_key": "interStarConnectionCount",
+                "children": [
+                  {
+                    "node": "field",
+                    "name": "starIndexA",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "planetIndexA",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "starIndexB",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "planetIndexB",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "spawnProbability",
+                    "validation": "Decimal"
+                  },
+                  {
+                    "node": "field",
+                    "name": "type",
+                    "validation": "Simple",
+                    "values": [
+                      "Wormhole",
+                      "PhaseLane"
+                    ]
+                  }
+                ]
+              },
+              {
+                "node": "iterative_field",
+                "name": "player",
+                "count_key": "playerCount",
+                "children": [
+                  {
+                    "node": "field",
+                    "name": "designName",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "inGameName",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "overrideRaceName",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "teamIndex",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "startingCredits",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "startingMetal",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "startingCrystal",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "condition_field",
+                    "name": "playerType",
+                    "version": "Rebellion193",
+                    "type": "PlayerStructure.playerType",
+                    "branches": {
+                      "NPCMinorFaction": [
+                        {
+                          "node": "field",
+                          "name": "minorFactionPlayerDefName",
+                          "version": "Rebellion193",
+                          "validation": "Any"
+                        }
+                      ],
+                      "NPCPirateRaider": [],
+                      "NPCRebel": [],
+                      "NPCOccupationVictory": [],
+                      "NPCMadVasari": [],
+                      "NPCMilitia": [],
+                      "Normal": []
+                    }
+                  },
+                  {
+                    "node": "field",
+                    "name": "isNormalPlayer",
+                    "version": "Rebellion185",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isRaidingPlayer",
+                    "version": "Rebellion185",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isInsurgentPlayer",
+                    "version": "Rebellion185",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isOccupationPlayer",
+                    "version": "Rebellion185",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "isMadVasariPlayer",
+                    "version": "Rebellion185",
+                    "validation": "Boolean"
+                  },
+                  {
+                    "node": "field",
+                    "name": "themeGroup",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "themeIndex",
+                    "validation": "Integer"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pictureGroup",
+                    "validation": "Any"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pictureIndex",
+                    "validation": "Integer"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "node": "iterative_field",
+          "name": "template",
+          "count_key": "templates",
+          "children": [
+            {
+              "node": "field",
+              "name": "templateName",
+              "validation": "Any"
+            },
+            {
+              "node": "iterative_field",
+              "name": "template",
+              "count_key": "subTemplates",
+              "validation": "GalaxyTemplate"
+            },
+            {
+              "node": "iterative_field",
+              "name": "group",
+              "count_key": "groups",
+              "children": [
+                {
+                  "node": "structure_reference",
+                  "name": "condition",
+                  "structure": "GroupType.condition"
+                },
+                {
+                  "node": "field",
+                  "name": "owner",
+                  "validation": "GalaxyDesign"
+                },
+                {
+                  "node": "field",
+                  "name": "colonizeChance",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "iterative_field",
+                  "name": "item",
+                  "count_key": "items",
+                  "validation": "GalaxyDesign"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "dlcID",
+          "version": "Rebellion193",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "RandomStarType",
+      "children": [
+        {
+          "node": "field",
+          "name": "type",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "radius",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "moveAreaRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceExitRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "connectionStarRadiusRange",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "connectionChance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxPlayerCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "ring",
+          "count_key": "ringCount",
+          "children": [
+            {
+              "node": "structure_reference",
+              "name": "starRadiusRange",
+              "structure": "RandomStarType.ringCount.ring.starRadiusRange"
+            },
+            {
+              "node": "field",
+              "name": "militiaColonizationPerc",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "planetGroup",
+              "count_key": "planetGroupCount",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "minCount",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "maxCount",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "iterative_field",
+                  "name": "planetType",
+                  "count_key": "planetTypeCount",
+                  "validation": "GalaxyDesign"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PlanetGroupType",
+      "children": [
+        {
+          "node": "field",
+          "name": "minCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "planetType",
+          "count_key": "planetTypeCount",
+          "validation": "GalaxyDesign"
+        }
+      ]
+    },
+    {
+      "name": "GalaxyStarType",
+      "children": [
+        {
+          "node": "field",
+          "name": "designName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "inGameName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "type",
+          "validation": "GalaxyDesign"
+        },
+        {
+          "node": "field",
+          "name": "pos",
+          "validation": "Position"
+        },
+        {
+          "node": "field",
+          "name": "radius",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "moveAreaRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceExitRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "planet",
+          "count_key": "planetCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "inGameName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "GalaxyDesign"
+            },
+            {
+              "node": "field",
+              "name": "pos",
+              "validation": "Position"
+            },
+            {
+              "node": "field",
+              "name": "moveAreaRadius",
+              "help": "deprecated with Version 5",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "hyperspaceExitRadius",
+              "help": "deprecated with Version 5",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "owner",
+              "validation": "Any",
+              "values": [
+                "Player-0",
+                "Player-1",
+                "Player-2",
+                "Player-3",
+                "Player-4",
+                "Player-5",
+                "Player-6",
+                "Player-7",
+                "Player-8",
+                "Player-9",
+                "NewPlayer",
+                "NewPlayer0",
+                "NewPlayer1",
+                "NewPlayer2",
+                "NewPlayer3",
+                "NewPlayer4",
+                "NewPlayer5",
+                "NewPlayer6",
+                "NewPlayer7",
+                "NewPlayer8",
+                "NewPlayer9",
+                "Player0",
+                "Player1",
+                "Player2",
+                "Player3",
+                "Player4",
+                "Player5",
+                "Player6",
+                "Player7",
+                "Player8",
+                "Player9",
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "Pirate"
+              ]
+            },
+            {
+              "node": "field",
+              "name": "isHomePlanet",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "normalStartUpgradeLevelForPopulation",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "normalStartUpgradeLevelForCivilianModules",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "normalStartUpgradeLevelForTacticalModules",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "normalStartUpgradeLevelForArtifacts",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "normalStartUpgradeLevelForInfrastructure",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "quickStartUpgradeLevelForPopulation",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "quickStartUpgradeLevelForCivilianModules",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "quickStartUpgradeLevelForTacticalModules",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "quickStartUpgradeLevelForArtifacts",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "quickStartUpgradeLevelForInfrastructure",
+              "validation": "Integer"
+            },
+            {
+              "node": "structure_reference",
+              "name": "planetItems",
+              "structure": "TemplateType"
+            },
+            {
+              "node": "field",
+              "name": "spawnProbability",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "useDefaultTemplate",
+              "validation": "Boolean"
+            },
+            {
+              "node": "field",
+              "name": "entityCount",
+              "version": "Rebellion",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "asteroid",
+              "count_key": "asteroidCount",
+              "children": [
+                {
+                  "node": "field",
+                  "name": "maxRefineryCount",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "field",
+                  "name": "extractionRate",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "refineryRate",
+                  "validation": "Decimal"
+                },
+                {
+                  "node": "field",
+                  "name": "pos",
+                  "validation": "Coordinate"
+                },
+                {
+                  "node": "field",
+                  "name": "type",
+                  "validation": "Simple",
+                  "values": [
+                    "ResourceAsteroidMetal",
+                    "ResourceAsteroidCrystal"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "connection",
+          "count_key": "connectionCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "planetIndexA",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "planetIndexB",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "spawnProbability",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Simple",
+              "values": [
+                "PhaseLane",
+                "Wormhole"
+              ]
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "entityCount",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "spawnProbability",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GalaxyPlanetType",
+      "children": [
+        {
+          "node": "field",
+          "name": "designName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "inGameName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "type",
+          "validation": "GalaxyDesign"
+        },
+        {
+          "node": "field",
+          "name": "pos",
+          "validation": "Position"
+        },
+        {
+          "node": "field",
+          "name": "moveAreaRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "hyperspaceExitRadius",
+          "help": "deprecated with Version 5",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "owner",
+          "validation": "Any",
+          "values": [
+            "Player-0",
+            "Player-1",
+            "Player-2",
+            "Player-3",
+            "Player-4",
+            "Player-5",
+            "Player-6",
+            "Player-7",
+            "Player-8",
+            "Player-9",
+            "NewPlayer",
+            "NewPlayer0",
+            "NewPlayer1",
+            "NewPlayer2",
+            "NewPlayer3",
+            "NewPlayer4",
+            "NewPlayer5",
+            "NewPlayer6",
+            "NewPlayer7",
+            "NewPlayer8",
+            "NewPlayer9",
+            "Player0",
+            "Player1",
+            "Player2",
+            "Player3",
+            "Player4",
+            "Player5",
+            "Player6",
+            "Player7",
+            "Player8",
+            "Player9",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "Pirate"
+          ]
+        },
+        {
+          "node": "field",
+          "name": "isHomePlanet",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "normalStartUpgradeLevelForPopulation",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartUpgradeLevelForCivilianModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartUpgradeLevelForTacticalModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartUpgradeLevelForArtifacts",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalStartUpgradeLevelForInfrastructure",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartUpgradeLevelForPopulation",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartUpgradeLevelForCivilianModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartUpgradeLevelForTacticalModules",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartUpgradeLevelForArtifacts",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "quickStartUpgradeLevelForInfrastructure",
+          "validation": "Integer"
+        },
+        {
+          "node": "structure_reference",
+          "name": "planetItems",
+          "structure": "TemplateType"
+        },
+        {
+          "node": "field",
+          "name": "spawnProbability",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "useDefaultTemplate",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "entityCount",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "asteroid",
+          "count_key": "asteroidCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "maxRefineryCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "extractionRate",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "refineryRate",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "pos",
+              "validation": "Coordinate"
+            },
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Simple",
+              "values": [
+                "ResourceAsteroidMetal",
+                "ResourceAsteroidCrystal"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Galaxy.useRandomGenerator.randomizerParams.starPosOffsetRange",
+      "children": [
+        {
+          "node": "field",
+          "name": "minPercentage",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxPercentage",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "Galaxy.useRandomGenerator.randomizerParams.playerParams.homePlanetStarRadiusRange",
+      "children": [
+        {
+          "node": "field",
+          "name": "minPercentage",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxPercentage",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "Galaxy.useRandomGenerator.randomizerParams.playerParams.extraPlanetsRadiusRange",
+      "children": [
+        {
+          "node": "field",
+          "name": "minPercentage",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxPercentage",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "Galaxy.useRandomGenerator.randomizerParams.playerParams",
+      "children": [
+        {
+          "node": "field",
+          "name": "startingCredits",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "startingMetal",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "startingCrystal",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "homePlanetType",
+          "validation": "Any"
+        },
+        {
+          "node": "structure_reference",
+          "name": "homePlanetStarRadiusRange",
+          "structure": "Galaxy.useRandomGenerator.randomizerParams.playerParams.homePlanetStarRadiusRange"
+        },
+        {
+          "node": "field",
+          "name": "areExtraPlanetsColonized",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "extraPlanetsMaxRadius",
+          "validation": "Integer"
+        },
+        {
+          "node": "structure_reference",
+          "name": "extraPlanetsRadiusRange",
+          "structure": "Galaxy.useRandomGenerator.randomizerParams.playerParams.extraPlanetsRadiusRange"
+        },
+        {
+          "node": "iterative_field",
+          "name": "extraPlanetGroup",
+          "count_key": "extraPlanetGroupCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "planetType",
+              "count_key": "planetTypeCount",
+              "validation": "GalaxyDesign"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RandomStarType.ringCount.ring.starRadiusRange",
+      "children": [
+        {
+          "node": "field",
+          "name": "minPercentage",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxPercentage",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "Galaxy.useRandomGenerator.randomizerParams",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "starPosOffsetRange",
+          "structure": "Galaxy.useRandomGenerator.randomizerParams.starPosOffsetRange"
+        },
+        {
+          "node": "structure_reference",
+          "name": "playerParams",
+          "structure": "Galaxy.useRandomGenerator.randomizerParams.playerParams"
+        },
+        {
+          "node": "iterative_field",
+          "name": "star",
+          "count_key": "starCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "radius",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "moveAreaRadius",
+              "help": "deprecated with Version 5",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "hyperspaceExitRadius",
+              "help": "deprecated with Version 5",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "connectionStarRadiusRange",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "connectionChance",
+              "validation": "Decimal"
+            },
+            {
+              "node": "field",
+              "name": "maxPlayerCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "iterative_field",
+              "name": "ring",
+              "count_key": "ringCount",
+              "children": [
+                {
+                  "node": "structure_reference",
+                  "name": "starRadiusRange",
+                  "structure": "RandomStarType.ringCount.ring.starRadiusRange"
+                },
+                {
+                  "node": "field",
+                  "name": "militiaColonizationPerc",
+                  "validation": "Integer"
+                },
+                {
+                  "node": "iterative_field",
+                  "name": "planetGroup",
+                  "count_key": "planetGroupCount",
+                  "children": [
+                    {
+                      "node": "field",
+                      "name": "minCount",
+                      "validation": "Integer"
+                    },
+                    {
+                      "node": "field",
+                      "name": "maxCount",
+                      "validation": "Integer"
+                    },
+                    {
+                      "node": "iterative_field",
+                      "name": "planetType",
+                      "count_key": "planetTypeCount",
+                      "validation": "GalaxyDesign"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

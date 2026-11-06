@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "EntryVehicle",
+      "children": [
+        {
+          "node": "field",
+          "name": "AtmosphereEntryEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "HasSurfaceImpactEffect",
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "SurfaceImpactEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "SurfaceImpactSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "LaunchSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "mass",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationStrafe",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxAccelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxDecelerationAngular",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxSpeedLinear",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollRate",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRollAngle",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "ExhaustParticleSystemName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "ExhaustTrailTextureName",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "ExhaustTrailWidth",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AtmosphereEntrySoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "SpaceTravelSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "minShadow",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxShadow",
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

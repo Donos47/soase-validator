@@ -1,6 +1,6 @@
 """Property test for gate monotonicity on Rebellion 1.96.
 
-# Feature: sose-validator, Property 10: Gate monotonicity for Rebellion 1.96
+# Feature: soase-validator, Property 10: Gate monotonicity for Rebellion 1.96
 
 **Validates: Requirements 3.9, 13.8**
 """
@@ -10,7 +10,7 @@ from __future__ import annotations
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from sose_validator.engine.versions import (
+from soase_validator.engine.versions import (
     GATE_TOKENS,
     GameVersion,
     VersionData,

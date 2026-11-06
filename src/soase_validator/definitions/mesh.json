@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Mesh",
+      "help": "Used to create abilities.",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "MeshData",
+          "structure": "MeshData"
+        }
+      ]
+    },
+    {
+      "name": "MeshData",
+      "children": [
+        {
+          "node": "field",
+          "name": "maxDiffuseMipLevel",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "hasValidTangents",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "BoundingRadius",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MaxBoundingExtents",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "MinBoundingExtents",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "iterative_field",
+          "name": "Material",
+          "count_key": "NumMaterials",
+          "children": [
+            {
+              "node": "field",
+              "name": "DiffuseTextureFileName",
+              "required": true,
+              "validation": "Texture"
+            },
+            {
+              "node": "field",
+              "name": "SelfIlluminationTextureFileName",
+              "required": true,
+              "validation": "Texture"
+            },
+            {
+              "node": "field",
+              "name": "NormalTextureFileName",
+              "required": true,
+              "validation": "Texture"
+            },
+            {
+              "node": "field",
+              "name": "DisplacementTextureFileName",
+              "required": true,
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "TeamColorTextureFileName",
+              "required": true,
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "Diffuse",
+              "required": true,
+              "validation": "Color"
+            },
+            {
+              "node": "field",
+              "name": "Ambient",
+              "required": true,
+              "validation": "Color"
+            },
+            {
+              "node": "field",
+              "name": "Specular",
+              "required": true,
+              "validation": "Color"
+            },
+            {
+              "node": "field",
+              "name": "Emissive",
+              "required": true,
+              "validation": "Color"
+            },
+            {
+              "node": "field",
+              "name": "Glossiness",
+              "required": true,
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "Point",
+          "count_key": "NumPoints",
+          "children": [
+            {
+              "node": "field",
+              "name": "DataString",
+              "required": true,
+              "validation": "MeshPoint"
+            },
+            {
+              "node": "field",
+              "name": "Position",
+              "required": true,
+              "validation": "Coordinate"
+            },
+            {
+              "node": "field",
+              "name": "Orientation",
+              "required": true,
+              "validation": "Orientation"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

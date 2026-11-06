@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Rebellion",
+      "help": "Rebellion Syntax and Constraints Wiki.\nCreated by ZombiesRus5",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "Ability",
+          "structure": "Ability"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Buff",
+          "structure": "Buff"
+        },
+        {
+          "node": "structure_reference",
+          "name": "CapitalShip",
+          "structure": "CapitalShip"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Gameplay Constants",
+          "structure": "Constants"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Fighter",
+          "structure": "Fighter"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Frigate",
+          "structure": "Frigate"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Galaxy",
+          "structure": "Galaxy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "GalaxyScenarioDef",
+          "structure": "GalaxyScenarioDef"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetBonus",
+          "structure": "PlanetBonus"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModule",
+          "structure": "Rebellion.PlanetModule"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Planet",
+          "structure": "Planet"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Player",
+          "structure": "Player"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ResearchSubject",
+          "structure": "ResearchSubject"
+        },
+        {
+          "node": "structure_reference",
+          "name": "SpaceMine",
+          "structure": "SpaceMine"
+        },
+        {
+          "node": "structure_reference",
+          "name": "StarBaseUpgrade",
+          "structure": "StarBaseUpgrade"
+        },
+        {
+          "node": "structure_reference",
+          "name": "StarBase",
+          "structure": "StarBase"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Star",
+          "structure": "Star"
+        },
+        {
+          "node": "structure_reference",
+          "name": "StringInfo",
+          "structure": "Str"
+        },
+        {
+          "node": "structure_reference",
+          "name": "Sounddata",
+          "structure": "Sounddata"
+        }
+      ]
+    },
+    {
+      "name": "Rebellion.PlanetModule",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleHangarDefense",
+          "structure": "PlanetModuleHangarDefense"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleRefinery",
+          "structure": "PlanetModuleRefinery"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleShipFactory",
+          "structure": "PlanetModuleShipFactory"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleStandard",
+          "structure": "PlanetModuleStandard"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleTradePort",
+          "structure": "PlanetModuleTradePort"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetModuleWeaponDefense",
+          "structure": "PlanetModuleWeaponDefense"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

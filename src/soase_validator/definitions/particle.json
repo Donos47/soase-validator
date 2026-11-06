@@ -1,0 +1,1972 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Particle",
+      "extension": ".particle",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "ParticleSimulation",
+          "structure": "ParticleSimulation"
+        }
+      ]
+    },
+    {
+      "name": "ParticleSimulation",
+      "children": [
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "EmitterType",
+          "count_key": "NumEmitters",
+          "limit": 99,
+          "children": [
+            {
+              "node": "condition_field",
+              "name": "EmitterType",
+              "type": "ParticleSimulation.NumEmitters.EmitterType",
+              "branches": {
+                "Point": [
+                  {
+                    "node": "structure_reference",
+                    "name": "EmitterContents",
+                    "structure": "EmitterContentsPoint",
+                    "required": true
+                  }
+                ],
+                "Ring": [
+                  {
+                    "node": "structure_reference",
+                    "name": "EmitterContents",
+                    "structure": "EmitterContentsRing",
+                    "required": true
+                  }
+                ],
+                "Sphere": [
+                  {
+                    "node": "structure_reference",
+                    "name": "EmitterContents",
+                    "structure": "EmitterContentsSphere",
+                    "required": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "AffectorType",
+          "count_key": "NumAffectors",
+          "children": [
+            {
+              "node": "condition_field",
+              "name": "AffectorType",
+              "type": "ParticleSimulation.NumAffectors.AffectorType",
+              "branches": {
+                "LinearInflate": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsLinearInflate",
+                    "required": true
+                  }
+                ],
+                "Fade": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsFade",
+                    "required": true
+                  }
+                ],
+                "LinearForceToPoint": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsLinearForceToPoint",
+                    "required": true
+                  }
+                ],
+                "ColorOscillator": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsColorOscillator",
+                    "required": true
+                  }
+                ],
+                "Jitter": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsJitter",
+                    "required": true
+                  }
+                ],
+                "SizeOscillator": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsSizeOscillator",
+                    "required": true
+                  }
+                ],
+                "LinearForceInDirection": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsLinearForceInDirection",
+                    "required": true
+                  }
+                ],
+                "RotateAboutAxis": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsRotateAboutAxis",
+                    "required": true
+                  }
+                ],
+                "KillParticlesNearPoint": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsKillParticlesNearPoint",
+                    "required": true
+                  }
+                ],
+                "Drag": [
+                  {
+                    "node": "structure_reference",
+                    "name": "AffectorContents",
+                    "structure": "AffectorContentsDrag",
+                    "required": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "length",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "EmitterContentsPoint",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "EmitRate",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteEmitCount",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MaxEmitCount",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "hasEmitIntervals",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalRunDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalWaitDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartMass",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartColor",
+          "required": true,
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "ParticleWidth",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleHeight",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "required": true,
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "Position",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "Orientation",
+          "required": true,
+          "validation": "Orientation"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutForward",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutUp",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutCross",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BillboardAnchor",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "ParticleFacing",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "PipelineEffectID",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "AreParticlesAttached",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "textureName",
+          "count_key": "numTextures",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationName",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationSpawnType",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationOnParticleFPS",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticlesRotate",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxisType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxis",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "RotationDirectionType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "AngleVariance",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "EmitterContentsRing",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "EmitRate",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteEmitCount",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MaxEmitCount",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "hasEmitIntervals",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalRunDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalWaitDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartMass",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartColor",
+          "required": true,
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "ParticleWidth",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleHeight",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "required": true,
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "Position",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "Orientation",
+          "required": true,
+          "validation": "Orientation"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutForward",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutUp",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutCross",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BillboardAnchor",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "ParticleFacing",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "PipelineEffectID",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "AreParticlesAttached",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "textureName",
+          "count_key": "numTextures",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationName",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationSpawnType",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationOnParticleFPS",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticlesRotate",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxisType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxis",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "RotationDirectionType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "RingRadiusXMin",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RingRadiusXMax",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RingRadiusYMin",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RingRadiusYMax",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartSpeedTangential",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartSpeedRingNormal",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ScaleStartSpeedsByRadius",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleStart",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleStop",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minSpawnHeight",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxSpawnHeight",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "spawnDirectionIsParallelToPlane",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "isSpawnAngleRandom",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "nonRandomSpawnLoopEmittedParticleCount",
+          "required": true,
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "EmitterContentsSphere",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "EmitRate",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteEmitCount",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MaxEmitCount",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "hasEmitIntervals",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalRunDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "emitIntervalWaitDuration",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartLinearSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartAngularSpeed",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMinStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartRotation",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartMass",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleStartColor",
+          "required": true,
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "ParticleWidth",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleHeight",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MeshName",
+          "required": true,
+          "validation": "Mesh"
+        },
+        {
+          "node": "field",
+          "name": "Position",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "Orientation",
+          "required": true,
+          "validation": "Orientation"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutForward",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutUp",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "RotateAboutCross",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BillboardAnchor",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "ParticleFacing",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "PipelineEffectID",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "AreParticlesAttached",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "textureName",
+          "count_key": "numTextures",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationName",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationSpawnType",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "textureAnimationOnParticleFPS",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticlesRotate",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxisType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "MeshParticleRotationAxis",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "RotationDirectionType",
+          "required": true,
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusXMax",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusXMin",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusYMax",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusYMin",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusZMax",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SphereRadiusZMin",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartSpeedAzimuthalTangential",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ParticleMaxStartSpeedPolarTangential",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ScaleStartSpeedsByRadius",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleLatitudinalStart",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleLatitudinalStop",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleLongitudinalStart",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "SpawnAngleLongitudinalStop",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsLinearInflate",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "WidthInflateRate",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HeightInflateRate",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsFade",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "DoFadeOut",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "FadeOutTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DoFadeIn",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "FadeInTime",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsLinearForceToPoint",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "MinForce",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MaxForce",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Point",
+          "required": true,
+          "validation": "Coordinate"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsColorOscillator",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "TransitionPeriod",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "StartColor",
+          "required": true,
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "StartAlpha",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "EndColor",
+          "required": true,
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "EndAlpha",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsJitter",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "JitterForce",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseCommonForce",
+          "required": true,
+          "validation": "Boolean"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsSizeOscillator",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "TransitionPeriod",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BeginSizeX",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BeginSizeY",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "EndSizeX",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "EndSizeY",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsLinearForceInDirection",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "MinForce",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MaxForce",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Direction",
+          "required": true,
+          "validation": "Coordinate"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsRotateAboutAxis",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "AngularVelocity",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "Radius",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AxisOfRotation",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "AxisOrigin",
+          "required": true,
+          "validation": "Coordinate"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsKillParticlesNearPoint",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Point",
+          "required": true,
+          "validation": "Coordinate"
+        },
+        {
+          "node": "field",
+          "name": "Distance",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "AffectorContentsDrag",
+      "children": [
+        {
+          "node": "field",
+          "name": "Name",
+          "required": true,
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "Enabled",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "StartTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HasInfiniteLifeTime",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "TotalLifeTime",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseYoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "YoungParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UseOldParticleAffectThreshold",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "field",
+          "name": "OldParticleAffectThreshold",
+          "required": true,
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AffectAttachedParticles",
+          "required": true,
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "attachedEmitterName",
+          "count_key": "numAttachedEmitters",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "DragCoefficient",
+          "required": true,
+          "validation": "Decimal"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

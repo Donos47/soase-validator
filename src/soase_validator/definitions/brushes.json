@@ -1,0 +1,289 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Brushes",
+      "extension": ".brushes",
+      "children": [
+        {
+          "node": "field",
+          "name": "onlyLoadOnDemand",
+          "validation": "Boolean"
+        },
+        {
+          "node": "iterative_field",
+          "name": "brush",
+          "count_key": "brushCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "condition_field",
+              "name": "content",
+              "type": "BrushType.content",
+              "branches": {
+                "Simple": [
+                  {
+                    "node": "field",
+                    "name": "fileName",
+                    "validation": "Texture"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pixelBox",
+                    "validation": "Position"
+                  }
+                ],
+                "States": [
+                  {
+                    "node": "structure_reference",
+                    "name": "Disabled",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Pressed",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "CursorOver",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Focused",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Normal",
+                    "structure": "StatesType"
+                  }
+                ],
+                "MarginsAndStates": [
+                  {
+                    "node": "structure_reference",
+                    "name": "stretchMargins",
+                    "structure": "MarginsType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "contentMargins",
+                    "structure": "MarginsType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Disabled",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Pressed",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "CursorOver",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Focused",
+                    "structure": "StatesType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "Normal",
+                    "structure": "StatesType"
+                  }
+                ],
+                "Margins": [
+                  {
+                    "node": "structure_reference",
+                    "name": "stretchMargins",
+                    "structure": "MarginsType"
+                  },
+                  {
+                    "node": "structure_reference",
+                    "name": "contentMargins",
+                    "structure": "MarginsType"
+                  },
+                  {
+                    "node": "field",
+                    "name": "fileName",
+                    "validation": "Texture"
+                  },
+                  {
+                    "node": "field",
+                    "name": "pixelBox",
+                    "validation": "Position"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BrushType",
+      "children": [
+        {
+          "node": "field",
+          "name": "name",
+          "validation": "Any"
+        },
+        {
+          "node": "condition_field",
+          "name": "content",
+          "type": "BrushType.content",
+          "branches": {
+            "Simple": [
+              {
+                "node": "field",
+                "name": "fileName",
+                "validation": "Texture"
+              },
+              {
+                "node": "field",
+                "name": "pixelBox",
+                "validation": "Position"
+              }
+            ],
+            "States": [
+              {
+                "node": "structure_reference",
+                "name": "Disabled",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Pressed",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "CursorOver",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Focused",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Normal",
+                "structure": "StatesType"
+              }
+            ],
+            "MarginsAndStates": [
+              {
+                "node": "structure_reference",
+                "name": "stretchMargins",
+                "structure": "MarginsType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "contentMargins",
+                "structure": "MarginsType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Disabled",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Pressed",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "CursorOver",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Focused",
+                "structure": "StatesType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "Normal",
+                "structure": "StatesType"
+              }
+            ],
+            "Margins": [
+              {
+                "node": "structure_reference",
+                "name": "stretchMargins",
+                "structure": "MarginsType"
+              },
+              {
+                "node": "structure_reference",
+                "name": "contentMargins",
+                "structure": "MarginsType"
+              },
+              {
+                "node": "field",
+                "name": "fileName",
+                "validation": "Texture"
+              },
+              {
+                "node": "field",
+                "name": "pixelBox",
+                "validation": "Position"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "StatesType",
+      "children": [
+        {
+          "node": "field",
+          "name": "fileName",
+          "validation": "Texture"
+        },
+        {
+          "node": "field",
+          "name": "pixelBox",
+          "validation": "Position"
+        }
+      ]
+    },
+    {
+      "name": "MarginsType",
+      "children": [
+        {
+          "node": "field",
+          "name": "left",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "right",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "top",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "bottom",
+          "validation": "Integer"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

@@ -1,0 +1,4370 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "Constants",
+      "extension": ".constants",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "GameplayConstants",
+          "structure": "GameplayConstants"
+        }
+      ]
+    },
+    {
+      "name": "IconOffset",
+      "children": [
+        {
+          "node": "field",
+          "name": "xOffset",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "yOffset",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "ExperienceLevelData",
+      "children": [
+        {
+          "node": "field",
+          "name": "ExperienceNeededForNextLevel",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ExperienceGainedForDestroying",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePriceForNextLevel",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "TitanExperienceLevelData",
+      "version": "Rebellion",
+      "children": [
+        {
+          "node": "field",
+          "name": "ExperienceNeededForNextLevel",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ExperienceGainedForDestroying",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "ChanceToHitTarget",
+      "children": [
+        {
+          "node": "field",
+          "name": "CAPITALSHIP",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "INTERCEPTOR",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "BOMBER",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "KilledType",
+      "children": [
+        {
+          "node": "field",
+          "name": "AllyKilled",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "EnemyKilled",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "RelationShipChangesType",
+      "children": [
+        {
+          "node": "field",
+          "name": "Trade",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "ExternalVision",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "InternalVision",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "CeaseFire",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "PeaceTreaty",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "QuestLevelInfosType",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "QuestDefName",
+          "count_key": "QuestDefNameCount",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "PirateRaidComposition",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BuildSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "shipBuildRateGameSpeedScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "moduleBuildRateGameSpeedScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "CultureSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "cultureConnectionReferenceLength",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "allegianceShiftRateScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "ResearchSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "researchRateGameSpeedScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "IncomeSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "incomeRateGameSpeedScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "FleetSupplyData",
+      "children": [
+        {
+          "node": "field",
+          "name": "fleetSupplyScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "ShipPhysicsSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "shipLinearMaxSpeedGameSpeedScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shipLinearAccelerationGameSpeedScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shipLinearDecelerationGameSpeedScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "DiplomaticPointsSpeedData",
+      "children": [
+        {
+          "node": "field",
+          "name": "diplomaticPointsRateSpeedScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "occupyVictoryTimeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "PlayerAITable",
+      "children": [
+        {
+          "node": "field",
+          "name": "BuildShip",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "BuildModuleTactical",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "BuildModuleCivilian",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "BuildModuleResearch",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradeResearch",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePlanetArtifactLevel",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePlanetPopulation",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePlanetInfastructure",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePlanetSocial",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradePlanetIndustry",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "MaxBountyBidCount",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "UpgradeStarBase",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "BuildMines",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants",
+      "children": [
+        {
+          "node": "field",
+          "name": "pingTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "zoomDistanceLevel0ScalarForPlanets",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "zoomDistanceLevel0ScalarForNonPlanets",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "zoomDistanceLevel0",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "zoomDistanceLevel1",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "zoomDistanceLevel2",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "nearFarThreshold",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "baseHyperspaceRange",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "jumpAngle",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeForPeaceTreatyCooldown",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "defaultGravWellColor",
+          "version": "Rebellion",
+          "validation": "Color"
+        },
+        {
+          "node": "field",
+          "name": "phaseLaneWidth",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "unexploredPhaseLaneWidth",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "gravWellThickness",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "cannonsPerGravityWellRatio",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "cannonGravityWellRatioDenominator",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxAiCannons",
+          "version": "Rebellion193",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "preferNewAssetsGameCountThreshold",
+          "version": "Rebellion",
+          "validation": "Integer"
+        },
+        {
+          "node": "structure_reference",
+          "name": "EconomyData",
+          "structure": "GameplayConstants.EconomyData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PlanetData",
+          "structure": "GameplayConstants.PlanetData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "CapitalShipData",
+          "structure": "GameplayConstants.CapitalShipData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "TitanData",
+          "structure": "GameplayConstants.TitanData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "cultureData",
+          "structure": "GameplayConstants.cultureData",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "structure_reference",
+          "name": "effectData",
+          "structure": "GameplayConstants.effectData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "OrbitBodyData",
+          "structure": "GameplayConstants.OrbitBodyData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "StarBaseData",
+          "structure": "GameplayConstants.StarBaseData",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "structure_reference",
+          "name": "DamageData",
+          "structure": "GameplayConstants.DamageData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ResearchData",
+          "structure": "GameplayConstants.ResearchData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "VisibilityDistanceData",
+          "structure": "GameplayConstants.VisibilityDistanceData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "PhysicsData",
+          "structure": "GameplayConstants.PhysicsData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidDef",
+          "structure": "GameplayConstants.pirateRaidDef"
+        },
+        {
+          "node": "structure_reference",
+          "name": "buildSpeedData-Slow",
+          "structure": "BuildSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "buildSpeedData-Normal",
+          "structure": "BuildSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "buildSpeedData-Fast",
+          "structure": "BuildSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "buildSpeedData-Faster",
+          "structure": "BuildSpeedData",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "cultureSpeedData-Slow",
+          "structure": "CultureSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "cultureSpeedData-Normal",
+          "structure": "CultureSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "cultureSpeedData-Fast",
+          "structure": "CultureSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "cultureSpeedData-Faster",
+          "structure": "CultureSpeedData",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchSpeedData-Slow",
+          "structure": "ResearchSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchSpeedData-Normal",
+          "structure": "ResearchSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchSpeedData-Fast",
+          "structure": "ResearchSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "researchSpeedData-Faster",
+          "structure": "ResearchSpeedData",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "incomeSpeedData-Slow",
+          "structure": "IncomeSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "incomeSpeedData-Normal",
+          "structure": "IncomeSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "incomeSpeedData-Fast",
+          "structure": "IncomeSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "incomeSpeedData-Faster",
+          "structure": "IncomeSpeedData",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "fleetSupplyData-Small",
+          "structure": "FleetSupplyData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "fleetSupplyData-Normal",
+          "structure": "FleetSupplyData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "fleetSupplyData-Large",
+          "structure": "FleetSupplyData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "shipPhysicsSpeedData-Slow",
+          "structure": "ShipPhysicsSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "shipPhysicsSpeedData-Normal",
+          "structure": "ShipPhysicsSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "shipPhysicsSpeedData-Fast",
+          "structure": "ShipPhysicsSpeedData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "shipPhysicsSpeedData-Faster",
+          "structure": "ShipPhysicsSpeedData",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "diplomaticPointsSpeedData-Slow",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "DiplomacyOnly"
+        },
+        {
+          "node": "structure_reference",
+          "name": "diplomaticPointsSpeedData-Normal",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "DiplomacyOnly"
+        },
+        {
+          "node": "structure_reference",
+          "name": "diplomaticPointsSpeedData-Fast",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "DiplomacyOnly"
+        },
+        {
+          "node": "structure_reference",
+          "name": "diplomaticPointsSpeedData-Faster",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "DiplomacyOnly"
+        },
+        {
+          "node": "structure_reference",
+          "name": "victorySpeedData-Slow",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "victorySpeedData-Normal",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "victorySpeedData-Fast",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "victorySpeedData-Faster",
+          "structure": "DiplomaticPointsSpeedData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "marketDef",
+          "structure": "GameplayConstants.marketDef"
+        },
+        {
+          "node": "structure_reference",
+          "name": "playerAISharedDef",
+          "structure": "GameplayConstants.playerAISharedDef"
+        },
+        {
+          "node": "structure_reference",
+          "name": "playerDiplomacyAIDef",
+          "structure": "GameplayConstants.playerDiplomacyAIDef"
+        },
+        {
+          "node": "structure_reference",
+          "name": "playerTradeNetworkDef",
+          "structure": "GameplayConstants.playerTradeNetworkDef"
+        },
+        {
+          "node": "field",
+          "name": "targetTypeCounterData",
+          "version": "Entrenchment",
+          "validation": "Any"
+        },
+        {
+          "node": "structure_reference",
+          "name": "aiData",
+          "structure": "GameplayConstants.aiData",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "structure_reference",
+          "name": "victoryData",
+          "structure": "GameplayConstants.victoryData",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "outlawSectorsData",
+          "structure": "GameplayConstants.outlawSectorsData",
+          "version": "Rebellion185"
+        },
+        {
+          "node": "structure_reference",
+          "name": "outlawSectorsData",
+          "structure": "GameplayConstants.outlawSectorsData#2",
+          "version": "Rebellion193"
+        },
+        {
+          "node": "structure_reference",
+          "name": "minorFactionsData",
+          "structure": "GameplayConstants.minorFactionsData",
+          "version": "Rebellion193"
+        },
+        {
+          "node": "structure_reference",
+          "name": "miscEntityDefNames",
+          "structure": "GameplayConstants.miscEntityDefNames",
+          "version": "Rebellion193"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.EconomyData",
+      "children": [
+        {
+          "node": "field",
+          "name": "DefaultSalvageRefundPercent",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "bountyPerExperiencePointMin",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "bountyPerExperiencePointMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "bountyThresholdMin",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "bountyThresholdMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "percOfBuildTimeForScuttleTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "buildCountSmallPerButtonPress",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "buildCountLargePerButtonPress",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minTimeBetweenResourcePickUps",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.PlanetData",
+      "children": [
+        {
+          "node": "field",
+          "name": "allegiancePassiveGainRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "allegiancePassiveLossRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "allegianceFriendlyMaxGainRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "allegianceEnemyMaxLossRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "allegianceGainFromCultureMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "startingPopulationPercOfMax",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "healthOnColonize",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "healthRegenRatePercWhenBombed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "nearPlacementDistOffset",
+          "version": "Vanilla",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "farPlacementDistOffset",
+          "version": "Vanilla",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "placementRadiusOffset",
+          "version": "Vanilla",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "considerBeingBombedTimeForHealthRegen",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "considerBeingBombedTimeForPopulationGrowth",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "populationGrowthPercWhenBombed",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minPropagatedCultureRate",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "culturePropagationPerc",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "cultureDecayRate",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "moduleConstructorRespawnTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "moduleConstructorRespawnTimeWithEnemies",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "baseTaxRatePerPopulation",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "allegiance",
+          "count_key": "planetBaseAllegianceAtDistanceCount",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetCultureTakeOverPercWarning",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "experienceGainedForDestroying",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "scuttleTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "stripTime",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.CapitalShipData",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:0",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:1",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:2",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:3",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:4",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:5",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:6",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:7",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:8",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:9",
+          "structure": "ExperienceLevelData"
+        },
+        {
+          "node": "field",
+          "name": "LevelUpEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "LevelUpEffectSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "PurchaseNextLevelTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "neutralPlanetCultureRepelRateMultiplier",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "enemyPlanetCultureRepelRateMultiplier",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.TitanData",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:0",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:1",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:2",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:3",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:4",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:5",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:6",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:7",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:8",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ExperienceLevelData:9",
+          "structure": "TitanExperienceLevelData"
+        },
+        {
+          "node": "field",
+          "name": "LevelUpEffectName",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "LevelUpEffectSoundID",
+          "validation": "Sound"
+        },
+        {
+          "node": "field",
+          "name": "AdditionalPriceModifierPerLevel",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "AdditionalBuildTimeModifierPerLevel",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.cultureData",
+      "children": [
+        {
+          "node": "field",
+          "name": "minPropagatedCultureRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "culturePropagationPerc",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "cultureDecayRate",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "neutralOrbitBodyCultureRepelRateMultiplier",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "enemyOrbitBodyCultureRepelRateMultiplier",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.effectData",
+      "children": [
+        {
+          "node": "field",
+          "name": "pingEffect",
+          "validation": "Particle"
+        },
+        {
+          "node": "field",
+          "name": "rallyPointEffect",
+          "validation": "Particle"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.OrbitBodyData",
+      "children": [
+        {
+          "node": "field",
+          "name": "MinStarToPlanetGravityDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MinInterPlanetGravityDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "MaxInterPlanetGravityDistance",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.StarBaseData",
+      "children": [
+        {
+          "node": "field",
+          "name": "friendlyOrbitBodyBuildTimeScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "neutralOrbitBodyBuildTimeScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "enemyOrbitBodyBuildTimeScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.DamageData",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTIVERYLIGHT",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTILIGHT",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTIMEDIUM",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTIHEAVY",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTIVERYHEAVY",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:ANTIMODULE",
+          "structure": "ChanceToHitTarget",
+          "version": "Entrenchment"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:COMPOSITE",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:CAPITALSHIP",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:CAPITALABILITY",
+          "structure": "ChanceToHitTarget"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:TITAN",
+          "structure": "ChanceToHitTarget",
+          "version": "Rebellion"
+        },
+        {
+          "node": "structure_reference",
+          "name": "ChanceToHitTargetType:CORVETTE",
+          "structure": "ChanceToHitTarget",
+          "version": "Rebellion"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYLIGHT:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTILIGHT:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMEDIUM:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIHEAVY:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIVERYHEAVY:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:CapitalShip",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:VeryLight",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Light",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Medium",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Heavy",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:VeryHeavy",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:ANTIMODULE:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:COMPOSITE:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALSHIP:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:CapitalShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:VeryLight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Light",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Medium",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Heavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:VeryHeavy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Module",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Pirate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CAPITALABILITY:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:CapitalShip",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:VeryLight",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Light",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Medium",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Heavy",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:VeryHeavy",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Module",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Pirate",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:TITAN:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:CapitalShip",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:VeryLight",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Light",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Medium",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Heavy",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:VeryHeavy",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Module",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Pirate",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "DamagePercentBonus:CORVETTE:Titan",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "HullPointPercentageIncreasePerArmorPoint",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "EffectName",
+          "count_key": "NumCriticalHitEffectNames",
+          "validation": "Particle"
+        },
+        {
+          "node": "iterative_field",
+          "name": "SoundID",
+          "count_key": "NumCriticalHitEffectSoundIDs",
+          "validation": "Sound"
+        },
+        {
+          "node": "iterative_field",
+          "name": "Definition",
+          "count_key": "NumPersistentHullDamageEffects",
+          "children": [
+            {
+              "node": "field",
+              "name": "effectName",
+              "validation": "Particle"
+            },
+            {
+              "node": "field",
+              "name": "maxNumEffects",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "minHullDamagePercentage",
+              "validation": "Decimal"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "InCombatHullRegenerationPenalty",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "InCombatFighterBuildRatePenalty",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "considerBeingDamagedTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "enemyDPSInOrbitBodyISquadOwnerBuildRateScalar",
+          "version": "Entrenchment",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.ResearchData.rebellionInfoCount.rebellionInfo.spawnShips",
+      "children": [
+        {
+          "node": "field",
+          "name": "minFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.ResearchData.pirateMercenariesInfo.spawnShips",
+      "children": [
+        {
+          "node": "field",
+          "name": "minFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.ResearchData.pirateMercenariesInfo",
+      "children": [
+        {
+          "node": "field",
+          "name": "minTimeBetweenAttacks",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxTimeBetweenAttacks",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "arrivalDelayTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "structure_reference",
+          "name": "spawnShips",
+          "structure": "GameplayConstants.ResearchData.pirateMercenariesInfo.spawnShips"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.ResearchData",
+      "children": [
+        {
+          "node": "field",
+          "name": "tierLabCount-0",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-1",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-2",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-3",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-4",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-5",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-6",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "tierLabCount-7",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "rebellionInfo",
+          "count_key": "rebellionInfoCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "minTimeBetweenAttacks",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxTimeBetweenAttacks",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "arrivalDelayTime",
+              "validation": "Integer"
+            },
+            {
+              "node": "structure_reference",
+              "name": "spawnShips",
+              "structure": "GameplayConstants.ResearchData.rebellionInfoCount.rebellionInfo.spawnShips"
+            }
+          ]
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateMercenariesInfo",
+          "structure": "GameplayConstants.ResearchData.pirateMercenariesInfo",
+          "version": "Rebellion"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.VisibilityDistanceData",
+      "children": [
+        {
+          "node": "field",
+          "name": "capitalShipRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "entryVehicleRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "frigateRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "planetRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "asteroidRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "resourceAsteroidRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "debrisRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "cannonShellRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "starRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "planetModuleRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "starBaseRadiusMultiplier",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "spaceMineRadiusMultiplier",
+          "version": "Entrenchment",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "fighterRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxFighterMeshDistanceToCamera",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIconChildrenPlanetRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIconChildrenAsteroidRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "mainViewIconChildrenStarRadiusMultiplier",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "veryDistantIconFadeNearThresholdDistance",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "veryDistantIconFadeFarThresholdDistance",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.PhysicsData",
+      "children": [
+        {
+          "node": "field",
+          "name": "shipLinearMaxSpeedWhileSafeScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shipLinearAccelerationWhileSafeScalar",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "shipLinearDecelerationWhileSafeScalar",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.pirateRaidDef",
+      "children": [
+        {
+          "node": "field",
+          "name": "arrivalDelayTime",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minSupply",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxSupply",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "strengthPerOwnedPlanet",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "strengthPerCargoShip",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "strengthPerBounty",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "firstWarningTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalWarningTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minSendRaidTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxSendRaidTime",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "pirateQuestCooldownTime",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minQuestCredits",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxQuestCredits",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxNumUpgradesPerRaid",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "juicyPlanetModuleThreshold",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidStrengthThreshold:0",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "raidStrengthThreshold:1",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "raidStrengthThreshold:2",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "raidStrengthThreshold:3",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "raidStrengthThreshold:4",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidComposition:0",
+          "structure": "PirateRaidComposition"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidComposition:1",
+          "structure": "PirateRaidComposition"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidComposition:2",
+          "structure": "PirateRaidComposition"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidComposition:3",
+          "structure": "PirateRaidComposition"
+        },
+        {
+          "node": "structure_reference",
+          "name": "pirateRaidComposition:4",
+          "structure": "PirateRaidComposition"
+        },
+        {
+          "node": "field",
+          "name": "fleetStrengthLevel:Weak",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "fleetStrengthLevel:Moderate",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "fleetStrengthLevel:Strong",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "fleetStrengthLevel:Massive",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "fleetStrengthLevel:Overwhelming",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidCost:0",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidCost:1",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidCost:2",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidCost:3",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "raidCost:4",
+          "version": "Diplomacy",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.marketDef",
+      "children": [
+        {
+          "node": "field",
+          "name": "sellPrice",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "buyPrice",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "priceIncreaseAtMaxShift",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minTimeForMarketChange",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxTimeForMarketChange",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minTimeToCrashOrBoom",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxTimeToCrashOrBoom",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "minLengthOfCrashOrBoom",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxLengthOfCrashOrBoom",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalMarketMinShift",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "normalMarketMaxShift",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "boomThresholdPerPlayer",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "crashThresholdPerPlayer",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "boomMinShift",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "crashMaxShift",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "netChangeForCrash",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "netChangeForBoom",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.playerAISharedDef",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "table-Aggressive",
+          "structure": "PlayerAITable"
+        },
+        {
+          "node": "structure_reference",
+          "name": "table-Defensive",
+          "structure": "PlayerAITable"
+        },
+        {
+          "node": "structure_reference",
+          "name": "table-Research",
+          "structure": "PlayerAITable"
+        },
+        {
+          "node": "structure_reference",
+          "name": "table-Economic",
+          "structure": "PlayerAITable"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.playerDiplomacyAIDef",
+      "children": [
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:Trade",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:ExternalVision",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:InternalVision",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:CeaseFire",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:PeaceTreaty",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:Trade",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:ExternalVision",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:InternalVision",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:CeaseFire",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:PeaceTreaty",
+          "version": "Vanilla",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:Trade",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:ExternalVision",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:InternalVision",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:CeaseFire",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "offerOrAcceptTreatyHappinessThreshold:PeaceTreaty",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:Trade",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:ExternalVision",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:InternalVision",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:CeaseFire",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakTreatyHappinessThreshold:PeaceTreaty",
+          "version": "EntrenchmentOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:Trade",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:ExternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:InternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:CeaseFire",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:PeaceTreaty",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:ResearchPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:EfficiencyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:AntimatterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:ArmorPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:BeamWeaponPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:CulturePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:MetalCrystalPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:ThrusterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:PhaseJumpPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:PlanetBombingPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:ShieldPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:MarketPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:EnergyWeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:MassReductionPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:SupplyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:TacticalSlotsPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:WeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipThreshold:TradeIncomePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:Trade",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:ExternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:InternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:CeaseFire",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:PeaceTreaty",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:ResearchPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:EfficiencyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:AntimatterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:ArmorPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:BeamWeaponPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:CulturePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:MetalCrystalPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:ThrusterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:PhaseJumpPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:PlanetBombingPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:ShieldPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:MarketPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:EnergyWeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:MassReductionPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:SupplyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:TacticalSlotsPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:WeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipRequirement:TradeIncomePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:Trade",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:ExternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:InternalVision",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:CeaseFire",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:PeaceTreaty",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:ResearchPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:EfficiencyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:AntimatterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:ArmorPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:BeamWeaponPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:CulturePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:MetalCrystalPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:ThrusterPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:PhaseJumpPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:PlanetBombingPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:ShieldPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:MarketPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:EnergyWeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:MassReductionPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:SupplyPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:TacticalSlotsPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:WeaponCooldownPact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "breakRelationshipPenalty:TradeIncomePact",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForRelationship:Trade",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForRelationship:ExternalVision",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForRelationship:InternalVision",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForRelationship:CeaseFire",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForRelationship:PeaceTreaty",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:1",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:2",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:3",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:4",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:5",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:6",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:7",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:8",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:9",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:10",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:11",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomacyPointsForPactCount:12",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:2",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:3",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:4",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:5",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:6",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:7",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:8",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:9",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryForPlayerCount:10",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Easy",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Medium",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Hard",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Unfair",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Nightmare",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiDiplomaticPointBonusScalar:Impossible",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenTreatyOffers",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenQuests",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxRelationship",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "rejectMissionsPenalty",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "rejectMissionsMin",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militaryActionsMin",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militaryActionsMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militaryActionsDecayRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "KilledShip",
+          "structure": "KilledType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "KilledCivilianStructure",
+          "structure": "KilledType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "KilledTacticalStructure",
+          "structure": "KilledType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "KilledPlanet",
+          "structure": "KilledType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "KilledStarbase",
+          "structure": "KilledType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "iterative_field",
+          "name": "modifier",
+          "count_key": "adjacentTerritoryModifiers",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aggressivenessModifierMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aggressivenessModifierMin",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aggressivenessModifierIncrement",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "raceRelationsIncrement",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "factionRelationsIncrement",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militaryPresenceMin",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militaryPresenceMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "allyTreatyRelationshipChanges",
+          "structure": "RelationShipChangesType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "enemyTreatyRelationshipChanges",
+          "structure": "RelationShipChangesType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "iterative_field",
+          "name": "modifier",
+          "count_key": "allyPactCountRelationshipChanges",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "modifier",
+          "count_key": "enemyPactCountRelationshipChanges",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "creditsGivenRelationshipRatio",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "metalGivenRelationshipRatio",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "crystalGivenRelationshipRatio",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "resourceGivenMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "resourceGivenChangeRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "tradeBonusRatePerTrip",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "tradeBonusCap",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "tradeBonusDecayRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetaryEnvoyBonusDecayRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetaryEnvoyBonusMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetaryEnvoyBonusTimeout",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "questTimeoutRatio",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Hateful",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Abysmal",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Warming",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Neutral",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Friendly",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Peaceful",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Cooperative",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Beneficial",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Symbiotic",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "flavorTextLevel:Devoted",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Hateful",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Abysmal",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Warming",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Neutral",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Friendly",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Peaceful",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Cooperative",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Beneficial",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Symbiotic",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "relationshipLevelMissionBonus:Devoted",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "diplomaticVictoryMultiplier",
+          "version": "DiplomacyOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "positiveDiplomaticPointsPerPoint",
+          "version": "DiplomacyOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "negativeDiplomaticPointsPerPoint",
+          "version": "DiplomacyOnly",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiBonusMax",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "aiBonusRate",
+          "version": "Diplomacy",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeBombAnyPlanetLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeGiveResourcesLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeKillShipsLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeKillCapitalShipsLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeKillCivilianStructuresLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeKillTacticalStructuresLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "structure_reference",
+          "name": "QuestTypeSendEnvoyLevelInfos",
+          "structure": "QuestLevelInfosType",
+          "version": "Diplomacy"
+        },
+        {
+          "node": "iterative_field",
+          "name": "FactionName",
+          "count_key": "FactionCount",
+          "version": "Rebellion",
+          "validation": "StringInfo"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.playerTradeNetworkDef",
+      "children": [
+        {
+          "node": "field",
+          "name": "incomeRateBonusPerLongestNodeDistanceNode",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.aiData",
+      "children": [
+        {
+          "node": "field",
+          "name": "aiRetreatThreshold",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.victoryData",
+      "children": [
+        {
+          "node": "field",
+          "name": "occupationVictoryStarType",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "occupationVictoryStarName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "occupationVictoryPlanetType",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "occupationVictoryPlanetName",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "occupationVictoryPlanetTemplate",
+          "validation": "GalaxyTemplate"
+        },
+        {
+          "node": "field",
+          "name": "occupationVictoryTime",
+          "validation": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.outlawSectorsData.spawnShips",
+      "children": [
+        {
+          "node": "field",
+          "name": "minFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.outlawSectorsData",
+      "children": [
+        {
+          "node": "field",
+          "name": "militiaMainViewXOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaMainViewYOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaMainViewIconSizeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaMainViewIconXOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaMainViewIconYOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaHUDIconSizeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaHUDIconXOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "militiaHUDIconYOffsetScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "structure_reference",
+          "name": "spawnShips",
+          "structure": "GameplayConstants.outlawSectorsData.spawnShips"
+        },
+        {
+          "node": "field",
+          "name": "baseFleetCapacity",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetSupplyPerPlanetPopulation",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyMin",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyMax",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyScalarAtMinFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyScalarAtMaxFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsAtMinFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsAtMaxFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsVariancePercent",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetsAtMinFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetsAtMaxFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minPlanetsFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxPlanetsFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "pirateBountyBonusScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "pirateRaidRaidTimeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.outlawSectorsData#2.numOutlawSpawnShipsOptionsCount.outlawSpawnShipsOptions.spawnShips",
+      "children": [
+        {
+          "node": "field",
+          "name": "minFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetPoints",
+          "validation": "Integer"
+        },
+        {
+          "node": "iterative_field",
+          "name": "requiredShip",
+          "count_key": "requiredShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "minCount",
+              "validation": "Integer"
+            },
+            {
+              "node": "field",
+              "name": "maxCount",
+              "validation": "Integer"
+            }
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "randomShip",
+          "count_key": "randomShipCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "type",
+              "validation": "Entity"
+            },
+            {
+              "node": "field",
+              "name": "weight",
+              "validation": "Integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.outlawSectorsData#2",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:Mesh",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:MainViewIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:HUDIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:PlanetIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "field",
+          "name": "outlawSpawnShipsType",
+          "validation": "Simple",
+          "values": [
+            "MatchPlayerRace"
+          ]
+        },
+        {
+          "node": "iterative_field",
+          "name": "outlawSpawnShipsOptions",
+          "count_key": "numOutlawSpawnShipsOptionsCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "raceEntityName",
+              "validation": "Entity"
+            },
+            {
+              "node": "structure_reference",
+              "name": "spawnShips",
+              "structure": "GameplayConstants.outlawSectorsData#2.numOutlawSpawnShipsOptionsCount.outlawSpawnShipsOptions.spawnShips"
+            }
+          ]
+        },
+        {
+          "node": "field",
+          "name": "baseFleetCapacity",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxFleetSupplyPerPlanetPopulation",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyMin",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyMax",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyScalarAtMinFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "fleetSupplyScalarAtMaxFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsAtMinFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsAtMaxFleetSupply",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "timeBetweenSpawnShipsVariancePercent",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetsAtMinFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetsAtMaxFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minPlanetsFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "maxPlanetsFleetSupplyScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "pirateBountyBonusScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "pirateRaidRaidTimeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.minorFactionsData.minorFactionPlayerDefCount.minorFactionPlayerDef.planetAbilities",
+      "children": [
+        {
+          "node": "field",
+          "name": "ability:0",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:1",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:2",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:3",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "ability:4",
+          "validation": "Entity"
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.minorFactionsData",
+      "children": [
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:Mesh",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:MainViewIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:HUDIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "structure_reference",
+          "name": "npcIconOffset:PlanetIcon",
+          "structure": "IconOffset"
+        },
+        {
+          "node": "iterative_field",
+          "name": "planet",
+          "count_key": "colonizePlanetBlackListCount",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "colonizablePlanetsWithMinorFactionsPercent",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minConnectionDistanceToColonizedPlanets",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minConnectionDistanceToSameFactionPlanets",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "minAdjacentPlanetCount",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "infrastructurePlanetUpgradeLevel",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "populationPlanetUpgradeLevel",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "civilianModulesUpgradeLevel",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "tacticalModulesUpgradeLevel",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetIncomeScalar",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "planetCultureRepelAdditiveBonus",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "spawnTime",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "spawnTimeVariance",
+          "version": "Rebellion",
+          "validation": "Decimal"
+        },
+        {
+          "node": "iterative_field",
+          "name": "minorFactionPlayerDef",
+          "count_key": "minorFactionPlayerDefCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "name",
+              "validation": "Any"
+            },
+            {
+              "node": "structure_reference",
+              "name": "planetAbilities",
+              "structure": "GameplayConstants.minorFactionsData.minorFactionPlayerDefCount.minorFactionPlayerDef.planetAbilities"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameplayConstants.miscEntityDefNames",
+      "children": [
+        {
+          "node": "field",
+          "name": "weaponDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "debrisDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionAttackPlanetDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionCaptureResourcesDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionCaptureMinorFactionDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionColonizeDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionDefendFlagshipDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionBuildStarBaseDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionBuildMinesDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionFosterRelationshipsDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionExploreDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "missionRaidDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "empireWindowNodeDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "resourceAsteroidMetalDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "resourceAsteroidCrystalDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "neutralMetalExtractorDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "neutralCrystalExtractorDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "neutralCaptureBuffDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "fleetDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "formationDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "spacePonyBonusDefName",
+          "validation": "Entity"
+        },
+        {
+          "node": "field",
+          "name": "decloakMineForMovementBuffDefName",
+          "validation": "Entity"
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

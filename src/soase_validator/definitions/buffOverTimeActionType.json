@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "structures": [],
+  "element_rules": [
+    {
+      "name": "isDamageShared",
+      "validation": "Boolean"
+    }
+  ]
+}

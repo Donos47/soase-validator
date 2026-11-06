@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "PlanetItemTypeCount",
+      "extension": ".planetItemTypeCount",
+      "children": [
+        {
+          "node": "iterative_field",
+          "name": "planetItemType",
+          "count_key": "planetItemTypeCount",
+          "children": [
+            {
+              "node": "field",
+              "name": "designName",
+              "validation": "Any"
+            },
+            {
+              "node": "field",
+              "name": "entityDefName",
+              "validation": "Entity"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}

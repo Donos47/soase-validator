@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "structures": [
+    {
+      "name": "hasWeaponEffects.weaponEffectOriginType.targetCentricEffectPointSpawnInfo",
+      "children": [
+        {
+          "node": "condition_field",
+          "name": "spawnType",
+          "type": "spawnType",
+          "branches": {
+            "RandomFromUp": [
+              {
+                "node": "field",
+                "name": "minRadius",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "maxRadius",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "angleVariance",
+                "validation": "Decimal"
+              }
+            ],
+            "CompletelyRandom": [
+              {
+                "node": "field",
+                "name": "minRadius",
+                "validation": "Decimal"
+              },
+              {
+                "node": "field",
+                "name": "maxRadius",
+                "validation": "Decimal"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "element_rules": []
+}
