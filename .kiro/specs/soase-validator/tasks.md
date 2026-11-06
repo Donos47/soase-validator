@@ -129,18 +129,18 @@ Conventions for every task:
     - Read the `key = "value"` form in the parser, correct `GroupType.condition` `param` to `Any`, add the `count=N` constraints to the bundled Definitions and record each in `PROVENANCE.json`
     - _Requirements: 3.3, 3.10_
 
-  - [ ] 5.2 Write property test for primitive type acceptance
+  - [x] 5.2 Write property test for primitive type acceptance
     - Test each checker over (value, prefs, constraint): accept exactly the shapes in the design (Primitive rules and evidence), reject near-miss shapes; `check_orientation` takes the header `Node`; a malformed `constraint` raises `ValueError` in `check_position` and is reported by `validate_constraint`
     - **Property 7: Primitive type acceptance**
     - **Validates: Requirements 3.3**
 
-  - [ ] 5.3 Write property test for numeric strictness
+  - [x] 5.3 Write property test for numeric strictness
     - Cover `integer_strict` and `decimal_allow_integer`, and check that exponents, a leading `+` and a trailing `.` are rejected for every preference setting
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 
-  - [ ] 5.4 Implement `engine/validator.py`
-    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
+  - [-] 5.4 Implement `engine/validator.py`
+    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), keys out of the declared order (`SOASE-V060`) and duplicate plain keys or count lines (`SOASE-V070`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
     - Pass each field's `constraint` to its checker and report `validate_constraint` problems as Definition load warnings; call `check_orientation` with the header node
     - Treat an `iterative_field` as a count line followed by that many repeats, where a repeat may be a sequence of sibling lines (for example particle `NumEmitters N` followed by N repeats of an `EmitterType "x"` line plus an `EmitterContents` block), not only a named block; block extents still come from indentation
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup

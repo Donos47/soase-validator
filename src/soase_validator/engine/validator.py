@@ -25,6 +25,12 @@ Codes produced
     Invalid value: a primitive checker failed, an enumeration value is not a
     member for the Game Version, or a block/value was found where the other
     was expected (on the value, or on the key when there is no value).
+``SOASE-V060``
+    Key out of the declared order of its block (on the key). The message
+    names the in-order key it must come before or after.
+``SOASE-V070``
+    Plain key or count line used more than once in a block (on the repeated
+    key); the message gives the line of the first use.
 ``SOASE-R010``
     Reference value that the ``ReferenceLookup`` reports as not found (on
     the value). An ``Unknown`` result (incomplete Chain) reports nothing.
@@ -48,9 +54,17 @@ Walk rules
   the selected branch's nodes, for example particle ``EmitterType`` plus
   ``EmitterContents``). Block extents come from indentation, never from the
   count.
-* Definitions are not ordered: the cursor records seen keys and does not
-  enforce the order of keys (the Registry carries no ``ordered`` attribute;
-  no shipped Definition sets one).
+* Order and duplicates: keys of a block must appear in the order the
+  gate-filtered Definition declares them; optional keys may be absent. The
+  selected ``condition_field`` branch counts as sitting right after the
+  selector, and an iterative field's count line plus its run of repeats
+  occupies the field's declared position. Plain keys and count lines may
+  appear once per block; repeats inside a counted run are not duplicates.
+  A duplicate takes no position (``SOASE-V070`` only), and an unknown key
+  takes none either (``SOASE-V020`` only). Of the placed keys, a longest
+  strictly increasing run of declared positions is "in order"; each other
+  key gets one ``SOASE-V060``, so one misplaced key never blames the keys
+  after it.
 
 Evidence for the interpretation of the Definitions (Rebellion 1.98
 Reference Root, shapes and counts; see ``reference/primitive-survey.md``):
@@ -77,6 +91,8 @@ from soase_validator.engine.diagnostics import (
     V030,
     V040,
     V050,
+    V060,
+    V070,
 )
 from soase_validator.engine.model import Diagnostic, Severity, Span
 from soase_validator.engine.parser import (
@@ -252,9 +268,15 @@ class StructureCursor:
         counts: Count key mapped to its iterative field.
         repeats: Repeat key mapped to the iterative fields using it.
         seen: Keys of Definition nodes that matched a file node.
+        position: Key (plain name, or count key of an iterative field) mapped
+            to the index of its Definition node in ``active``.
+        first: Key mapped to the first file node that used it (for the
+            duplicate check).
+        placed: ``(file node, declared position)`` of every file node that
+            takes a position in the declared order, in file order.
     """
 
-    __slots__ = ("active", "counts", "plain", "repeats", "seen")
+    __slots__ = ("active", "counts", "first", "placed", "plain", "position", "repeats", "seen")
 
     def __init__(self, active: list[DefNode]) -> None:
         """Index the active Definition nodes.
@@ -273,12 +295,92 @@ class StructureCursor:
         self.counts: dict[str, IterativeFieldDef] = {}
         self.repeats: dict[str, list[IterativeFieldDef]] = {}
         self.seen: set[str] = set()
-        for node in active:
+        self.position: dict[str, int] = {}
+        self.first: dict[str, Node] = {}
+        self.placed: list[tuple[Node, int]] = []
+        for index, node in enumerate(active):
             if isinstance(node, IterativeFieldDef):
                 self.counts.setdefault(node.count_key, node)
                 self.repeats.setdefault(node.name, []).append(node)
+                self.position.setdefault(node.count_key, index)
             else:
                 self.plain.setdefault(node.name, node)
+                self.position.setdefault(node.name, index)
+
+    def place(self, node: Node) -> Node | None:
+        """Record a file node that matched a plain field or a count line.
+
+        Args:
+            node: The matched file node.
+
+        Returns:
+            The first earlier node with the same key when ``node`` is a
+            duplicate (it takes no position); None otherwise.
+
+        Raises:
+            None.
+        """
+        earlier = self.first.get(node.key)
+        if earlier is not None:
+            return earlier
+        self.first[node.key] = node
+        self.placed.append((node, self.position[node.key]))
+        return None
+
+    def out_of_order(self) -> list[tuple[Node, str, str]]:
+        """Pick the keys that break the declared order.
+
+        The keys that stay in order are a longest strictly increasing run of
+        declared positions (when several runs are equally long, the one
+        patience sorting finds), so one misplaced key yields one entry and
+        the keys after it are not blamed.
+
+        Returns:
+            ``(node, "before" | "after", neighbour key)`` for each misplaced
+            key in file order: the key must come before (or after) the
+            neighbouring in-order key that is next in declared order.
+
+        Raises:
+            None.
+        """
+        placed = self.placed
+        count = len(placed)
+        if count < 2:
+            return []
+        # Patience sorting with back links; tails[k] is the index of the
+        # smallest tail of a run of length k + 1.
+        tails: list[int] = []
+        link: list[int] = [-1] * count
+        for i, (_, pos) in enumerate(placed):
+            lo, hi = 0, len(tails)
+            while lo < hi:
+                mid = (lo + hi) // 2
+                if placed[tails[mid]][1] < pos:
+                    lo = mid + 1
+                else:
+                    hi = mid
+            link[i] = tails[lo - 1] if lo else -1
+            if lo == len(tails):
+                tails.append(i)
+            else:
+                tails[lo] = i
+        keep: set[int] = set()
+        cur = tails[-1]
+        while cur != -1:
+            keep.add(cur)
+            cur = link[cur]
+        anchors = sorted((placed[i][1], placed[i][0].key) for i in keep)
+        result: list[tuple[Node, str, str]] = []
+        for i, (node, pos) in enumerate(placed):
+            if i in keep:
+                continue
+            after = next((key for p, key in anchors if p > pos), None)
+            if after is not None:
+                result.append((node, "before", after))
+            else:
+                before = [key for p, key in anchors if p < pos]
+                result.append((node, "after", before[-1] if before else ""))
+        return result
 
     def missing_required(self) -> list[str]:
         """List required keys that were not seen, in declared order.
@@ -697,15 +799,46 @@ class _Walker:
             node = nodes[i]
             iterative = cursor.counts.get(node.key)
             if iterative is not None:
+                self._place(cursor, node, label)
                 i = self._iterate(cursor, iterative, nodes, i, label)
                 continue
             definition = cursor.plain.get(node.key)
             if definition is None:
                 self._unknown(cursor, defs, node, label)
             else:
+                self._place(cursor, node, label)
                 cursor.seen.add(node.key)
                 self._check_node(definition, node, nodes, label)
             i += 1
+        for node, side, neighbour in cursor.out_of_order():
+            self.emit(
+                node.key_span,
+                V060,
+                f"'{node.key}' is out of order in {label}: it must come {side} '{neighbour}'",
+            )
+
+    def _place(self, cursor: StructureCursor, node: Node, label: str) -> None:
+        """Give a matched key its declared position or report a duplicate.
+
+        Args:
+            cursor: Cursor for the block.
+            node: A plain field or a count line.
+            label: Name used in messages.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        earlier = cursor.place(node)
+        if earlier is not None:
+            self.emit(
+                node.key_span,
+                V070,
+                f"Duplicate key '{node.key}' in {label}; first used on line "
+                f"{earlier.key_span.line + 1}",
+            )
 
     def _unknown(
         self, cursor: StructureCursor, defs: Iterable[DefNode], node: Node, label: str
@@ -994,11 +1127,12 @@ class _Walker:
             found += 1
             self._check_value(selector, rule)
             defs: list[DefNode] = []
-            self._expand(rest, nodes[index + 1 :], defs)
+            # Declared order: the selected branch sits right after the selector.
             if isinstance(selector_def, ConditionFieldDef) and selector_def.branches:
                 text = _text_of(selector.value)
                 if text is not None and text in selector_def.branches:
                     self._expand(selector_def.branches[text], nodes[index + 1 :], defs)
+            self._expand(rest, nodes[index + 1 :], defs)
             names = {d.name for d in defs}
             end = index + 1
             taken: set[str] = set()

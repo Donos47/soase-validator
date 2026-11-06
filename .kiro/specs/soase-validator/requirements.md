@@ -95,6 +95,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 8. WHEN a `condition_field` value selects a branch, THE Engine SHALL validate the following fields against that branch only.
 9. WHEN a field, structure, or enumeration value carries a `version` gate that excludes the active Game Version, THE Engine SHALL treat it as undefined for that version.
 10. WHERE the user has configured numeric strictness preferences, THE Engine SHALL apply them to integer and decimal validation.
+11. WHEN keys of a block appear in a different order than the Definition declares them (after version gates are applied, the selected `condition_field` branch counting as sitting right after its selector, and an iterative field's count line with its repeats occupying that field's position), THE Engine SHALL report `SOASE-V060` once on each key that breaks the order, naming the key it must come before or after, and SHALL NOT report the keys that follow a misplaced key. Optional fields MAY be absent.
+12. WHEN a plain key or a count line is used more than once in the same block, THE Engine SHALL report `SOASE-V070` on each later use, giving the line of the first use, and SHALL NOT also report it as out of order. Repeats inside a counted run (blocks, value lines or sibling sequences after a count line) are not duplicates.
+13. THE Engine SHALL NOT report an unknown key (criterion 6) as out of order.
 
 ### Requirement 4: Cross-file reference validation
 

@@ -724,6 +724,170 @@ def test_reference_root_particle_and_simple_files_validate_clean(reference_root:
     assert checked > 0
 
 
+def test_reference_root_has_no_order_or_duplicate_findings(reference_root: Path) -> None:
+    # Survey of the Rebellion 1.98 files (3066 text files): no key breaks the
+    # declared order and one `.entity` file repeats `buffType` in an Ability.
+    # The two galaxy files with the known indentation artefact are excluded.
+    registry = load_registry()
+    artefacts = {"Voruk's Labyrinth.galaxy", "Hyperion's Gates.galaxy"}
+    found: list[tuple[str, str]] = []
+    for path in sorted(reference_root.rglob("*")):
+        if not path.is_file() or path.name in artefacts:
+            continue
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        if not text.startswith("TXT"):
+            continue
+        ctx = ValidationContext(registry, GameVersion.REBELLION_198, path)
+        for diag in validate(parse(text, path), ctx):
+            if diag.code in (dg.V060, dg.V070):
+                found.append((diag.code, path.name))
+    assert found == [(dg.V070, "AbilityShieldProjection.entity")]
+
+
+# ---- declared order (V060) and duplicates (V070) ---------------------------
+
+
+def _ordered() -> Registry:
+    return _registry(
+        [_f("a", "Integer"), _f("b", "Integer"), _f("c", "Integer"), _f("d", "Integer")]
+    )
+
+
+def test_keys_in_declared_order_pass_and_optional_keys_may_be_absent() -> None:
+    registry = _ordered()
+    assert _run(registry, "a 1\nb 2\nc 3\nd 4\n") == []
+    assert _run(registry, "a 1\nd 4\n") == []
+    assert _run(registry, "") == []
+
+
+def test_one_misplaced_key_gives_exactly_one_v060_and_no_cascade() -> None:
+    registry = _ordered()
+    # `a` last: the three keys after the start are still in order.
+    diags = _run(registry, "b 2\nc 3\nd 4\na 1\n")
+    assert _brief(diags) == [(dg.V060, 4, 0, 1)]
+    assert "'a'" in diags[0].message and "before 'b'" in diags[0].message
+    # `d` first: reported once, told to come after `c`.
+    diags = _run(registry, "d 4\na 1\nb 2\nc 3\n")
+    assert _brief(diags) == [(dg.V060, 1, 0, 1)]
+    assert "after 'c'" in diags[0].message
+    # A swapped pair is one report, not two.
+    assert len(_run(registry, "a 1\nc 3\nb 2\nd 4\n")) == 1
+
+
+def test_duplicate_plain_key_gives_one_v070_and_no_v060() -> None:
+    registry = _ordered()
+    diags = _run(registry, "a 1\nb 2\na 3\nc 4\n")
+    assert _brief(diags) == [(dg.V070, 3, 0, 1)]
+    assert "line 2" in diags[0].message  # first use: file line 2 (header is line 1)
+    # Adjacent duplicates are duplicates too.
+    assert [d.code for d in _run(registry, "a 1\na 1\n")] == [dg.V070]
+
+
+def test_unknown_key_is_not_reported_as_out_of_order() -> None:
+    registry = _ordered()
+    assert [d.code for d in _run(registry, "a 1\nzzz 1\nb 2\n")] == [dg.V020]
+    assert [d.code for d in _run(registry, "b 1\nzzz 1\na 2\n")] == [dg.V020, dg.V060]
+
+
+def test_gated_out_field_does_not_count_for_order() -> None:
+    registry = _registry(
+        [_f("a", "Integer"), _f("old", "Integer", version="Rebellion194"), _f("b", "Integer")]
+    )
+    assert _run(registry, "a 1\nold 2\nb 3\n") == []
+    # In 185 `old` is undefined (V020) and a/b keep their order.
+    diags = _run(registry, "a 1\nold 2\nb 3\n", version=GameVersion.REBELLION_185)
+    assert [d.code for d in diags] == [dg.V020]
+
+
+def test_condition_branch_sits_right_after_its_selector() -> None:
+    registry = _registry(
+        [
+            _f("first", "Integer"),
+            {
+                "node": "condition_field",
+                "name": "kind",
+                "type": "K",
+                "branches": {"A": [_f("x", "Integer"), _f("y", "Integer")]},
+            },
+            _f("last", "Integer"),
+        ],
+        enums=[{"name": "K", "values": ["A", "B"]}],
+    )
+    assert _run(registry, 'first 1\nkind "A"\nx 1\ny 2\nlast 3\n') == []
+    assert _run(registry, 'first 1\nkind "B"\nlast 3\n') == []
+    # Branch keys after `last`, or before the selector, are out of order.
+    assert [d.code for d in _run(registry, 'first 1\nkind "A"\nx 1\nlast 3\ny 2\n')] == [dg.V060]
+    assert [d.code for d in _run(registry, 'first 1\nx 1\nkind "A"\ny 2\nlast 3\n')] == [dg.V060]
+
+
+def test_iterative_run_occupies_the_position_of_its_field() -> None:
+    registry = _registry(
+        [
+            _f("a", "Integer"),
+            *_STARS,
+            _f("z", "Integer"),
+        ]
+    )
+    assert _run(registry, "a 1\nstarCount 2\nstar\n\tn 1\nstar\n\tn 2\nz 3\n") == []
+    # The whole run counts once: `a` after it is one report.
+    body = "starCount 2\nstar\n\tn 1\nstar\n\tn 2\nz 3\na 1\n"
+    diags = _run(registry, body)
+    assert _brief(diags) == [(dg.V060, 7, 0, 1)]
+
+
+def test_counted_repeats_are_not_duplicates() -> None:
+    registry = _registry(_STARS)
+    assert _run(registry, "starCount 3\n" + "star\n\tn 1\n" * 3) == []
+    # A second count line is a duplicate of the first.
+    diags = _run(registry, "starCount 1\nstar\n\tn 1\nstarCount 1\nstar\n\tn 1\n")
+    assert [d.code for d in diags] == [dg.V070]
+
+
+def test_iterative_fields_sharing_a_repeat_key_are_not_duplicates() -> None:
+    registry = _registry(
+        [
+            {"node": "iterative_field", "name": "SoundID", "count_key": "onA", "validation": "Any"},
+            {"node": "iterative_field", "name": "SoundID", "count_key": "onB", "validation": "Any"},
+        ]
+    )
+    assert _run(registry, 'onA 1\nSoundID "x"\nonB 2\nSoundID "y"\nSoundID "z"\n') == []
+    # Declared order still applies to the two count lines.
+    diags = _run(registry, 'onB 1\nSoundID "y"\nonA 1\nSoundID "x"\n')
+    assert [d.code for d in diags] == [dg.V060]
+
+
+def test_sibling_sequences_are_ordered_by_selector_then_branch_then_rest() -> None:
+    registry = _emitters()
+    assert _run(registry, f"NumEmitters 2\n{_TWO}") == []
+    swapped = 'NumEmitters 1\nEmitterContents\n\tw 1\nEmitterType "Point"\n'
+    # The block precedes its selector: unknown at the block level, no V060 cascade.
+    assert dg.V060 not in [d.code for d in _run(registry, swapped)]
+
+
+def test_bundled_particle_order_is_enforced() -> None:
+    body = (
+        "ParticleSimulation\n"
+        "\tHasInfiniteLifeTime FALSE\n"
+        "\tTotalLifeTime 10.000000\n"
+        "\tlength 1.000000\n"
+        "\tNumEmitters 0\n"
+        "\tNumAffectors 0\n"
+    )
+    diags = _run(load_registry(), body, header="TXT2", name="x.particle")
+    assert [d.code for d in diags] == [dg.V060]
+    assert "'length'" in diags[0].message
+
+
+def test_nested_blocks_are_ordered_independently() -> None:
+    registry = _registry(
+        [{"node": "structure_reference", "name": "blk", "structure": "Inner"}],
+        extra=[{"name": "Inner", "children": [_f("x", "Integer"), _f("y", "Integer")]}],
+    )
+    assert _run(registry, "blk\n\tx 1\n\ty 2\n") == []
+    assert _brief(_run(registry, "blk\n\ty 2\n\tx 1\n")) == [(dg.V060, 2, 1, 2)]
+    assert "Inner" in _run(registry, "blk\n\ty 2\n\tx 1\n")[0].message
+
+
 def test_resolve_protocol_types_are_distinct() -> None:
     assert Found() != NotFound() != Unknown()
     assert isinstance(NullReferenceLookup().resolve("Brush", "x"), Unknown)
