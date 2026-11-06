@@ -891,3 +891,171 @@ def test_nested_blocks_are_ordered_independently() -> None:
 def test_resolve_protocol_types_are_distinct() -> None:
     assert Found() != NotFound() != Unknown()
     assert isinstance(NullReferenceLookup().resolve("Brush", "x"), Unknown)
+
+
+# ---- unexpected indentation (V080) -----------------------------------------
+
+
+def _v080(diags: list[Diagnostic]) -> list[tuple[int, int]]:
+    """(zero-based line, column) of every V080."""
+    return [(d.range.start.line, d.range.start.col) for d in diags if d.code == dg.V080]
+
+
+def _indent_registry() -> Registry:
+    return _registry(
+        [
+            {"node": "structure_reference", "name": "blk", "structure": "Blk"},
+            {
+                "node": "iterative_field",
+                "name": "star",
+                "count_key": "starCount",
+                "children": [_f("n", "Integer")],
+            },
+            {
+                "node": "iterative_field",
+                "name": "w",
+                "count_key": "wCount",
+                "validation": "Integer",
+            },
+            _f("Orientation", "Orientation"),
+        ],
+        extra=[{"name": "Blk", "children": [_f("a", "Integer"), _f("b", "Integer")]}],
+    )
+
+
+def test_line_deeper_than_a_matched_value_line_is_v080() -> None:
+    # The owner shape: a value line followed by a deeper line (the value line
+    # is under-indented). V080 sits on the deeper key; the other findings stay.
+    registry = _indent_registry()
+    diags = _run(registry, "blk\n\ta 1\n\tb 2\n\t\tc 3\n")
+    assert _v080(diags) == [(4, 2)]
+    assert "line 4" in next(d for d in diags if d.code == dg.V080).message
+    assert sorted(d.code for d in diags) == [dg.V020, dg.V080]
+    assert _v080(_run(registry, "blk\n\ta 1\n\tb 2\n")) == []
+    # A count line stays known when its count is wrong (RandomEventDefs shape).
+    counted = _run(registry, "wCount 2\n\tx 1\n")
+    assert _v080(counted) == [(2, 1)]
+    assert dg.V030 in [d.code for d in counted]
+
+
+def _galaxy_registry() -> Registry:
+    return _registry(
+        [{"node": "structure_reference", "name": "star", "structure": "Star"}],
+        extra=[
+            {
+                "name": "Star",
+                "children": [
+                    {
+                        "node": "iterative_field",
+                        "name": "planet",
+                        "count_key": "planetCount",
+                        "children": [
+                            _f("designName", "Any"),
+                            _f("owner", "Any"),
+                            _f("isHomePlanet", "Boolean"),
+                        ],
+                    },
+                ],
+            },
+        ],
+    )
+
+
+def test_owner_shape_adds_one_v080_and_keeps_v020_v030() -> None:
+    # Real galaxy shape: a planet's `owner` sits one level too shallow, so it
+    # and the lines after it land in the star. The line after `owner` is
+    # deeper than it; `owner` is defined by the planet block right before it.
+    registry = _galaxy_registry()
+    body = (
+        'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "p"\n\towner "P0"\n\t\tisHomePlanet TRUE\n'
+    )
+    diags = _run(registry, body)
+    assert _v080(diags) == [(6, 2)]
+    v080 = next(d for d in diags if d.code == dg.V080)
+    assert "'owner' on line 6" in v080.message and "under-indented" in v080.message
+    others = [(d.code, d.range.start.line) for d in diags if d.code != dg.V080]
+    assert others == [(dg.V020, 5), (dg.V020, 6)]
+    fixed = body.replace('\towner "P0"', '\t\towner "P0"')
+    assert _run(registry, fixed) == []
+
+
+def test_repeats_one_level_under_their_count_line_pass() -> None:
+    registry = _indent_registry()
+    assert _run(registry, "starCount 2\n\tstar\n\t\tn 1\n\tstar\n\t\tn 2\n") == []
+    assert _run(registry, "wCount 2\n\tw 1\n\tw 2\n") == []
+
+
+def test_repeats_at_the_count_line_level_pass() -> None:
+    registry = _indent_registry()
+    assert _run(registry, "starCount 2\nstar\n\tn 1\nstar\n\tn 2\n") == []
+    assert _run(registry, "wCount 2\nw 1\nw 2\n") == []
+
+
+def test_repeats_two_levels_deeper_are_v080() -> None:
+    registry = _indent_registry()
+    diags = _run(registry, "wCount 1\n\t\tw 1\n")
+    assert _v080(diags) == [(2, 2)]
+    assert "2 levels" in diags[0].message
+
+
+def test_mixed_styles_in_one_run_give_one_v080_on_the_first_offender() -> None:
+    registry = _indent_registry()
+    diags = _run(registry, "wCount 4\nw 1\nw 2\n\tw 3\nw 4\n")
+    assert [d.code for d in diags].count(dg.V080) == 1
+    assert _v080(diags) == [(4, 1)]
+    deeper_first = _run(registry, "wCount 3\n\tw 1\nw 2\n\tw 3\n")
+    assert _v080(deeper_first) == [(3, 0)]
+
+
+def test_nothing_is_reported_inside_unmatched_blocks_or_after_v020_lines() -> None:
+    registry = _indent_registry()
+    unmatched = _run(registry, "mystery\n\tx 1\n\t\ty 2\n\t\t\tz 3\n")
+    assert _v080(unmatched) == []
+    after_v020 = _run(registry, "zzz 1\n\tx 2\n")
+    assert [d.code for d in after_v020] == [dg.V020, dg.V020]
+    # An unknown key that the block before it does not define either.
+    after_unknown = _run(registry, "blk\n\ta 1\nzzz 1\n\tx 2\n")
+    assert _v080(after_unknown) == []
+    inside_unplaced = _run(registry, "blk\n\tq 1\n\t\tr 2\n")
+    assert _v080(inside_unplaced) == []
+    after_v030 = _run(registry, "star\n\tn 1\n")
+    assert _v080(after_v030) == []
+
+
+def test_orientation_rows_and_particle_sequences_give_no_v080() -> None:
+    registry = _indent_registry()
+    rows = "Orientation\n" + "\t[ 1.000000 0.000000 0.000000 ]\n" * 3
+    assert _run(registry, rows) == []
+    assert _run(_emitters(), f"NumEmitters 2\n{_TWO}") == []
+    nested = _TWO.replace("\n", "\n\t")
+    assert _v080(_run(_emitters(), f"NumEmitters 2\n\t{nested.rstrip(chr(9))}")) == []
+
+
+def test_files_without_a_root_definition_give_no_v080() -> None:
+    registry = _indent_registry()
+    assert _run(registry, "a 1\n\tb 2\n", name="x.window") == []
+
+
+def test_reference_root_v080_set(reference_root: Path) -> None:
+    # Rebellion 1.98 survey: V080 appears in three files only. The two galaxy
+    # files carry the planet `owner` under-indentation (Voruk's Labyrinth is
+    # the owner's own artefact); RandomEventDefs line 90 (`racialBuffCount`)
+    # is a Definition gap (task 5.9). `.window` whitespace cases are not
+    # covered (no root Definition).
+    registry = load_registry()
+    tally: dict[str, int] = {}
+    for path in sorted(reference_root.rglob("*")):
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8-sig", errors="replace")
+        if not text.startswith("TXT"):
+            continue
+        ctx = ValidationContext(registry, GameVersion.REBELLION_198, path)
+        count = sum(1 for d in validate(parse(text, path), ctx) if d.code == dg.V080)
+        if count:
+            tally[path.relative_to(reference_root).as_posix().lower()] = count
+    assert tally == {
+        "galaxy/hyperion's gates.galaxy": 70,
+        "galaxy/voruk's labyrinth.galaxy": 62,
+        "gameinfo/randomeventdefs.randomeventdefs": 1,
+    }

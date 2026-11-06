@@ -139,12 +139,12 @@ Conventions for every task:
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 
-  - [-] 5.4 Implement `engine/validator.py`
-    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), keys out of the declared order (`SOASE-V060`) and duplicate plain keys or count lines (`SOASE-V070`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
+  - [x] 5.4 Implement `engine/validator.py`
+    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), keys out of the declared order (`SOASE-V060`), duplicate plain keys or count lines (`SOASE-V070`) and lines indented deeper than a known value line or counted repeats at another depth or in mixed styles (`SOASE-V080`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
     - Pass each field's `constraint` to its checker and report `validate_constraint` problems as Definition load warnings; call `check_orientation` with the header node
     - Treat an `iterative_field` as a count line followed by that many repeats, where a repeat may be a sequence of sibling lines (for example particle `NumEmitters N` followed by N repeats of an `EmitterType "x"` line plus an `EmitterContents` block), not only a named block; block extents still come from indentation
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup
-    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10_
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14, 3.15, 3.16_
 
   - [ ] 5.5 Write property test for enumeration membership
     - **Property 9: Enumeration membership is version-gated**
@@ -164,7 +164,7 @@ Conventions for every task:
 
   - [ ] 5.9 Correct Definitions against the Rebellion 1.98 survey
     - Work from `reference/primitive-survey.md` and re-survey the Reference Root read-only; correct the bundled JSON for each gap below, and record every correction in `PROVENANCE.json` with game version Rebellion 1.98 and evidence (shapes and counts only)
-    - Gaps: `Starscape` structure versus the `.starscapedata` files (mismatch); `.galaxy` `star[]` keys not placed in the Definition (about 2,150 uses); `ResearchSubject` `researchModifier` keys (about 1,281 uses) and 589 selector values with no match; `Player` (about 180); `.constants` `outlawSectorsData` (12); `.randomeventdefs` (12); `Buff` (1)
+    - Gaps: `Starscape` structure versus the `.starscapedata` files (mismatch); `.galaxy` `star[]` keys not placed in the Definition (about 2,150 uses); `ResearchSubject` `researchModifier` keys (about 1,281 uses) and 589 selector values with no match; `Player` (about 180); `.constants` `outlawSectorsData` (12); `.randomeventdefs` (12, including line 89 `racialBuffCount` with its `race` line one level deeper, which gives the only non-galaxy `SOASE-V080` in the Reference Root); `Buff` (1)
     - Also list the Position fields the survey never reached (`BrushType` `pixelBox`, `GalaxyStarType` `pos` and `planet[]` `pos`, `GalaxyPlanetType` `pos`, `ResearchBlock` `area`) and decide each constraint from evidence, or leave it unset
     - The zombiesrus5 plugin may not have validated `.galaxy`, so weak `galaxy.xml` coverage is expected. `plugin.xml` registers a Galaxy Editor for `galaxy` and the Definitions ship `galaxy.xml`, but the builder's handling of `.galaxy` is not covered by `reference/plugin-bytecode-findings.md`; verify it before treating a gap as a plugin omission
     - _Requirements: 12.1, 13.5_

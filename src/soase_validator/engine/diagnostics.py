@@ -42,6 +42,7 @@ V040 = "SOASE-V040"
 V050 = "SOASE-V050"
 V060 = "SOASE-V060"
 V070 = "SOASE-V070"
+V080 = "SOASE-V080"
 # Reference
 R010 = "SOASE-R010"
 # Chain / config
@@ -90,6 +91,7 @@ CODE_CATALOGUE: dict[str, CodeInfo] = {
         _info(V050, Severity.ERROR, "Invalid value for the field"),
         _info(V060, Severity.ERROR, "Key out of the declared order"),
         _info(V070, Severity.ERROR, "Duplicate key in a block"),
+        _info(V080, Severity.ERROR, "Unexpected indentation"),
         _info(R010, Severity.ERROR, "Unresolved reference"),
         _info(C010, Severity.ERROR, "Layer chain cycle"),
         _info(C020, Severity.WARNING, "Layer missing or unusable"),

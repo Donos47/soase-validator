@@ -31,6 +31,11 @@ Codes produced
 ``SOASE-V070``
     Plain key or count line used more than once in a block (on the repeated
     key); the message gives the line of the first use.
+``SOASE-V080``
+    Unexpected indentation (on the deeper line's key): a line deeper than
+    the known value line before it, which is named as probably
+    under-indented, or a counted repeat at another depth or in a style
+    other than its run's first repeat.
 ``SOASE-R010``
     Reference value that the ``ReferenceLookup`` reports as not found (on
     the value). An ``Unknown`` result (incomplete Chain) reports nothing.
@@ -65,6 +70,17 @@ Walk rules
   strictly increasing run of declared positions is "in order"; each other
   key gets one ``SOASE-V060``, so one misplaced key never blames the keys
   after it.
+* Indentation: after the walk, every line deeper than the line before it
+  is checked. A block header (no value) may be followed by a deeper line;
+  so may a count line, by the first repeat of its run exactly one level
+  deeper. Any other deeper line gets ``SOASE-V080`` when the previous line
+  is known: matched in its block as a field, count line or repeat, or an
+  unknown key that is a field of the repeat block ending right before it
+  at the same indentation (the galaxy ``owner`` shape). Other unknown keys,
+  repeats without a count line and lines inside unmatched blocks are
+  skipped. The repeats of a run sit at the count line's level or one level
+  deeper, one style per run. The pass leaves the tree and the other
+  findings unchanged.
 
 Evidence for the interpretation of the Definitions (Rebellion 1.98
 Reference Root, shapes and counts; see ``reference/primitive-survey.md``):
@@ -72,7 +88,12 @@ Reference Root, shapes and counts; see ``reference/primitive-survey.md``):
 ``NumEmitters`` and ``NumAffectors``) are sequences of sibling lines and
 account for 8546 repeats in 872 particle files; 5 iterative fields share the
 repeat key ``SoundID`` in each entity structure and are told apart only by
-the count line before the run.
+the count line before the run. Counted repeats sit at the count line's
+level (14,989 runs plus 1,669 particle sequences) or one level deeper (174
+runs), never at another offset and never mixed in one run. ``SOASE-V080``
+reports 133 lines in 3 files: two galaxy files with the planet ``owner``
+under-indentation (70 and 62) and one ``.randomeventdefs`` line after
+``racialBuffCount`` (a Definition gap).
 """
 
 from __future__ import annotations
@@ -93,6 +114,7 @@ from soase_validator.engine.diagnostics import (
     V050,
     V060,
     V070,
+    V080,
 )
 from soase_validator.engine.model import Diagnostic, Severity, Span
 from soase_validator.engine.parser import (
@@ -569,6 +591,15 @@ class _Walker:
         self.registry = ctx.registry
         self.diags: list[Diagnostic] = []
         self._gates: dict[str | None, bool] = {}
+        # State for the V080 pass, by node id: lines matched to a known field,
+        # count line or repeat; matched lines whose block has no structure;
+        # lines reported as unknown keys; the keys each repeat block defines;
+        # and the repeats that follow each count line.
+        self._matched: set[int] = set()
+        self._flagged: set[int] = set()
+        self._unknown_ids: set[int] = set()
+        self._block_keys: dict[int, frozenset[str]] = {}
+        self._runs: dict[int, list[Node]] = {}
 
     # ---- helpers -------------------------------------------------------
 
@@ -654,6 +685,7 @@ class _Walker:
         if parsed.header == "TXT2" and not self._defines(root, ARCHIVE_VERSION_KEY):
             nodes = [n for n in nodes if n.key != ARCHIVE_VERSION_KEY]
         self._scope(root.children, nodes, None, root.name, anchor)
+        self._check_indentation(parsed.nodes)
         return self.diags
 
     def _defines(self, struct: StructureDef, key: str) -> bool:
@@ -800,6 +832,7 @@ class _Walker:
             iterative = cursor.counts.get(node.key)
             if iterative is not None:
                 self._place(cursor, node, label)
+                self._matched.add(id(node))
                 i = self._iterate(cursor, iterative, nodes, i, label)
                 continue
             definition = cursor.plain.get(node.key)
@@ -807,6 +840,7 @@ class _Walker:
                 self._unknown(cursor, defs, node, label)
             else:
                 self._place(cursor, node, label)
+                self._matched.add(id(node))
                 cursor.seen.add(node.key)
                 self._check_node(definition, node, nodes, label)
             i += 1
@@ -862,6 +896,13 @@ class _Walker:
             return
         owners = cursor.repeats.get(node.key)
         if owners:
+            if node.value is None:
+                self._block_keys[id(node)] = frozenset(
+                    child.count_key if isinstance(child, IterativeFieldDef) else child.name
+                    for it in owners
+                    for child in it.children
+                    if self.allowed(child.version)
+                )
             counts = ", ".join(sorted({it.count_key for it in owners}))
             self.emit(
                 node.key_span,
@@ -869,6 +910,7 @@ class _Walker:
                 f"'{node.key}' is a repeated entry and must follow its count line ({counts})",
             )
             return
+        self._unknown_ids.add(id(node))
         hint = self._branch_hint(defs, node.key)
         suffix = f" ({hint})" if hint else ""
         self.emit(node.key_span, V020, f"Unknown key '{node.key}' in {label}{suffix}")
@@ -927,6 +969,7 @@ class _Walker:
             text = _text_of(selector.value) if selector is not None else None
             target = definition.cases.get(text) if text is not None else None
             if target is None:
+                self._flagged.add(id(node))
                 self.emit(
                     node.key_span,
                     V020,
@@ -1010,10 +1053,12 @@ class _Walker:
         cursor.seen.add(count_node.key)
         count = self._count_of(count_node)
         flat = bool(iterative.children) and iterative.children[0].name == iterative.name
+        repeats: list[Node] = []
         if flat:
-            end, found = self._flat_run(iterative, nodes, index + 1)
+            end, found = self._flat_run(iterative, nodes, index + 1, repeats)
         else:
-            end, found = self._repeat_run(iterative, nodes, index + 1)
+            end, found = self._repeat_run(iterative, nodes, index + 1, repeats)
+        self._runs[id(count_node)] = repeats
         if count is not None:
             line = _line_span(count_node)
             if iterative.limit is not None and count > iterative.limit:
@@ -1054,7 +1099,11 @@ class _Walker:
         return None
 
     def _repeat_run(
-        self, iterative: IterativeFieldDef, nodes: Sequence[Node], start: int
+        self,
+        iterative: IterativeFieldDef,
+        nodes: Sequence[Node],
+        start: int,
+        repeats: list[Node],
     ) -> tuple[int, int]:
         """Validate the consecutive block or value repeats after a count line.
 
@@ -1062,6 +1111,7 @@ class _Walker:
             iterative: The iterative field.
             nodes: The block's child nodes.
             start: Index just after the count line.
+            repeats: Receives the repeat nodes of the run.
 
         Returns:
             The index after the run and the number of repeats in it.
@@ -1072,6 +1122,8 @@ class _Walker:
         end = start
         while end < len(nodes) and nodes[end].key == iterative.name:
             repeat = nodes[end]
+            repeats.append(repeat)
+            self._matched.add(id(repeat))
             if iterative.children:
                 if repeat.value is not None:
                     self.emit(
@@ -1080,12 +1132,15 @@ class _Walker:
                         f"'{repeat.key}' must be a block, found a value",
                     )
                 else:
-                    self._scope(
+                    cursor = self._scope(
                         iterative.children,
                         repeat.children,
                         repeat,
                         repeat.key,
                         repeat.key_span,
+                    )
+                    self._block_keys[id(repeat)] = frozenset(cursor.plain) | frozenset(
+                        cursor.counts
                     )
             else:
                 self._check_value(repeat, _Rule(iterative.type, iterative.validation, None, None))
@@ -1093,7 +1148,11 @@ class _Walker:
         return end, end - start
 
     def _flat_run(
-        self, iterative: IterativeFieldDef, nodes: Sequence[Node], start: int
+        self,
+        iterative: IterativeFieldDef,
+        nodes: Sequence[Node],
+        start: int,
+        repeats: list[Node],
     ) -> tuple[int, int]:
         """Validate sequences of sibling lines after a count line.
 
@@ -1105,6 +1164,7 @@ class _Walker:
             iterative: The iterative field.
             nodes: The block's child nodes.
             start: Index just after the count line.
+            repeats: Receives the selector node of each sequence.
 
         Returns:
             The index after the run and the number of sequences in it.
@@ -1124,6 +1184,8 @@ class _Walker:
         found = 0
         while index < len(nodes) and nodes[index].key == iterative.name:
             selector = nodes[index]
+            repeats.append(selector)
+            self._matched.add(id(selector))
             found += 1
             self._check_value(selector, rule)
             defs: list[DefNode] = []
@@ -1147,6 +1209,116 @@ class _Walker:
             self._scope(defs, nodes[index + 1 : end], selector, selector.key, selector.key_span)
             index = end
         return index, found
+
+    # ---- indentation ---------------------------------------------------
+
+    def _check_indentation(self, roots: Sequence[Node]) -> None:
+        """Report lines indented deeper than a value line (``SOASE-V080``).
+
+        Walks every node in source order. A line deeper than the line right
+        before it is expected only when that line is a block header (no
+        value), or the count line of an iterative field and the deeper line
+        is the first repeat of its run, exactly one level deeper. Otherwise
+        the deeper line is reported when the previous line is a known line:
+
+        * a plain field, count line or repeat matched in its block (a count
+          mismatch on the count line does not change that), or
+        * an unknown key (``SOASE-V020``) that is a field of the repeat block
+          (an entry of an iterative field) ending right before it at the same
+          indentation: the line was meant to sit one level deeper, inside
+          that repeat (the galaxy planet ``owner`` shape). The repeat may
+          itself be unplaced (``SOASE-V030``) after an earlier break.
+
+        Every other previous line is skipped: other unknown keys (including
+        keys that a preceding non-repeat block defines, which is a
+        Definition placement question), repeats without a count line, list
+        rows, and everything inside blocks that no Definition matched.
+
+        Repeats of one run sit at the count line's level or exactly one
+        level deeper, one style per run; the first repeat that breaks the
+        style of the first repeat is reported once.
+
+        Args:
+            roots: Top-level nodes of the file.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        order: list[Node] = []
+        stack = list(reversed(roots))
+        while stack:
+            node = stack.pop()
+            order.append(node)
+            stack.extend(reversed(node.children))
+        by_id = {id(n): n for n in order}
+        later_repeats = {id(r) for run in self._runs.values() for r in run[1:]}
+        for index in range(1, len(order)):
+            prev, node = order[index - 1], order[index]
+            if node.indent <= prev.indent or prev.value is None:
+                continue
+            if id(node) in later_repeats:
+                continue  # judged by the run-style check below
+            if not self._known_line(prev, order[index - 2] if index > 1 else None):
+                continue
+            run = self._runs.get(id(prev))
+            if run and run[0] is node and node.indent - prev.indent == 1:
+                continue
+            line = prev.key_span.line + 1
+            if run and run[0] is node:
+                message = (
+                    f"'{node.key}' is indented {node.indent - prev.indent} levels under count "
+                    f"line '{prev.key}' (line {line}); repeats sit at the count line's level "
+                    "or one level deeper"
+                )
+            else:
+                message = (
+                    f"'{node.key}' is indented under '{prev.key}' on line {line}, which has a "
+                    f"value; line {line} is probably under-indented"
+                )
+            self.emit(node.key_span, V080, message)
+        for count_id, run in self._runs.items():
+            count_line = by_id.get(count_id)
+            if not run or count_line is None or run[0].indent - count_line.indent not in (0, 1):
+                continue  # a first repeat at another depth was reported above
+            first = run[0]
+            odd = next((r for r in run[1:] if r.indent != first.indent), None)
+            if odd is not None:
+                self.emit(
+                    odd.key_span,
+                    V080,
+                    f"'{odd.key}' is indented differently from the first '{first.key}' of its "
+                    f"run (line {first.key_span.line + 1}); a run uses one indentation",
+                )
+
+    def _known_line(self, line: Node, before: Node | None) -> bool:
+        """Whether a value line counts as known for the V080 check.
+
+        Args:
+            line: The value line before a deeper line.
+            before: The line before ``line`` in source order, or None.
+
+        Returns:
+            True for a matched field, count line or repeat, and for an
+            unknown key that is a field of the repeat block ending right
+            before it at the same indentation.
+
+        Raises:
+            None.
+        """
+        if id(line) in self._matched:
+            return id(line) not in self._flagged
+        if id(line) not in self._unknown_ids:
+            return False
+        block = before
+        while block is not None and block.indent > line.indent:
+            block = block.parent
+        if block is None or block.indent != line.indent:
+            return False
+        keys = self._block_keys.get(id(block))
+        return keys is not None and line.key in keys
 
     # ---- values --------------------------------------------------------
 
