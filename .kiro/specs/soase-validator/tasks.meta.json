@@ -15,6 +15,34 @@
     "3.3 Write property test for malformed Definitions": {
       "status": "passed",
       "lastRunTimestamp": 1793985248844
+    },
+    "4.3 Write property test for parse round trip": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989072590
+    },
+    "4.5 Write property test for recorded spans": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989075360
+    },
+    "4.4 Write property test for separator independence": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989094036
+    },
+    "4.7 Write property test for missing header": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989097641
+    },
+    "4.6 Write property test for parser recovery": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989102091
+    },
+    "4.9 Write property test for indentation style independence": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989141200
+    },
+    "4.8 Write property test for archive version handling": {
+      "status": "passed",
+      "lastRunTimestamp": 1793989185302
     }
   },
   "executionHistory": {
@@ -226,6 +254,133 @@
         "executionId": "9f924cdf-9048-4b07-9c0a-60f8499a10fa",
         "chatSessionId": "sess_cd29a3fb-9bf8-4f15-b5c7-f3c35a943519",
         "timestamp": 1793986049824
+      }
+    ],
+    "4.1 Implement `engine/parser.py`": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988797315
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988910748
+      }
+    ],
+    "4.2 Write Hypothesis strategies for trees and indentation": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988918019
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988978825
+      }
+    ],
+    "4.3 Write property test for parse round trip": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988982600
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989108842
+      }
+    ],
+    "4.4 Write property test for separator independence": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988982671
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989109401
+      }
+    ],
+    "4.5 Write property test for recorded spans": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988982967
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989109946
+      }
+    ],
+    "4.6 Write property test for parser recovery": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988983335
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989110746
+      }
+    ],
+    "4.7 Write property test for missing header": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793988983959
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989111248
+      }
+    ],
+    "4.8 Write property test for archive version handling": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989111807
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989210373
+      }
+    ],
+    "4.9 Write property test for indentation style independence": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989112343
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989210926
+      }
+    ],
+    "4.10 Write parser unit tests": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989112835
+      },
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989211312
+      }
+    ],
+    "4. Parser": [
+      {
+        "executionId": "d37dc9b6-f058-4802-ba3b-25b294aafdcd",
+        "chatSessionId": "sess_87e4dd69-d7a8-4f8e-93f4-d1051c2d25e5",
+        "timestamp": 1793989211378
       }
     ]
   }

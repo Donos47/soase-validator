@@ -79,46 +79,46 @@ Conventions for every task:
     - Write a unit test that loads every bundled Definition with zero warnings and that each Definition node type is present
     - _Requirements: 1.1, 1.4, 1.5, 11.3, 12.1, 15.1.1_
 
-- [ ] 4. Parser
-  - [ ] 4.1 Implement `engine/parser.py`
+- [x] 4. Parser
+  - [x] 4.1 Implement `engine/parser.py`
     - Implement the tolerant line-oriented parser with `Node`, `Value` variants, `ParsedFile` and `parse(text)`, relative-indentation block extents using an indent stack (tabs and spaces each count as one unit), keys containing colons, quoted strings including empty and unterminated, numbers, `TRUE`/`FALSE`, bracket lists, and count keys as ordinary nodes
     - Emit `SOASE-P001` for a missing header, `SOASE-P002` for skipped unparseable lines, `SOASE-P003` for unterminated quotes and `SOASE-P004` for unrecognised `SinsArchiveVersion` integers; validate `SinsArchiveVersion` only in `TXT2` files
     - Implement `format_tree(parsed)` for tests, and file reading with `utf-8-sig` falling back to `latin-1`
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11_
 
-  - [ ] 4.2 Write Hypothesis strategies for trees and indentation
+  - [x] 4.2 Write Hypothesis strategies for trees and indentation
     - Create `tests/strategies/trees.py` with `trees()` (strings including empty, six-place decimals, booleans, bracket lists, colon keys, nested blocks, count-prefixed repeats) and an `indent_style` strategy rendering tabs, spaces or a mix with strictly increasing widths
     - _Requirements: 2.3, 2.4, 2.5_
 
-  - [ ] 4.3 Write property test for parse round trip
+  - [x] 4.3 Write property test for parse round trip
     - **Property 1: Parse round trip**
     - **Validates: Requirements 2.1, 2.3, 2.4, 2.5**
 
-  - [ ] 4.4 Write property test for separator independence
+  - [x] 4.4 Write property test for separator independence
     - **Property 2: Separator independence**
     - **Validates: Requirements 2.2**
 
-  - [ ] 4.5 Write property test for recorded spans
+  - [x] 4.5 Write property test for recorded spans
     - **Property 3: Recorded spans match source**
     - **Validates: Requirements 2.6**
 
-  - [ ] 4.6 Write property test for parser recovery
+  - [x] 4.6 Write property test for parser recovery
     - **Property 4: Parser recovery**
     - **Validates: Requirements 2.8**
 
-  - [ ] 4.7 Write property test for missing header
+  - [x] 4.7 Write property test for missing header
     - **Property 5: Missing header**
     - **Validates: Requirements 2.7**
 
-  - [ ] 4.8 Write property test for archive version handling
+  - [x] 4.8 Write property test for archive version handling
     - **Property 6: Archive version handling**
     - **Validates: Requirements 2.10, 2.11**
 
-  - [ ] 4.9 Write property test for indentation style independence
+  - [x] 4.9 Write property test for indentation style independence
     - **Property 37: Indentation style independence**
     - **Validates: Requirements 2.3, 2.4**
 
-  - [ ] 4.10 Write parser unit tests
+  - [x] 4.10 Write parser unit tests
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
