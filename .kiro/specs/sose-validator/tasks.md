@@ -31,22 +31,22 @@ Conventions for every task:
     - Add one trivial test proving the package imports under Python 3.14
     - _Requirements: 11.1, 11.2.1, 12.6_
 
-- [ ] 2. Model, diagnostics and version gating
-  - [ ] 2.1 Implement `engine/model.py` and `engine/diagnostics.py`
+- [x] 2. Model, diagnostics and version gating
+  - [x] 2.1 Implement `engine/model.py` and `engine/diagnostics.py`
     - Define `Position`, `Range`, `Span`, `Severity`, `Diagnostic`, `CompletionItem`, `HoverResult`, `Location` and `FieldHelp` as frozen dataclasses with zero-based positions
     - Add the stable code catalogue (`P`, `V`, `R`, `C`, `M`, `D`, `X` families from the design) and a single `filter_disabled(diagnostics, disabled_codes)` function
     - _Requirements: 5.2, 8.5, 9.7_
 
-  - [ ]* 2.2 Write property test for disabled-code filtering
+  - [x] 2.2 Write property test for disabled-code filtering
     - **Property 23: Disabled codes are filtered**
     - **Validates: Requirements 8.5**
 
-  - [ ] 2.3 Implement `engine/versions.py`
+  - [x] 2.3 Implement `engine/versions.py`
     - Define the `GameVersion` enum (Vanilla, Entrenchment, Diplomacy, Rebellion 185, 193, 194, 196), map bare "Rebellion" to 1.96, and implement capability sets and `gate_allows(gate, version)` over the gate tokens
     - Make Rebellion 1.96 start from the 194 capability set and load optional `overrides` and `unverified` token lists and per-version audit status from `definitions/versions.json`
     - _Requirements: 3.9, 13.7, 13.8_
 
-  - [ ]* 2.4 Write property test for gate monotonicity
+  - [x] 2.4 Write property test for gate monotonicity
     - **Property 10: Gate monotonicity for Rebellion 1.96**
     - **Validates: Requirements 3.9, 13.8**
 
@@ -60,11 +60,11 @@ Conventions for every task:
     - Create `tests/strategies/definitions.py` with `definitions()` generating structure graphs with all node types, gates and enums, plus a serializer to the bundled JSON schema
     - _Requirements: 1.2, 11.3_
 
-  - [ ]* 3.3 Write property test for malformed Definitions
+  - [ ] 3.3 Write property test for malformed Definitions
     - **Property 35: Malformed Definitions do not block loading**
     - **Validates: Requirements 1.3**
 
-  - [ ]* 3.4 Write property test for Definition load round trip
+  - [ ] 3.4 Write property test for Definition load round trip
     - **Property 36: Definition load round trip**
     - **Validates: Requirements 1.2**
 
@@ -90,35 +90,35 @@ Conventions for every task:
     - Create `tests/strategies/trees.py` with `trees()` (strings including empty, six-place decimals, booleans, bracket lists, colon keys, nested blocks, count-prefixed repeats) and an `indent_style` strategy rendering tabs, spaces or a mix with strictly increasing widths
     - _Requirements: 2.3, 2.4, 2.5_
 
-  - [ ]* 4.3 Write property test for parse round trip
+  - [ ] 4.3 Write property test for parse round trip
     - **Property 1: Parse round trip**
     - **Validates: Requirements 2.1, 2.3, 2.4, 2.5**
 
-  - [ ]* 4.4 Write property test for separator independence
+  - [ ] 4.4 Write property test for separator independence
     - **Property 2: Separator independence**
     - **Validates: Requirements 2.2**
 
-  - [ ]* 4.5 Write property test for recorded spans
+  - [ ] 4.5 Write property test for recorded spans
     - **Property 3: Recorded spans match source**
     - **Validates: Requirements 2.6**
 
-  - [ ]* 4.6 Write property test for parser recovery
+  - [ ] 4.6 Write property test for parser recovery
     - **Property 4: Parser recovery**
     - **Validates: Requirements 2.8**
 
-  - [ ]* 4.7 Write property test for missing header
+  - [ ] 4.7 Write property test for missing header
     - **Property 5: Missing header**
     - **Validates: Requirements 2.7**
 
-  - [ ]* 4.8 Write property test for archive version handling
+  - [ ] 4.8 Write property test for archive version handling
     - **Property 6: Archive version handling**
     - **Validates: Requirements 2.10, 2.11**
 
-  - [ ]* 4.9 Write property test for indentation style independence
+  - [ ] 4.9 Write property test for indentation style independence
     - **Property 37: Indentation style independence**
     - **Validates: Requirements 2.3, 2.4**
 
-  - [ ]* 4.10 Write parser unit tests
+  - [ ] 4.10 Write parser unit tests
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
@@ -127,11 +127,11 @@ Conventions for every task:
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`
     - _Requirements: 3.3, 3.10_
 
-  - [ ]* 5.2 Write property test for primitive type acceptance
+  - [ ] 5.2 Write property test for primitive type acceptance
     - **Property 7: Primitive type acceptance**
     - **Validates: Requirements 3.3**
 
-  - [ ]* 5.3 Write property test for numeric strictness
+  - [ ] 5.3 Write property test for numeric strictness
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 
@@ -140,19 +140,19 @@ Conventions for every task:
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10_
 
-  - [ ]* 5.5 Write property test for enumeration membership
+  - [ ] 5.5 Write property test for enumeration membership
     - **Property 9: Enumeration membership is version-gated**
     - **Validates: Requirements 3.2, 3.4, 3.9**
 
-  - [ ]* 5.6 Write property test for structural diagnostics
+  - [ ] 5.6 Write property test for structural diagnostics
     - **Property 11: Structural diagnostics**
     - **Validates: Requirements 3.5, 3.6, 3.7**
 
-  - [ ]* 5.7 Write property test for condition branch isolation
+  - [ ] 5.7 Write property test for condition branch isolation
     - **Property 12: Condition branch isolation**
     - **Validates: Requirements 3.8**
 
-  - [ ]* 5.8 Write unit tests for validator node types and primitives
+  - [ ] 5.8 Write unit tests for validator node types and primitives
     - Add at least one example test per Definition node type and per primitive type using synthetic Definitions
     - _Requirements: 11.3_
 
@@ -167,15 +167,15 @@ Conventions for every task:
     - Implement helpers that write `sose.json`/user-file values for Reference Roots and Layers (used by `init`, `config` and the MCP tools)
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.12, 8.14, 8.15, 14.7, 14.18_
 
-  - [ ]* 7.2 Write property test for settings precedence
+  - [ ] 7.2 Write property test for settings precedence
     - **Property 20: Settings precedence**
     - **Validates: Requirements 8.1, 8.14, 14.18**
 
-  - [ ]* 7.3 Write property test for invalid settings
+  - [ ] 7.3 Write property test for invalid settings
     - **Property 21: Invalid settings degrade locally**
     - **Validates: Requirements 8.4**
 
-  - [ ]* 7.4 Write property test for path resolution
+  - [ ] 7.4 Write property test for path resolution
     - **Property 22: Path resolution**
     - **Validates: Requirements 8.12**
 
@@ -184,7 +184,7 @@ Conventions for every task:
     - Use the Project's single Game Version and never read `EnabledMods.txt`
     - _Requirements: 4.6.1, 4.6.3, 14.1, 14.2, 14.3, 14.6, 14.7, 14.8, 14.9, 14.17_
 
-  - [ ]* 7.6 Write property test for chain construction
+  - [ ] 7.6 Write property test for chain construction
     - **Property 17: Chain construction**
     - **Validates: Requirements 14.1, 14.2, 14.6**
 
@@ -211,27 +211,27 @@ Conventions for every task:
     - Create `tests/strategies/chains.py` generating Layers on the in-memory `FileSystem` with overlapping names in varying case, hidden and VCS directories, and complete and incomplete chains
     - _Requirements: 4.3, 14.4.1, 14.5_
 
-  - [ ]* 8.6 Write property test for highest Layer wins
+  - [ ] 8.6 Write property test for highest Layer wins
     - **Property 13: Highest Layer wins, case-insensitively**
     - **Validates: Requirements 4.3, 4.4, 14.5, 14.12**
 
-  - [ ]* 8.7 Write property test for directory scanning
+  - [ ] 8.7 Write property test for directory scanning
     - **Property 18: Directory scanning excludes non-game data**
     - **Validates: Requirements 14.4.1**
 
-  - [ ]* 8.8 Write property test for incremental index
+  - [ ] 8.8 Write property test for incremental index
     - **Property 15: Incremental index equals full rebuild**
     - **Validates: Requirements 4.7**
 
-  - [ ]* 8.9 Write property test for layer cache validity
+  - [ ] 8.9 Write property test for layer cache validity
     - **Property 16: Layer cache validity**
     - **Validates: Requirements 14.10**
 
-  - [ ]* 8.10 Write property test for unresolved references on complete chains only
+  - [ ] 8.10 Write property test for unresolved references on complete chains only
     - **Property 14: Unresolved references are reported only on complete chains**
     - **Validates: Requirements 4.5, 4.6.1, 4.6.2**
 
-  - [ ]* 8.11 Write unit tests for the reference index
+  - [ ] 8.11 Write unit tests for the reference index
     - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured
     - _Requirements: 4.6, 14.9, 14.15_
 
@@ -240,7 +240,7 @@ Conventions for every task:
     - Load `manifest_rules.json`, implement `ManifestData` parsing with per-type count and name keys, extension rules, case-insensitive matching, header style and line-ending detection, and a formatter
     - _Requirements: 15.1, 15.1.1_
 
-  - [ ]* 9.2 Write property test for manifest round trip
+  - [ ] 9.2 Write property test for manifest round trip
     - **Property 27: Manifest parse and format round trip**
     - **Validates: Requirements 15.1**
 
@@ -249,15 +249,15 @@ Conventions for every task:
     - Honour the shipped base-game-unlisted list and user exemption patterns, and include the lower-Layer wording in `SOSE-M010`
     - _Requirements: 14.4, 14.19, 15.2, 15.3, 15.3.1, 15.3.2, 15.3.3, 15.3.4, 15.3.5, 15.4, 15.4.1, 15.5, 15.6_
 
-  - [ ]* 9.4 Write property test for governing manifest selection
+  - [ ] 9.4 Write property test for governing manifest selection
     - **Property 19: Governing manifest selection**
     - **Validates: Requirements 14.4, 14.19**
 
-  - [ ]* 9.5 Write property test for unlisted-file detection
+  - [ ] 9.5 Write property test for unlisted-file detection
     - **Property 28: Unlisted file detection**
     - **Validates: Requirements 15.2, 15.3**
 
-  - [ ]* 9.6 Write property test for manifest hygiene diagnostics
+  - [ ] 9.6 Write property test for manifest hygiene diagnostics
     - **Property 29: Manifest hygiene diagnostics**
     - **Validates: Requirements 15.4, 15.5, 15.6**
 
@@ -266,23 +266,23 @@ Conventions for every task:
     - Implement the side-effecting apply with `.bak` backups (numeric suffix when present), temporary file plus atomic replace, and dry-run diff output
     - _Requirements: 15.8, 15.8.1, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
-  - [ ]* 9.8 Write property test for sync preserving content
+  - [ ] 9.8 Write property test for sync preserving content
     - **Property 30: Sync preserves existing content**
     - **Validates: Requirements 15.8.1**
 
-  - [ ]* 9.9 Write property test for sync then check
+  - [ ] 9.9 Write property test for sync then check
     - **Property 31: Sync then check is clean**
     - **Validates: Requirements 15.3, 15.5, 15.8**
 
-  - [ ]* 9.10 Write property test for opt-in removal
+  - [ ] 9.10 Write property test for opt-in removal
     - **Property 32: Removal is opt-in**
     - **Validates: Requirements 15.8.4**
 
-  - [ ]* 9.11 Write property test for lower-Layer manifests
+  - [ ] 9.11 Write property test for lower-Layer manifests
     - **Property 33: Lower-Layer manifests are never edited**
     - **Validates: Requirements 15.8.5, 15.3.1**
 
-  - [ ]* 9.12 Write manifest unit tests
+  - [ ] 9.12 Write manifest unit tests
     - Cover the `skybox.manifest` governed subset, an overlay without manifests, extension-less `galaxy.manifest` names, backup creation and failed-write safety
     - _Requirements: 14.19, 15.3.3, 15.8.3_
 
@@ -296,15 +296,15 @@ Conventions for every task:
     - Limit reference completions to usable Layers on incomplete chains
     - _Requirements: 4.6.4, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 7.1, 7.2, 7.3, 14.12, 14.13, 14.14_
 
-  - [ ]* 11.2 Write property test for completion correctness
+  - [ ] 11.2 Write property test for completion correctness
     - **Property 24: Completion correctness**
     - **Validates: Requirements 6.2, 6.4, 6.5, 6.6**
 
-  - [ ]* 11.3 Write property test for reference completions
+  - [ ] 11.3 Write property test for reference completions
     - **Property 25: Reference completions are unique and layer-attributed**
     - **Validates: Requirements 4.6.4, 6.3, 14.14**
 
-  - [ ]* 11.4 Write completion and hover unit tests
+  - [ ] 11.4 Write completion and hover unit tests
     - Cover `entityType` completion, hover with no Definition, hover on overridden references and go-to-definition across Layers
     - _Requirements: 6.7, 7.3, 14.12, 14.13_
 
@@ -315,11 +315,11 @@ Conventions for every task:
     - Validate only files within the Project's Mod Roots and rebuild indexes when the Game Version changes
     - _Requirements: 4.2.1, 4.7, 4.8, 8.5, 9.6, 11.5, 14.3, 14.15, 15.7_
 
-  - [ ]* 12.2 Write Engine integration tests
+  - [ ] 12.2 Write Engine integration tests
     - Cover internal-error recovery, `validate_directory`, `on_file_saved` dependent discovery, overlay projects, and per-folder `sose.json` chains using synthetic trees
     - _Requirements: 4.8, 11.5, 14.11, 14.18, 14.19_
 
-  - [ ]* 12.3 Write the opt-in performance check
+  - [ ] 12.3 Write the opt-in performance check
     - Add a test marked `perf` (excluded from the default run) that checks a typical `.entity` validation completes within 500 ms on a warm index using a synthetic file, and skips when the reference root is absent
     - _Requirements: 5.6_
 
@@ -334,7 +334,7 @@ Conventions for every task:
     - Handle `didChangeWatchedFiles` for Layer files, `sose.json` and the user file, and handle initialization options and `didChangeConfiguration` as the editor settings tier, re-validating open files and dependents
     - _Requirements: 4.8, 8.13, 8.14, 14.11, 15.9_
 
-  - [ ]* 13.3 Write LSP tests with the pygls test client
+  - [ ] 13.3 Write LSP tests with the pygls test client
     - Cover publish on open and save, clearing on close and after a fix, completion, hover, definition, the code action and configuration reload
     - _Requirements: 5.1, 5.3, 5.4, 5.5, 8.13, 15.9_
 
@@ -348,11 +348,11 @@ Conventions for every task:
     - Add `get_config` (effective config with sources, Reference Root found status and the resolved Chain in order with path, kind and found status), `set_reference_root` and `edit_layers` (add, remove, reorder)
     - _Requirements: 8.15, 8.16, 14.16_
 
-  - [ ]* 14.3 Write property test for diagnostic conversion
+  - [ ] 14.3 Write property test for diagnostic conversion
     - **Property 26: Diagnostic conversion is lossless**
     - **Validates: Requirements 5.2, 9.6, 9.7**
 
-  - [ ]* 14.4 Write MCP tests
+  - [ ] 14.4 Write MCP tests
     - Invoke each tool function directly and through the SDK in-memory client, covering validation, completion, help, entity types, config tools, manifest tools, resources, and identical diagnostics to the Engine
     - _Requirements: 8.15, 8.16, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 15.10_
 
@@ -369,7 +369,7 @@ Conventions for every task:
     - List Game Versions with audit status (Rebellion 1.96 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`
     - _Requirements: 13.7, 13.8_
 
-  - [ ]* 15.4 Write CLI tests
+  - [ ] 15.4 Write CLI tests
     - Cover `init` with and without a root and with a user default, `set-reference-root` warnings, dry-run default for `manifest sync`, `--write` backup creation, `--remove-stale` listing and `versions` output
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 13.7, 15.7, 15.8_
 
@@ -383,7 +383,7 @@ Conventions for every task:
     - Wire `audit --reference-root PATH` into `cli/main.py` with a threshold option and output directory
     - _Requirements: 13.1, 13.6_
 
-  - [ ]* 16.3 Write property test for audit classification
+  - [ ] 16.3 Write property test for audit classification
     - **Property 34: Audit classification and coverage sets**
     - **Validates: Requirements 13.2, 13.3, 13.4**
 
@@ -412,11 +412,11 @@ Conventions for every task:
     - Add the MIT `LICENSE`, a `NOTICE` file listing the third-party attribution, and make sure `PROVENANCE.json` records origin, author, version and audit corrections
     - _Requirements: 12.1, 12.3, 12.4, 16.7, 16.8_
 
-  - [ ]* 17.3 Write the credits test
+  - [ ] 17.3 Write the credits test
     - Fail if the README lacks any credited party named in the requirements (zombiesrus5, GoaFan77, Stardock Entertainment, Ironclad Games) or the unofficial-tool statement
     - _Requirements: 16.4, 16.5, 16.9_
 
-  - [ ]* 17.4 Write smoke and repository hygiene tests
+  - [ ] 17.4 Write smoke and repository hygiene tests
     - Check that `import sose_validator` works, the three entry points start and answer (LSP and MCP initialize), no network use occurs, and the repository tree contains no game asset extensions (`.mesh`, `.dds`, `.ogg`, base game `.entity` sets)
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 12.6_
 

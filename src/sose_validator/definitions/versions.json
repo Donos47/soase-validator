@@ -1,0 +1,13 @@
+{
+  "audit_status": {
+    "vanilla": "unaudited",
+    "entrenchment": "unaudited",
+    "diplomacy": "unaudited",
+    "rebellion-185": "unaudited",
+    "rebellion-193": "unaudited",
+    "rebellion-194": "unaudited",
+    "rebellion-1.96": "audited"
+  },
+  "overrides": {},
+  "unverified": []
+}
