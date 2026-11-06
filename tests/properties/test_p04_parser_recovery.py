@@ -75,6 +75,20 @@ def _codes(diags: list[Diagnostic]) -> set[str]:
     return {d.code for d in diags}
 
 
+def test_every_garbage_text_is_unparseable_on_its_own() -> None:
+    """No garbage text is a valid value (hex token, number, list, bool, string).
+
+    Guards the generator: the parser accepts bare hex tokens such as ``beef``,
+    the ``key = "v"`` form and keyless ``[`` rows, so each text used to corrupt
+    a line must still be rejected after ``Broken<sep>``.
+    """
+    for garbage in _GARBAGE:
+        for sep in ("\t", " "):
+            result = parse(f"TXT\nBroken{sep}{garbage}\n")
+            assert [d.code for d in result.diagnostics] == ["SOASE-P002"], garbage
+            assert result.nodes == [], garbage
+
+
 @settings(max_examples=100)
 @given(
     nodes=trees().filter(bool),

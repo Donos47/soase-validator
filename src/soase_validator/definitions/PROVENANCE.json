@@ -11,42 +11,145 @@
       "field": "param (type=PlanetOwnerIsMilitiaWithChance, type=NoPlanetOwnerWithChance)",
       "change": "validation Decimal -> Any",
       "game_version": "Rebellion 1.98",
-      "evidence": ".galaxyScenarioDef: 15 uses, all quoted (two distinct decimal-looking values, 7 and 8 uses). Decimal accepts unquoted numbers only, so every real use was rejected. Not a closed set, so no enumeration."
+      "evidence": ".galaxyScenarioDef: 15 uses, all quoted (two distinct decimal-looking values, 7 and 8 uses). Decimal accepts unquoted numbers only, so every real use was rejected. Not a closed set, so no enumeration.",
+      "verify": [
+        {
+          "structure": "GroupType.condition",
+          "branch": "PlanetOwnerIsMilitiaWithChance",
+          "field": "param",
+          "validation": "Any",
+          "count": 1
+        },
+        {
+          "structure": "GroupType.condition",
+          "branch": "NoPlanetOwnerWithChance",
+          "field": "param",
+          "validation": "Any",
+          "count": 1
+        }
+      ]
     },
     {
       "structure": "Brushes:brush[]/content=Simple, Brushes:brush[]/content=Margins, StatesType",
       "field": "pixelBox",
       "change": "added constraint count=4",
       "game_version": "Rebellion 1.98",
-      "evidence": ".brushes: 10022 uses (57 Margins, 1630 Simple, 8335 StatesType), always a bracketed comma separated list of 4 integers."
+      "evidence": ".brushes: 10022 uses (57 Margins, 1630 Simple, 8335 StatesType), always a bracketed comma separated list of 4 integers.",
+      "verify": [
+        {
+          "structure": "Brushes",
+          "field": "pixelBox",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 2
+        },
+        {
+          "structure": "StatesType",
+          "field": "pixelBox",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        }
+      ]
     },
     {
       "structure": "PipCloud",
       "field": "mainViewIconAreaOffsetFromCenter",
       "change": "added constraint count=4",
       "game_version": "Rebellion 1.98",
-      "evidence": ".entity (PipCloud): 4 uses, always 4 integers."
+      "evidence": ".entity (PipCloud): 4 uses, always 4 integers.",
+      "verify": [
+        {
+          "structure": "PipCloud",
+          "field": "mainViewIconAreaOffsetFromCenter",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        }
+      ]
     },
     {
       "structure": "Player.researchScreenData.{Artifact,Combat,Defense,Diplomacy,Fleet,NonCombat}/block[]",
       "field": "area",
       "change": "added constraint count=4",
       "game_version": "Rebellion 1.98",
-      "evidence": ".entity (Player): 77 uses over the 6 block lists, always 4 integers."
+      "evidence": ".entity (Player): 77 uses over the 6 block lists, always 4 integers.",
+      "verify": [
+        {
+          "structure": "Player.researchScreenData.Artifact",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        },
+        {
+          "structure": "Player.researchScreenData.Combat",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        },
+        {
+          "structure": "Player.researchScreenData.Defense",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        },
+        {
+          "structure": "Player.researchScreenData.Diplomacy",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        },
+        {
+          "structure": "Player.researchScreenData.Fleet",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        },
+        {
+          "structure": "Player.researchScreenData.NonCombat",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        }
+      ]
     },
     {
       "structure": "Galaxy:useRandomGenerator=FALSE/star[], Galaxy:useRandomGenerator=FALSE/star[]/planet[]",
       "field": "pos",
       "change": "added constraint count=2",
       "game_version": "Rebellion 1.98",
-      "evidence": ".galaxy: 4014 uses (187 star, 3827 planet), always a bracketed comma separated list of 2 integers."
+      "evidence": ".galaxy: 4014 uses (187 star, 3827 planet), always a bracketed comma separated list of 2 integers.",
+      "verify": [
+        {
+          "structure": "Galaxy",
+          "field": "pos",
+          "validation": "Position",
+          "constraint": "count=2",
+          "count": 2
+        }
+      ]
     },
     {
       "structure": "ResearchSubject.researchWindowLocation",
       "field": "pos",
       "change": "added constraint count=2",
       "game_version": "Rebellion 1.98",
-      "evidence": ".entity (ResearchSubject): 582 uses, always 2 integers."
+      "evidence": ".entity (ResearchSubject): 582 uses, always 2 integers.",
+      "verify": [
+        {
+          "structure": "ResearchSubject.researchWindowLocation",
+          "field": "pos",
+          "validation": "Position",
+          "constraint": "count=2",
+          "count": 1
+        }
+      ]
     }
   ]
 }

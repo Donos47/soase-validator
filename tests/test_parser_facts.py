@@ -162,6 +162,16 @@ def test_equals_form_unterminated_quote_still_reported() -> None:
     assert p.nodes[0].value == StringValue("oops", terminated=False)
 
 
+def test_key_containing_equals_is_skipped() -> None:
+    # `key= "v"` (no space before `=`) and any other key holding `=` are
+    # not the surveyed shape; 0 keys with `=` occur in the reference files.
+    for line in ('k= "v"', 'a=b "v"', "k= 5", "k=", '=k "v"'):
+        p = parse(f"TXT2\n{line}\nz 1\n")
+        assert [d.code for d in p.diagnostics] == ["SOASE-P002"], line
+        assert [n.key for n in p.nodes] == ["z"], line
+        assert not p.complete, line
+
+
 def test_equals_without_quoted_value_is_still_skipped() -> None:
     # Only the surveyed shape is accepted: no unquoted value, no missing
     # space after `=`, no bare `=`.

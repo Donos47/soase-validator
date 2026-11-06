@@ -8,7 +8,8 @@ parsed portion of a broken file is always returned.
 Values are quoted strings, ``TRUE``/``FALSE``, numbers, bare hexadecimal
 tokens (colors such as ``ffffffff``) and bracket lists separated by commas or
 whitespace. A line that starts with ``[`` is a keyless row. The form
-``key = "value"`` (``.constants``) is read as ``key "value"``.
+``key = "value"`` (``.constants``) is read as ``key "value"``; any other use of
+``=`` (for example ``key= "v"``) is reported as ``SOASE-P002``.
 
 Block extents are decided purely by relative indentation using an indent
 stack. Tabs and spaces each count as one unit of indentation width.
@@ -344,8 +345,10 @@ def parse(
 
         value: Value | None = None
         value_span: Span | None = None
-        bad = False
-        if rest:
+        # A key never contains "=": the only accepted "=" shape is the
+        # `key = "value"` form handled above (0 keys with "=" in the reference).
+        bad = "=" in key
+        if rest and not bad:
             value_span = Span(lineno, rest_off, lineno, rest_off + len(rest))
             if rest[0] == '"':
                 close = rest.find('"', 1)

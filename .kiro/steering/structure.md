@@ -4,43 +4,56 @@ inclusion: always
 
 # Project Structure
 
-The repository is at an early stage: only `.kiro/specs/soase-validator/` exists so far. The layout below is the planned one from the design. Follow it when creating files.
+Entries marked (planned) do not exist yet; everything else is in the repository. Work through `.kiro/specs/soase-validator/tasks.md` for what comes next.
 
 ```
 soase-validator/
-  pyproject.toml
-  README.md                 # install, config, diagnostic code catalogue, credits
-  LICENSE, NOTICE/CREDITS
-  docs/version-gates.md
+  pyproject.toml, uv.lock, README.md, LICENSE
+  docs/version-gates.md          # (planned)
+  NOTICE/CREDITS                 # (planned)
   src/soase_validator/
     engine/
-      facade.py             # Engine class: the only API front ends use
-      model.py, diagnostics.py, versions.py
-      config.py, chain.py   # settings resolution, Layer chain
-      registry.py           # Definition loader
-      parser.py, validator.py, primitives.py
-      refindex.py, layercache.py
-      manifests.py, completion.py
-    definitions/            # bundled JSON Definitions, enums.json,
-                            # manifest_rules.json, versions.json, PROVENANCE.json
-    lsp/server.py           # pygls handlers
-    mcp_server/app.py       # MCP tools and resources
-    cli/main.py             # init, config, manifest, audit, versions
-    audit/audit.py
+      model.py, diagnostics.py   # Span, Diagnostic, code catalogue
+      versions.py                # GameVersion, gate_allows
+      registry.py                # Definition loader and Registry
+      parser.py                  # tolerant parser, Node/Value types, format_tree
+      primitives.py              # checkers, validate_constraint
+      validator.py               # (planned, task 5.4)
+      facade.py                  # (planned) Engine class, the only API front ends use
+      config.py, chain.py        # (planned)
+      refindex.py, layercache.py # (planned)
+      manifests.py, completion.py  # (planned)
+    definitions/                 # bundled JSON Definitions, enums.json, manifest_rules.json,
+                                 # versions.json, PROVENANCE.json
+    lsp/server.py                # placeholder
+    mcp_server/app.py            # placeholder
+    cli/main.py                  # placeholder (init, config, manifest, audit, versions planned)
+    audit/audit.py               # placeholder
   tools/convert_definitions.py   # one-off XML -> JSON converter, not shipped at runtime
   tests/
     conftest.py
-    properties/             # test_pNN_<name>.py
-    strategies/             # Hypothesis strategies
+    properties/                  # test_pNN_<name>.py (P1-P6, P10, P23, P35-P37 so far)
+    strategies/                  # trees.py, definitions.py
+    test_parser.py, test_parser_facts.py   # parser unit tests, verified format facts
+    test_primitives.py           # primitive checkers
+    test_registry.py, test_bundled_definitions.py, test_convert_definitions.py
+    test_versions.py, test_engine_model.py, test_smoke.py, ...
+  reference/                     # git-ignored, local evidence only
+    zombiesrus5-xml-definitions/ # original XML Definitions and entity_definitions.xsd
+    primitive-survey.md          # Reference Root survey (shapes and counts)
+    plugin-bytecode-findings.md  # findings from the plugin jar
+  audit-output/                  # git-ignored audit reports
   .kiro/
-    specs/soase-validator/   # requirements.md, design.md, tasks.md
+    specs/soase-validator/       # requirements.md, design.md, tasks.md
     steering/
 ```
 
 ## Conventions
 
 - Engine code must not import from `lsp/`, `mcp_server/`, `cli/` or `audit/`.
-- Definition changes go in the bundled JSON, with a correction recorded in `PROVENANCE.json` (game version and evidence).
-- Audit output goes to a git-ignored `audit-output/` directory. `.gitignore` also covers `.venv`, caches and any local reference copies.
+- Definition corrections go only in the bundled JSON, with an entry in `PROVENANCE.json` `audit_corrections` (game version, evidence and a `verify` list that a test checks). Never make one by re-running the converter: it refuses to write into the bundled directory while corrections are recorded, unless `--overwrite-corrections` is given.
+- Per-field shape parameters (for example a Position item count) use the Definition `constraint` attribute, for example `count=4`.
+- Survey and analysis output goes to `reference/` (git-ignored), never into the repo. Temporary scripts live in the system temp folder and are deleted afterwards.
+- `.gitignore` also covers `.venv`, caches and any local reference copies.
 - Game files are never stored in the repo. Manifest rules and the base-game-unlisted list contain names only.
-- Work through `.kiro/specs/soase-validator/tasks.md` in order; tasks marked `*` are optional tests.
+- Work through `.kiro/specs/soase-validator/tasks.md` in order; tasks marked `*` are optional tests. Only the orchestrator changes task statuses; sub-agents leave them alone unless told to.

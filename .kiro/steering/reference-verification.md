@@ -9,9 +9,12 @@ This tool exists to match real game data and the zombiesrus5 Definitions exactly
 
 1. The Rebellion 1.98 Reference Root (`SOASE_REFERENCE_ROOT_REBELLION_198` or the configured `referenceRoots` entry). Read in place only.
 2. `reference/zombiesrus5-xml-definitions/` (the original Definitions and `entity_definitions.xsd`).
-3. `.kiro/specs/soase-validator/requirements.md` and `design.md`.
+3. The zombiesrus5 compiled plugin jar (`~/Downloads/com.zombiesrus5.plugin.sose_1.0.0.<build>.jar`). Read in place, class files only; record findings in `reference/plugin-bytecode-findings.md`.
+4. `.kiro/specs/soase-validator/requirements.md` and `design.md`.
 
 If sources disagree, real files in the Reference Root win over the design text. Record the disagreement, do not paper over it.
+
+Game data outranks the plugin. The plugin is a cross-check for shapes the game data does not show, not a source of rules. Where this tool deliberately differs from the plugin, or accepts a shape no real file uses, that must be an explicit user decision recorded in `design.md` (example: Coordinate items written as integers).
 
 ## Rules
 
@@ -23,3 +26,5 @@ If sources disagree, real files in the Reference Root win over the design text. 
 - Tests must include real-shaped examples from the survey (synthetic reproductions of the shape, not copied game files), plus at least one rejected shape per rule.
 - A Definition correction goes in the bundled JSON and is recorded in `PROVENANCE.json` with game version and evidence.
 - When delegating a task, the brief must say which sources to read first and that unverifiable rules must be raised, not guessed.
+- If a rule would reject a shape that real files use, stop and report instead of enforcing it.
+- Sub-agents must not change task statuses in `tasks.md` unless told to.

@@ -270,6 +270,43 @@ def test_main_rejects_missing_directory(tmp_path: Path) -> None:
     assert conv.main([str(tmp_path / "nope")]) == 2
 
 
+def _guard_setup(tmp_path: Path) -> tuple[Path, Path]:
+    """Create a one-file XML directory and an output directory with corrections."""
+    xml_dir = tmp_path / "xml"
+    xml_dir.mkdir()
+    (xml_dir / "a.xml").write_text(
+        _xml('<structure name="Brushes"><field name="k" validation="Any"/></structure>'),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    out.mkdir()
+    provenance = {"audit_corrections": [{"structure": "S", "field": "f"}]}
+    (out / "PROVENANCE.json").write_text(json.dumps(provenance), encoding="utf-8")
+    return xml_dir, out
+
+
+def test_converter_refuses_to_overwrite_recorded_corrections(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    xml_dir, out = _guard_setup(tmp_path)
+    assert conv.main([str(xml_dir), "--output", str(out)]) == 2
+    err = capsys.readouterr().err
+    assert "audit correction" in err and "--overwrite-corrections" in err
+    assert not (out / "enums.json").exists()
+
+
+def test_converter_overwrites_with_explicit_flag(tmp_path: Path) -> None:
+    xml_dir, out = _guard_setup(tmp_path)
+    assert conv.main([str(xml_dir), "--output", str(out), "--overwrite-corrections"]) == 0
+    assert (out / "enums.json").exists()
+
+
+def test_converter_writes_when_no_corrections_recorded(tmp_path: Path) -> None:
+    xml_dir, out = _guard_setup(tmp_path)
+    (out / "PROVENANCE.json").write_text(json.dumps({"audit_corrections": []}), encoding="utf-8")
+    assert conv.main([str(xml_dir), "--output", str(out)]) == 0
+
+
 @pytest.mark.parametrize(
     ("count_key", "expected"),
     [("stageCount", "stage"), ("NumStrings", "Strings"), ("numPoints", "points"), ("x", "x")],

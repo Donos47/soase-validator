@@ -40,6 +40,8 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 
 1. THE Engine SHALL load all bundled Definition files and merge them into a single Registry at startup.
 2. THE Engine SHALL support the Definition node types `structure`, `iterative_field`, `field`, `condition_field`, `structure_reference`, `condition_reference`, and `element_rule`, including their documented attributes (`name`, `type`, `required`, `validation`, `values`, `limit`, `version`, `help`, `constraint`).
+   1. THE `constraint` attribute SHALL carry the per-field shape of a value. The only form defined is `count=N`, with N a positive integer, on a field with validation type `Position`, giving the exact number of integers.
+   2. IF a `constraint` is used on any other validation type, or is not of the form `count=N`, THEN THE Engine SHALL report a Definition load warning (`SOASE-D001`) that names the file and field, and SHALL continue loading.
 3. WHEN a Definition file is malformed or references an unknown structure, THE Engine SHALL report a startup warning that names the file and element, and SHALL continue loading the remaining Definitions.
 4. THE Engine SHALL expose the Registry for read-only queries by structure name, element rule name, and file extension.
 5. THE package SHALL bundle the Definitions so that no external download or Java runtime is needed.
@@ -53,7 +55,12 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 1. WHEN a text mod file begins with a recognised header line (`TXT` or `TXT2`), THE Engine SHALL parse the remaining lines as whitespace-delimited key-value entries.
 2. THE Engine SHALL accept both tab and space separators between a key and its value.
 3. THE Engine SHALL parse quoted string values, unquoted numeric values, and unquoted `TRUE`/`FALSE` values.
+   1. THE Engine SHALL parse an unquoted run of hexadecimal digits that is not a number (for example `ffffffff`) as a hexadecimal token, SHALL parse an all-digit token (for example `0` or `00000000`) as a number, and SHALL keep each token's source text.
+   2. WHEN a value begins with `[`, THE Engine SHALL parse it as a bracket list of numbers whose items are separated by commas (`[ 234 , 219 ]`, `[9, 99, 999, 99]`) or by whitespace (`[ 0.000000 0.100000 0.000000 ]`), and SHALL record which separator was used.
+   3. IF a bracket list is not closed, is closed more than once, or holds an item that is not a number, THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
+   4. IF a quoted string is not terminated, THEN THE Engine SHALL report `SOASE-P003`, SHALL keep the text to the end of the line as the value, and SHALL continue.
 4. WHEN a key has no value and is followed by more deeply indented entries, THE Engine SHALL treat the key as the start of a structure block.
+   1. WHEN the first non-blank character of a line is `[`, THE Engine SHALL treat the line as a keyless row, a node with an empty key and a bracket list value, nested under the nearest preceding less-indented key (the rows of an `Orientation` header).
 5. WHEN an entry is an iterative count key, THE Engine SHALL associate the following repeated blocks with that count.
 6. THE Engine SHALL record the line and column of every key and value for use in Diagnostics.
 7. IF a file is missing a recognised header, THEN THE Engine SHALL report an error Diagnostic at line 1.
@@ -61,6 +68,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 9. THE Engine SHALL parse `.entity`, `.galaxy`, `.brushes`, `.sounddata`, `.str`, `.constants`, `.galaxyScenarioDef`, `.particle`, and `.explosiondata` files, and SHALL ignore file extensions that have no Definition.
 10. THE Engine SHALL accept both `TXT` and `TXT2` headers in files of the same mod, and SHALL treat `SinsArchiveVersion` as belonging to `TXT2` files only; THE Engine SHALL NOT report a missing `SinsArchiveVersion` in a `TXT` file.
 11. WHEN `SinsArchiveVersion` is present, THE Engine SHALL verify it is an integer, and SHALL report a value not recognised for the active Game Version as informational.
+12. WHEN a line has the form key, whitespace, `=`, whitespace, quoted value (the `.constants` form `key = "value"`), THE Engine SHALL parse it as the same key and value as `key "value"`, with the key span covering the key and the value span covering the quoted value.
+13. IF a key contains `=`, or an `=` appears in any shape other than the one in criterion 12 (`key= "v"`, `key ="v"`, `key = 5`, a bare `=`), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
+14. IF a value is none of the forms in criterion 3 (including its sub-criteria), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
 
 ### Requirement 3: Structural and value validation
 
@@ -71,6 +81,12 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 1. WHEN validating an `.entity` file, THE Engine SHALL select the governing structure from the `entityType` value.
 2. IF the `entityType` value is not a known entity type for the active Game Version, THEN THE Engine SHALL report an error Diagnostic on that value.
 3. WHEN a field has a primitive validation type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`), THE Engine SHALL verify the value conforms to that type.
+   1. THE Engine SHALL accept as a `Color` only an unquoted token of exactly 8, 6 or 4 hexadecimal digits in either letter case, or a lone `0`, SHALL check every digit, and SHALL reject a `0x` prefix, a quoted value and any other length.
+   2. THE Engine SHALL accept as a `Position` only a bracketed, comma separated list of integers, and WHERE the field's Definition `constraint` is `count=N`, SHALL require exactly N items.
+   3. THE Engine SHALL accept as a `Coordinate` only a bracketed, whitespace separated list of exactly 3 numbers, each written in integer or decimal form (integer items are accepted by decision, to match the zombiesrus5 plugin).
+   4. THE Engine SHALL accept as an `Orientation` only a header with no value that has exactly 3 keyless child rows, each a `Coordinate`.
+   5. THE Engine SHALL reject a number written with an exponent, with a leading `+`, or with a trailing `.`, for `Integer`, `Decimal` and `Coordinate` items, under every numeric preference setting, and SHALL accept a number with no digit before the point (`.5`, `-.5`).
+   6. THE Engine SHALL accept `TRUE` and `FALSE` only, in capitals, as `Boolean` values.
 4. WHEN a field is bound to an enumeration (`type` or `values`), THE Engine SHALL verify the value is a member of the enumeration for the active Game Version.
 5. WHEN a field is marked `required` and is absent, THE Engine SHALL report an error Diagnostic on the enclosing block.
 6. WHEN a key is not defined by the governing structure, THE Engine SHALL report an error Diagnostic on that key.
@@ -212,6 +228,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 4. THE repository SHALL include attribution crediting Stardock Entertainment and Ironclad Games as the creators of Sins of a Solar Empire.
 5. THE README SHALL state that the project is an unofficial community tool, not affiliated with or endorsed by Stardock, Ironclad Games, or zombiesrus5.
 6. THE repository SHALL NOT include any game assets or base game files from Sins of a Solar Empire.
+7. THE project SHALL make every Definition correction only in the bundled JSON, and SHALL record each one in `PROVENANCE.json` `audit_corrections` with the Game Version, the evidence (shapes and counts only) and a machine-checkable `verify` entry.
+8. THE conversion tool SHALL refuse to write into a directory whose `PROVENANCE.json` lists audit corrections unless an explicit option is given, and SHALL state the reason on standard error.
+9. THE test suite SHALL fail if any audit correction recorded in `PROVENANCE.json` is absent from the bundled Definitions.
 
 ### Requirement 13: Definition completeness audit
 
@@ -328,5 +347,5 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
 
 ## Open Questions
 
-None.
+1. **Text after a complete quoted value (Requirement 2).** Six lines in the Rebellion 1.98 reference files have text directly after the closing quote (5 in `.str`, 1 in `.window`). The Engine currently reads up to the first closing quote and drops the rest without a Diagnostic. Whether to report these lines is undecided (see design.md, Verified format facts).
 

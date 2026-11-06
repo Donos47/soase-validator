@@ -123,17 +123,19 @@ Conventions for every task:
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
 - [ ] 5. Primitives and validator
-  - [x] 5.1 Implement `engine/primitives.py`
+  - [-] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
     - Read the `key = "value"` form in the parser, correct `GroupType.condition` `param` to `Any`, add the `count=N` constraints to the bundled Definitions and record each in `PROVENANCE.json`
     - _Requirements: 3.3, 3.10_
 
   - [~] 5.2 Write property test for primitive type acceptance
+    - Test each checker over (value, prefs, constraint): accept exactly the shapes in the design (Primitive rules and evidence), reject near-miss shapes; `check_orientation` takes the header `Node`; a malformed `constraint` raises `ValueError` in `check_position` and is reported by `validate_constraint`
     - **Property 7: Primitive type acceptance**
     - **Validates: Requirements 3.3**
 
   - [~] 5.3 Write property test for numeric strictness
+    - Cover `integer_strict` and `decimal_allow_integer`, and check that exponents, a leading `+` and a trailing `.` are rejected for every preference setting
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 

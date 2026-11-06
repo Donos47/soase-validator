@@ -2,8 +2,10 @@
 
 # Feature: soase-validator, Property 1: Parse round trip
 
-For any valid tree and either header, parsing the rendered text and then
-parsing the formatted result yields an equivalent tree with no Diagnostics.
+For any valid tree (strings, numbers, booleans, hex tokens, comma and
+whitespace separated lists, keyless rows, blocks and repeats) and either
+header, parsing the rendered text and then parsing the formatted result yields
+an equivalent tree with no Diagnostics.
 
 **Validates: Requirements 2.1, 2.3, 2.4, 2.5**
 """

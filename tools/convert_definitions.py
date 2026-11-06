@@ -8,6 +8,11 @@ writes JSON files in the schema documented in
 Usage::
 
     uv run python tools/convert_definitions.py <xml-dir> [--output <dir>]
+        [--overwrite-corrections]
+
+The converter refuses to write into a directory whose ``PROVENANCE.json``
+lists ``audit_corrections`` (the bundled directory), because converting from
+XML drops them. ``--overwrite-corrections`` overrides the refusal.
 
 Mapping summary
 ---------------
@@ -1200,6 +1205,28 @@ def write_result(result: ConversionResult, output: Path) -> list[Path]:
     return written
 
 
+def _audit_correction_count(output: Path) -> int:
+    """Count the audit corrections recorded beside an output directory.
+
+    Args:
+        output: Intended output directory.
+
+    Returns:
+        The number of ``audit_corrections`` in ``<output>/PROVENANCE.json``,
+        or 0 when the file is absent or unreadable.
+
+    Raises:
+        None.
+    """
+    path = output / "PROVENANCE.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except OSError, ValueError:
+        return 0
+    corrections = data.get("audit_corrections") if isinstance(data, dict) else None
+    return len(corrections) if isinstance(corrections, list) else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the converter from the command line.
 
@@ -1208,7 +1235,9 @@ def main(argv: list[str] | None = None) -> int:
 
     Returns:
         Process exit code: 0 on success, 1 with ``--strict`` when elements
-        could not be converted, 2 on usage or I/O errors.
+        could not be converted, 2 on usage or I/O errors or when the output
+        directory records audit corrections and ``--overwrite-corrections``
+        was not given.
 
     Raises:
         None.
@@ -1218,9 +1247,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("xml_dir", type=Path, help="directory containing the XML Definition files")
     parser.add_argument("--output", type=Path, default=default_out, help="output directory")
     parser.add_argument("--strict", action="store_true", help="exit 1 when anything is unconverted")
+    parser.add_argument(
+        "--overwrite-corrections",
+        action="store_true",
+        help="write even when the output directory's PROVENANCE.json lists audit corrections "
+        "(the conversion drops them; re-apply each one afterwards)",
+    )
     args = parser.parse_args(argv)
     if not args.xml_dir.is_dir():
         print(f"error: {args.xml_dir} is not a directory", file=sys.stderr)
+        return 2
+    count = _audit_correction_count(args.output)
+    if count and not args.overwrite_corrections:
+        print(
+            f"error: refusing to write to {args.output}: its PROVENANCE.json lists {count} "
+            "audit correction(s) that converting from XML would drop. Definition corrections "
+            "are made in the bundled JSON, not by re-running the converter. Pass "
+            "--overwrite-corrections to overwrite anyway and re-apply them by hand.",
+            file=sys.stderr,
+        )
         return 2
     try:
         result = convert_directory(args.xml_dir)

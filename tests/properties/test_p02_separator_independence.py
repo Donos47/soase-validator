@@ -5,6 +5,10 @@
 For any parsed tree, replacing each key/value separator with any non-empty
 run of tabs and spaces yields the same parsed tree.
 
+The ``key = "value"`` form is out of scope here: it is a fixed shape (``=``
+surrounded by whitespace, quoted value), not a separator, and is covered by
+unit tests in ``tests/test_parser_facts.py``.
+
 **Validates: Requirements 2.2**
 """
 

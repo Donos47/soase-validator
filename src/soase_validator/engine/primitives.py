@@ -44,7 +44,9 @@ Position
     the Definition as ``constraint`` ``count=N``.
 Coordinate
     7876 uses in 11 contexts (``.particle``), always a bracketed,
-    space separated list of exactly 3 numbers (decimals, negatives).
+    space separated list of exactly 3 numbers (six-place decimals,
+    negatives). Integer items do not occur; they are accepted by user
+    decision, to match the plugin (``BigDecimal`` items).
 Orientation
     3625 uses in 3 contexts (``.particle``): a header with no value and
     exactly 3 keyless child rows, each a Coordinate.

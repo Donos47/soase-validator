@@ -110,6 +110,37 @@ def test_provenance_content() -> None:
         assert entry["structure"] and entry["field"] and entry["change"] and entry["evidence"]
 
 
+def test_every_audit_correction_is_present_in_the_bundled_json() -> None:
+    """Each PROVENANCE `verify` entry matches the registry, so a revert fails.
+
+    A `verify` entry names a registry structure, a field name, the expected
+    `validation`, the expected `constraint` (when the correction adds one),
+    optionally one `branch` of the structure's condition field, and the number
+    of such fields found. Re-running the converter into
+    the bundled directory would drop these and fail here.
+    """
+    reg = load_registry()
+    for entry in _read("PROVENANCE.json")["audit_corrections"]:
+        assert entry.get("verify"), entry["structure"]
+        for check in entry["verify"]:
+            structure = reg.structure(check["structure"])
+            assert structure is not None, check
+            nodes = structure.children
+            if "branch" in check:
+                (selector,) = nodes
+                assert isinstance(selector, ConditionFieldDef), check
+                nodes = selector.branches[check["branch"]]
+            found = [
+                n
+                for n in _walk(nodes)
+                if isinstance(n, FieldDef)
+                and n.name == check["field"]
+                and n.validation == check["validation"]
+                and n.constraint == check.get("constraint")
+            ]
+            assert len(found) == check["count"], check
+
+
 def _fields(reg: Registry, name: str):
     """Yield (structure name, field) for every field called ``name``."""
     for sname in reg.structure_names:

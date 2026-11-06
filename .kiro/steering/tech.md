@@ -24,7 +24,8 @@ inclusion: always
 
 - All logic lives in the Engine (`engine/`). Front ends (`lsp/`, `mcp_server/`, `cli/`, `audit/`) only translate types and call `engine/facade.py`.
 - Core modules (parser, primitives, versions, manifest parsing and `plan_sync`) are pure functions; side effects live in `manifest_apply`, the layer cache and config writers.
-- The parser is hand-written and tolerant: always return Diagnostics for the parsed portion of a broken file.
+- The parser is hand-written and tolerant: always return Diagnostics for the parsed portion of a broken file. Its values are `StringValue`, `NumberValue`, `BoolValue`, `ListValue` and `HexValue`; a keyless row has an empty key.
+- Primitive checkers have the signature `check_<type>(raw, prefs, constraint=None)`; `check_orientation` takes the header `Node`. A malformed `constraint` raises `ValueError`; the validator reports it once at load as `SOASE-D001`.
 - Unexpected exceptions are caught at the facade, logged to stderr, and returned as partial Diagnostics plus `SOASE-X001`.
 - stdout must stay clean in the MCP stdio server and LSP; log to stderr only.
 - Positions are zero-based internally; MCP output uses one-based line and column.
@@ -58,7 +59,10 @@ uv run ruff format --check
 uv run pytest
 uv run pytest -m perf
 uv run pip-audit
-uv run soase-validator audit --reference-root <path>
+uv run soase-validator audit --reference-root <path>   # planned
+uv run python tools/convert_definitions.py <xml-dir> --output <dir>
 ```
+
+The converter exits 2 and writes nothing when the output directory's `PROVENANCE.json` lists audit corrections; `--overwrite-corrections` overrides that (then re-apply every correction by hand).
 
 Run `ruff check`, `ruff format --check` and `pytest` before finishing a task.

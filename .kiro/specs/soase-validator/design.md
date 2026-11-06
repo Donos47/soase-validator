@@ -198,7 +198,12 @@ class Registry:
 
 Malformed Definitions and dangling structure references produce a `LoadWarning(file, element, message)` and loading continues (Requirement 1.3). Resolution of structure references is done in a second pass so forward references work.
 
-**Field `constraint`.** The zombiesrus5 schema has a `constraint` string on `field` (and `element_rule`). The plugin only recognised `>0` and `>=0` on `Decimal`, and no shipped Definition uses either, so those meanings are dropped. Here `constraint` carries the per-field shape of a value. The only form defined is `count=N` (N a positive integer) on a `Position` field, giving the exact number of integers. `primitives.validate_constraint(validation, constraint)` returns a message for any other use (a constraint on another type, or a malformed `count`). Each constraint added to a bundled Definition is recorded in `PROVENANCE.json` `audit_corrections` with the game version and the evidence (shapes and counts). The converter copies `constraint` from `field` and `element_rule` elements; it drops it on a repeated value of an `iterative_field` and says so in its report.
+**Field `constraint`.** The zombiesrus5 schema has a `constraint` string on `field` (and `element_rule`). The plugin only recognised `>0` and `>=0` on `Decimal`, and no shipped Definition uses either, so those meanings are dropped. Here `constraint` carries the per-field shape of a value. The only form defined is `count=N` (N a positive integer) on a `Position` field, giving the exact number of integers. `primitives.validate_constraint(validation, constraint)` returns a message for any other use (a constraint on another type, or a malformed `count`). Each constraint added to a bundled Definition is recorded in `PROVENANCE.json` `audit_corrections` with the game version and the evidence (shapes and counts). The converter copies `constraint` from `field` and `element_rule` elements; it drops it on a repeated value of an `iterative_field` and says so in its report. Constraints in the original XML are not the audit constraints above: the XML carries none of the `count=N` values, so converting from XML would remove them.
+
+**Corrections and the converter.** Corrections are made only in the bundled JSON and recorded in `PROVENANCE.json` `audit_corrections`. Each entry carries a `verify` list (registry structure, field, `validation`, `constraint`, optional `branch`, and the expected number of matching fields). Two guards keep a re-run from silently reverting them:
+
+- `tools/convert_definitions.py` refuses to write into a directory whose `PROVENANCE.json` lists `audit_corrections`, prints the reason to stderr and exits 2, unless `--overwrite-corrections` is given. After using the flag, every correction must be re-applied by hand.
+- A test checks every `verify` entry against the loaded Registry, so a reverted correction fails the suite.
 
 ### Version Gating (Requirements 3.9, 13.8)
 
@@ -216,25 +221,55 @@ The parser is a tolerant, line-oriented scanner producing a tree of `Node`s with
 
 ```python
 @dataclass(frozen=True, slots=True)
-class Span:
+class Span:                      # in engine/model.py; zero-based
     line: int; col: int; end_line: int; end_col: int
+
+@dataclass(frozen=True, slots=True)
+class StringValue:
+    text: str                    # between the quotes, may be empty
+    terminated: bool = True      # False when the closing quote is missing
+
+@dataclass(frozen=True, slots=True)
+class NumberValue:
+    raw: str                     # exactly as written
+    value: int | float           # int when there is no decimal point or exponent
+    # property is_integer: True when value is an int
+
+@dataclass(frozen=True, slots=True)
+class BoolValue:
+    value: bool                  # TRUE / FALSE only
+
+@dataclass(frozen=True, slots=True)
+class ListValue:
+    items: tuple[NumberValue, ...]
+    separator: str = ","         # "," comma separated, " " whitespace separated (2+ items)
+
+@dataclass(frozen=True, slots=True)
+class HexValue:
+    raw: str                     # bare hex token that is not a number, e.g. "ffffffff"
+
+Value = StringValue | NumberValue | BoolValue | ListValue | HexValue
 
 @dataclass(slots=True)
 class Node:
-    key: str
+    key: str                     # empty for a keyless row (a line starting with "[")
     key_span: Span
-    value: Value | None          # StringValue | NumberValue | BoolValue | ListValue | None
-    value_span: Span | None
-    children: list[Node]         # populated for structure blocks and iterative blocks
-    parent: Node | None
+    value: Value | None = None   # None for block keys
+    value_span: Span | None = None
+    children: list[Node]         # nodes nested under this key
+    parent: Node | None          # excluded from repr and equality
+    extent: Span                 # key start to the end of the last descendant
+    indent: int = 0              # indentation width of the key's line
 
 @dataclass(slots=True)
 class ParsedFile:
-    header: Header | None        # "TXT" | "TXT2"
+    header: str | None           # "TXT" | "TXT2" | None when missing
     nodes: list[Node]
     diagnostics: list[Diagnostic]
-    complete: bool               # False when recovery was needed
+    complete: bool = True        # False when recovery was needed
 ```
+
+The parser keeps the raw token text in `NumberValue.raw` and `HexValue.raw`, so the primitive checkers decide what a token means (a Color `00000000` is a `NumberValue`; `ffffffff` is a `HexValue`).
 
 Algorithm:
 
@@ -243,7 +278,7 @@ Algorithm:
 3. The tokenizer reads bracket lists into a `ListValue` of numbers with a recorded `separator`: comma separated (`[ 234 , 219 ]`, `[9, 99, 999, 99]`) or whitespace separated (`[ 0.000000 0.100000 0.000000 ]`). A list that contains a comma is comma separated; otherwise items are split on whitespace.
 4. Block extent is decided by indentation alone, compared relatively with an indent stack as in Python. A key with no value opens a block, and its children are the following lines whose indentation is wider than the block key's indentation. The block ends at the first line whose indentation is not wider than the block key's. Spaces are accepted silently with no Diagnostic. Mixed tabs and spaces are compared by leading-whitespace length, with a tab counted as one unit, so a line is never rejected for its indentation characters. Nesting levels are therefore defined by the stack of widths seen so far, not by absolute widths.
 5. A count key such as `starCount N` is an ordinary key-value node. The N repeated blocks (for example `star`) or repeated value lines (for example `recommendedGameType "FFA"`) that follow are sibling nodes with the matching name. The validator compares the count with the number of repeats (Requirement 2.5, 3.7); the parser does not depend on the count to find block extents.
-6. Unrecoverable lines produce `SOASE-P002` and are skipped so that later lines are still parsed.
+6. Unrecoverable lines produce `SOASE-P002` and are skipped so that later lines are still parsed. A line is unrecoverable when its value is none of the forms in step 2 (including a malformed bracket list), or when its key contains `=`. The only accepted `=` shape is `key = "value"` (whitespace on both sides of the `=`, quoted value), which is read as `key "value"`; `key= "v"`, `key ="v"`, `key = 5` and a bare `=` are all `SOASE-P002`. Text after a complete value on the same line is not yet rejected: see the open item under Verified format facts.
 7. `SinsArchiveVersion` is validated only in `TXT2` files, must be an integer, and an integer unknown to the active Game Version gives an informational `SOASE-P004` (Requirement 2.10, 2.11). A `TXT` file never gets a missing-version error.
 
 Parsing is exposed as `parse(text: str) -> ParsedFile` and a printer `format_tree(parsed) -> str` used only in tests for round-tripping. The scanner is format-agnostic and needs no per-extension options.
@@ -255,14 +290,15 @@ These were checked against the Rebellion 1.98 reference set and drive the parser
 - Entity files start with `TXT2`, then `SinsArchiveVersion 194`, then `key value` lines. Galaxy and manifest files start with `TXT`; galaxy files carry `versionNumber 193` instead of `SinsArchiveVersion`.
 - Nesting uses tab indentation in the base game files, and those files contain no space-indented lines. Parsing does not require tabs: spaces are accepted without a Diagnostic and block extent is decided by relative indentation width.
 - Keys may contain colons, for example `Level:0 0.000000`.
-- Comma separated integer lists: `pos [ 234 , 219 ]` has 2 items (entity 582, galaxy 4014); `area`, `pixelBox` and `mainViewIconAreaOffsetFromCenter` have 4 items (brushes 10022, window 697, entity 81, screen 11). Spacing varies (`[ 9 , 99 ]` and `[9, 99, 999, 99]`).
-- Whitespace separated decimal lists: particle `Position`, `MeshParticleRotationAxis`, `Direction`, `Point`, `AxisOfRotation` and `AxisOrigin` are always 3 items, for example `[ 0.000000 0.100000 0.000000 ]` (7876 uses).
+- Comma separated integer lists: `pos [ 234 , 219 ]` has 2 items; `area`, `pixelBox` and `mainViewIconAreaOffsetFromCenter` have 4 items. Spacing varies (`[ 9 , 99 ]` and `[9, 99, 999, 99]`). Uses by extension: `.brushes` 10022 (4 items), `.galaxy` 4014 (2), `.entity` 582 (2) plus 81 (4), which are the 14699 uses the Definitions cover (the Primitive rules total below). `.window` (697, 4 items) and `.screen` (11, 4 items) use the same shape but have no Definition, so they are parsed and never validated.
+- Whitespace separated decimal lists: particle `Position`, `MeshParticleRotationAxis`, `Direction`, `Point`, `AxisOfRotation` and `AxisOrigin` are always 3 items, for example `[ 0.000000 0.100000 0.000000 ]` (7876 uses). Every parsed use is in `.particle`. The Coordinate and Orientation fields in `mesh.json` describe the binary `.mesh` format, which is out of scope and never parsed.
 - `Orientation` (particle, 3625 uses) is a header with no value whose children are keyless rows, each a whitespace separated list of 3 decimals (10875 rows, always 3 per header).
 - Colors are bare hexadecimal tokens, not quoted and not bracketed: 8 digits (4109 lowercase uses plus one uppercase use in `.constants`), plus a lone `0` (94 uses on `cloudColor`, `glowColor`, `ringColor` and `corona*Color`), plus 6 digit (3) and 4 digit (1) tokens (`corona*Color`, `dustCloudColor`). The parser yields `NumberValue` for all-digit tokens (`0`, `00000000`) and `HexValue` otherwise. `.color` files also use mixed-case 8 digit tokens and a `0x` prefixed form (13 lines); `.color` is not validated and `0x` does not occur in any validated Color field.
 - Booleans are `TRUE` or `FALSE` only; no other spelling or case occurs.
 - Numbers: integers (`42`, `-3`), decimals with a digit before the point (six places is the usual form but 1 to 9 places occur), and decimals with no digit before the point (`.5`, `-.111111`, about 210 uses). A leading `+`, exponents and a trailing point do not occur. Fields defined as `Integer` often hold decimals (for example `colonizeChance`, `priority`, `playTime`) and `Decimal` fields often hold integers.
-- The form `key = "Value"` occurs in `.constants` (22 lines, all `*DefName` keys defined as entity references), with whitespace on both sides of the `=` and a quoted value. The parser reads it as the same key and value as `key "Value"` (spans cover the key and the quoted value, not the `=`). Only that shape is accepted: an unquoted value, no space after `=`, or a bare `=` still gives `SOASE-P002`. The plugin reached the same result by replacing every `=` in a line with a space.
-- Lines the parser still reports as `SOASE-P002` in the base game: unterminated or doubly closed lists in `.window` (3 lines), and `0x`-prefixed color tokens in `.color` (13 lines).
+- The form `key = "Value"` occurs in `.constants` (22 lines, all `*DefName` keys defined as entity references), with whitespace on both sides of the `=` and a quoted value. The parser reads it as the same key and value as `key "Value"` (spans cover the key and the quoted value, not the `=`). Only that shape is accepted: an unquoted value, no space after `=` (`key ="v"`), a bare `=`, or a key that contains `=` (`key= "v"`) gives `SOASE-P002`. No key in the reference files contains `=`. The plugin reached a different result by replacing every `=` in a line with a space.
+- Lines the parser reports as `SOASE-P002` in the Rebellion 1.98 reference files (3068 `TXT`/`TXT2` files, 15 lines): malformed lists in `.window` (2 lines) and `0x`-prefixed color tokens in `.color` (13 lines). The count was 15 before and after the `=` rule above.
+- **Open item (not decided): text after a complete quoted value.** Six real lines have text directly after the closing quote, with no whitespace between: 5 lines in `.str` end in a second closing quote (`"text""`) and 1 line in `.window` has letters after the closing quote. The parser reads the quoted string up to the first closing quote and drops the rest without a Diagnostic. Rejecting trailing text would add 6 `SOASE-P002` lines to the reference set, so it is not enforced until the user decides how these shapes are to be treated (value text lost versus reported). No reference line has whitespace separated text after a value (`a "x" "y"`, `a = "v" tail`), and `a 1 2` is already `SOASE-P002`.
 - Quoted strings may be empty (`""`), and decimals are written with six places (`0.000000`).
 - Count keys (`starCount`, `planetCount`, `triggerCount`, `recommendedGameTypeCount`, `NumResearchPrerequisites`) precede that many repeated blocks or value lines, and may be zero.
 
@@ -289,13 +325,13 @@ Steps:
 The Rebellion 1.98 reference files are the authority. The checkers accept exactly the shapes below and reject the rest. Counts are uses in the reference files (shapes and counts only; no game content is stored).
 
 1. **Color**: an unquoted token of exactly 8, 6 or 4 hex digits in any letter case, or a lone `0`. Every digit is checked. A `0x`/`0X` prefix, a quoted value and any other length are rejected. The raw token text is checked, because the parser yields `NumberValue` for all-digit tokens and `HexValue` otherwise. Evidence: 4208 uses in 34 contexts (8 digits 4110, `0` 94, 6 digits 3, 4 digits 1).
-2. **Position**: a bracketed, comma separated list of integers (negatives allowed, no decimals). The item count comes from the field's `constraint` `count=N`: 2 for `pos` (`.galaxy` star and planet, `researchWindowLocation`), 4 for `pixelBox`, `area` and `mainViewIconAreaOffsetFromCenter`. Evidence: 14699 uses in 13 contexts, each field always one count (pos 4596 uses, pixelBox 10022, area 77, mainViewIconAreaOffsetFromCenter 4). A Position field with no `constraint` has its shape checked and its count left unchecked, because the survey did not reach it (see task 5.9).
-3. **Coordinate**: a bracketed, space separated list of exactly 3 numbers; each item may be in integer or decimal form. All reference uses are six-place decimals, and the integer form is accepted by user decision to match the zombiesrus5 plugin, which parses items with `BigDecimal`. **Orientation**: a header with no value and exactly 3 keyless child rows, each a Coordinate. Evidence: Coordinate 7876 uses in 11 contexts, Orientation 3625 uses in 3 contexts (10875 rows), all `.particle`.
+2. **Position**: a bracketed, comma separated list of integers (negatives allowed, no decimals). The item count comes from the field's `constraint` `count=N`: 2 for `pos` (`.galaxy` star and planet, `researchWindowLocation`), 4 for `pixelBox`, `area` and `mainViewIconAreaOffsetFromCenter`. Evidence: 14699 uses in 13 contexts, each field always one count (pos 4596 uses, pixelBox 10022, area 77, mainViewIconAreaOffsetFromCenter 4). These counts cover only extensions that have a Definition; the 697 `.window` and 11 `.screen` lists in Verified format facts are not included. A Position field with no `constraint` has its shape checked and its count left unchecked, because the survey did not reach it (see task 5.9).
+3. **Coordinate**: a bracketed, space separated list of exactly 3 numbers; each item may be in integer or decimal form. All reference uses are six-place decimals, and the integer form is accepted by user decision to match the zombiesrus5 plugin, which parses items with `BigDecimal`. **Orientation**: a header with no value and exactly 3 keyless child rows, each a Coordinate. Evidence: Coordinate 7876 uses in 11 contexts, Orientation 3625 uses in 3 contexts (10875 rows). Every parsed use is in `.particle`. The Coordinate and Orientation fields in `mesh.json` belong to the binary `.mesh` format, which is never parsed, so they have no text evidence and are out of scope. The integer-item leniency for Coordinate is a user decision (the plugin parses items with `BigDecimal`); no reference use has an integer item.
 4. **Integer** accepts the decimal form and **Decimal** accepts the integer form by default; `integer_strict` and `decimal_allow_integer` keep their meaning. Evidence: Integer fields hold decimal forms in 15 contexts (`dec6` 199 uses), Decimal fields hold integer forms in 84 contexts (666 uses).
 5. **Number form** (Integer, Decimal, Coordinate items): exponents, a leading `+` and a trailing `.` are rejected; a leading-dot (`.5`, `-.5`) and negatives are accepted. None of the rejected forms occurs; leading-dot occurs about 140 times.
-6. **Parser**: the `key = "value"` form is read like `key "value"` (see Verified format facts).
+6. **Parser**: the `key = "value"` form is read like `key "value"`, and a key containing `=` is `SOASE-P002` (see Verified format facts).
 7. **Definition correction**: `GroupType.condition` `param` for `PlanetOwnerIsMilitiaWithChance` and `NoPlanetOwnerWithChance` was `Decimal` but all 15 real uses are quoted (two distinct values, 7 and 8 uses), so it is now `Any`. See `PROVENANCE.json`.
-8. **Shape parameters live in the Definitions**, on the field, in `constraint` (see Definition Loader and Registry).
+8. **Shape parameters live in the Definitions**, on the field, in `constraint` (see Definition Loader and Registry). A malformed `constraint` makes `check_position` raise `ValueError`; the validator (task 5.4) reports it once at load as `SOASE-D001` through `validate_constraint`, so the checker never sees one in normal use.
 9. **Iterative fields are counted repeats of sibling lines** (task 5.4, not part of primitives): see below.
 
 **Where this is stricter than the zombiesrus5 plugin.** The plugin checks only the first 6 characters of an 8 digit Color and 5 of a 6 digit Color, blanks every quote and `=` before checking a value (so a quoted Color or number passes), does not count Position or Coordinate items, and parses numbers with `BigDecimal`, which accepts exponents, a leading `+` and a trailing `.`. This tool checks every digit, does not strip quotes, enforces the counts above and rejects those number forms. None of the plugin-only forms occurs in the reference files.
@@ -635,13 +671,13 @@ Reflection on redundancy: the parse round trip (2.1, 2.3 to 2.5) subsumes the se
 
 ### Property 1: Parse round trip
 
-For any valid tree of keys (including keys containing colons), strings (including empty), numbers, booleans, bracket lists, tab-indented structure blocks and count-prefixed repeated blocks, and for either header (`TXT` or `TXT2`), formatting the tree and then parsing the text produces an equivalent tree with no Diagnostics. Block extent in the result follows relative indentation width alone.
+For any valid tree of keys (including keys containing colons), strings (including empty), numbers, booleans, bare hexadecimal tokens, bracket lists with either separator (comma or whitespace), keyless list rows under a header, tab-indented structure blocks and count-prefixed repeated blocks, and for either header (`TXT` or `TXT2`), formatting the tree and then parsing the text produces an equivalent tree (keys, values including `ListValue.separator` and `HexValue`, and children) with no Diagnostics. Block extent in the result follows relative indentation width alone.
 
 **Validates: Requirements 2.1, 2.3, 2.4, 2.5**
 
 ### Property 2: Separator independence
 
-For any parsed tree, replacing each key/value separator with any non-empty run of tabs and spaces yields the same parsed tree.
+For any parsed tree, replacing each key/value separator with any non-empty run of tabs and spaces yields the same parsed tree. The `key = "value"` form is out of scope for this property: it is a fixed shape (an `=` with whitespace on both sides and a quoted value), not a separator, and is covered by unit tests. Keyless rows have no key/value separator and are unaffected.
 
 **Validates: Requirements 2.2**
 
@@ -653,7 +689,7 @@ For any parsed file and any node, the source text at the node's key span equals 
 
 ### Property 4: Parser recovery
 
-For any valid file and any single line replaced with unparseable text, the parser reports at least one Diagnostic and still returns every node from lines before and after the corrupted line unchanged.
+For any valid file and any single line replaced with unparseable text, the parser reports at least one Diagnostic and still returns every node from lines before and after the corrupted line unchanged. The corrupting texts are drawn from a fixed list, and a test checks that each of them is rejected on its own, so a text the parser comes to accept (a bare hex token such as `beef`, the `key = "v"` form, a keyless `[` row) cannot silently turn the property into one about valid input.
 
 **Validates: Requirements 2.8**
 
@@ -671,13 +707,13 @@ For any `TXT` file, no missing-`SinsArchiveVersion` Diagnostic is produced. For 
 
 ### Property 7: Primitive type acceptance
 
-For any primitive validation type and any string, the checker accepts the value if and only if it matches that type's grammar, and the result is independent of surrounding context.
+For any primitive validation type, any parsed value, any numeric preferences and any `constraint`, the checker accepts the value if and only if it matches that type's grammar under those preferences and that constraint (the Primitive rules above), and the result is independent of surrounding context. `Orientation` takes the header `Node` instead of a value and accepts it if and only if it has no value and exactly 3 keyless Coordinate rows. A `Position` checker given a malformed `constraint` raises `ValueError`, and `validate_constraint` reports the same constraint as a message; a malformed constraint is reported once at load by the validator (task 5.4) and never reaches the checker in normal use.
 
 **Validates: Requirements 3.3**
 
 ### Property 8: Numeric strictness
 
-For any numeric string and any numeric preference setting, `Integer` validation with strictness on rejects every value containing a fractional part, and the result with strictness off accepts a superset of the values accepted with it on.
+For any numeric string and any numeric preference setting, `Integer` validation with strictness on rejects every value containing a fractional part, and the result with strictness off accepts a superset of the values accepted with it on. For every preference setting, `Integer`, `Decimal` and the items of a `Coordinate` reject a value written with an exponent, a leading `+` or a trailing `.`.
 
 **Validates: Requirements 3.10**
 
@@ -886,7 +922,7 @@ Both unit tests and property tests are used. Unit and integration tests cover co
 
 ### Generators
 
-- `trees()`: random key/value trees with strings (including empty strings, spaces and punctuation), integers, six-place decimals, booleans, bracket lists, keys containing colons, nested blocks, and count keys with repeated blocks (Properties 1 to 4 and 37). An `indent_style` strategy renders the same tree with tabs, with a random number of spaces per level, or with a mix of both, so long as widths increase strictly with depth.
+- `trees()`: random key/value trees with strings (including empty strings, spaces and punctuation), integers, six-place decimals, booleans, hexadecimal tokens, comma and whitespace separated bracket lists, `Orientation`-style headers with keyless list rows, keys containing colons, nested blocks, and count keys with repeated blocks (Properties 1 to 4 and 37). An `indent_style` strategy renders the same tree with tabs, with a random number of spaces per level, or with a mix of both, so long as widths increase strictly with depth.
 - `definitions()`: random structure graphs with all node types, gates and enums (Properties 9 to 12, 24, 35, 36).
 - `chains()`: random Layers on a `tmp_path` filesystem with overlapping names in varying case (Properties 13 to 19, 25, 28 to 33).
 - `manifests()`: per-type manifests with random names, line endings and count mismatches (Properties 27 to 33).
