@@ -156,6 +156,68 @@ def test_element_rule_becomes_enum_and_typed_field() -> None:
     assert _structure(result, "u.json", "U")["children"][0]["type"] == "role"
 
 
+def test_empty_value_is_kept_as_empty_string_member(tmp_path: Path) -> None:
+    rules = _xml(
+        '<element_rule name="role" validation="Simple">'
+        '<value></value><value version="Rebellion">Heavy</value></element_rule>'
+    )
+    user = _xml(
+        '<structure name="Brushes"><field name="owner" validation="Any">'
+        "<value></value><value>Player-0</value></field>"
+        '<field name="gated" validation="Any"><value version="Rebellion"></value>'
+        "<value>X</value></field>"
+        '<condition_field name="sel"><condition><value></value><value>Z</value>'
+        '<field name="f" validation="Integer"/></condition></condition_field>'
+        "</structure>"
+    )
+    result = conv.convert_texts({"common.xml": rules, "u.xml": user})
+    children = {n["name"]: n for n in _structure(result, "u.json", "Brushes")["children"]}
+    assert children["owner"]["values"] == ["", "Player-0"]
+    assert set(children["sel"]["branches"]) == {"", "Z"}
+    enums = {e["name"]: e for e in result.files["enums.json"]["enums"]}
+    assert enums["role"]["values"] == ["", {"name": "Heavy", "version": "Rebellion"}]
+    # A gate on an empty value cannot be represented; it is dropped and reported.
+    assert children["gated"]["values"] == ["", "X"]
+    assert any("version/help on an empty <value>" in line for line in result.report.unconverted)
+    assert not any("empty <value> element skipped" in line for line in result.report.unconverted)
+
+    out = tmp_path / "out"
+    conv.write_result(result, out)
+    assert load_registry(out).warnings == ()
+
+
+def test_condition_without_any_value_is_still_reported() -> None:
+    xml = _xml(
+        '<structure name="S"><condition_field name="sel"><condition>'
+        '<field name="f" validation="Integer"/></condition></condition_field></structure>'
+    )
+    result = conv.convert_texts({"s.xml": xml})
+    assert any("without a value" in line for line in result.report.unconverted)
+
+
+def test_repeated_condition_value_is_replaced_not_merged() -> None:
+    cond = _xml(
+        '<condition_field name="kind">'
+        '<condition value="A"><field name="old" validation="Integer"/>'
+        '<field name="shared" validation="Integer"/></condition>'
+        '<condition value="B"><field name="b" validation="Integer"/></condition>'
+        '<condition value="A"><field name="shared" validation="Integer" version="Rebellion193"/>'
+        '<field name="new" validation="Integer"/></condition>'
+        "</condition_field>"
+    )
+    user = _xml('<structure name="U"><field name="kind" type="kind"/></structure>')
+    result = conv.convert_texts({"kind.xml": cond, "u.xml": user})
+    branches = _structure(result, "u.json", "U")["children"][0]["branches"]
+    names = [n["name"] for n in branches["A"]]
+    assert names == ["shared", "new"]
+    assert branches["A"][0]["version"] == "Rebellion193"
+    assert [n["name"] for n in branches["B"]] == ["b"]
+    notes = [n for n in result.report.notices if "kind='A'" in n]
+    assert len(notes) == 1
+    assert "#1" in notes[0] and "#3" in notes[0] and "later definition (#3) kept" in notes[0]
+    assert not result.report.unconverted
+
+
 def test_problems_are_reported_not_raised() -> None:
     result = conv.convert_texts(
         {

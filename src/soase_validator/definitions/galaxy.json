@@ -245,6 +245,7 @@
                         "name": "owner",
                         "validation": "Any",
                         "values": [
+                          "",
                           "Player-0",
                           "Player-1",
                           "Player-2",
@@ -844,6 +845,7 @@
               "name": "owner",
               "validation": "Any",
               "values": [
+                "",
                 "Player-0",
                 "Player-1",
                 "Player-2",
@@ -1086,6 +1088,7 @@
           "name": "owner",
           "validation": "Any",
           "values": [
+            "",
             "Player-0",
             "Player-1",
             "Player-2",

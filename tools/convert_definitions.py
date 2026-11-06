@@ -22,8 +22,14 @@ Mapping summary
 * ``iterative_field`` -> ``iterative_field`` with ``count_key`` set to the
   original (count) name and ``name`` set to the repeated key. A repeated
   structure reference is inlined as the block's ``children``.
-* ``condition_field`` -> ``condition_field`` with one branch per value. A
-  top-level ``condition_field`` is also an enumeration of its values, and
+* An empty ``<value></value>`` is the empty-string member ``""`` (valid in
+  field values, element rules and condition selectors). A version or help on
+  an empty value is dropped and reported, because the registry requires a
+  non-empty name in member objects.
+* ``condition_field`` -> ``condition_field`` with one branch per value. When
+  a value is defined by more than one ``<condition>``, the later definition
+  replaces the earlier one (no merge) and a notice names both. A top-level
+  ``condition_field`` is also an enumeration of its values, and
   every field whose ``type`` (or bare name) refers to it is expanded inline.
 * ``element_rule`` -> element rule; its value list becomes an enumeration
   of the same name, referenced through the rule's ``type``.
@@ -216,7 +222,9 @@ class Converter:
             None.
         """
         file = ctx.file if isinstance(ctx, Ctx) else ctx
-        self.report.unconverted.append(f"{file}: {where}: {message}")
+        line = f"{file}: {where}: {message}"
+        if line not in self.report.unconverted:
+            self.report.unconverted.append(line)
 
     def notice(self, ctx: Ctx | str, where: str, message: str) -> None:
         """Record an informational remark.
@@ -233,7 +241,9 @@ class Converter:
             None.
         """
         file = ctx.file if isinstance(ctx, Ctx) else ctx
-        self.report.notices.append(f"{file}: {where}: {message}")
+        line = f"{file}: {where}: {message}"
+        if line not in self.report.notices:
+            self.report.notices.append(line)
 
     # -- loading -------------------------------------------------------------
 
@@ -378,22 +388,34 @@ class Converter:
                 return child.text.strip()
         return None
 
-    @staticmethod
-    def _member(text: str, version: str | None, help_text: str | None) -> str | dict[str, Any]:
+    def _member(
+        self, ctx: Ctx, text: str, version: str | None, help_text: str | None
+    ) -> str | dict[str, Any]:
         """Build an enum member.
 
         Args:
-            text: Member text.
+            ctx: Conversion context, for reporting.
+            text: Member text; may be empty (the empty-string value).
             version: Version gate or None.
             help_text: Help or None.
 
         Returns:
-            A plain string, or an object when a gate or help is present.
+            A plain string, or an object when a gate or help is present. The
+            empty string is always a plain string because the registry needs
+            a non-empty ``name`` in member objects; a gate or help on it is
+            dropped and reported.
 
         Raises:
             None.
         """
         if not version and not help_text:
+            return text
+        if text == "":
+            self.issue(
+                ctx,
+                ctx.path,
+                "version/help on an empty <value> dropped; the empty-string member is ungated",
+            )
             return text
         member: dict[str, Any] = {"name": text}
         _put(member, "version", version)
@@ -418,10 +440,7 @@ class Converter:
             if _local(child.tag) != "value":
                 continue
             text = (child.text or "").strip()
-            if not text:
-                self.issue(ctx, ctx.path, "empty <value> element skipped")
-                continue
-            members.append(self._member(text, child.get("version"), child.get("help")))
+            members.append(self._member(ctx, text, child.get("version"), child.get("help")))
         return members
 
     def _rule_members(self, elem: ET.Element, ctx: Ctx) -> list[str | dict[str, Any]]:
@@ -462,15 +481,16 @@ class Converter:
         cond_version = cond.get("version")
         values: list[tuple[str, str | None, str | None]] = []
         attr = cond.get("value")
-        if attr is not None and attr.strip():
+        if attr is not None:
             values.append((attr.strip(), cond_version, None))
         for child in cond:
             if _local(child.tag) == "value":
                 text = (child.text or "").strip()
-                if text:
-                    values.append((text, child.get("version") or cond_version, child.get("help")))
+                values.append((text, child.get("version") or cond_version, child.get("help")))
         if not values:
             self.issue(ctx, ctx.path, "<condition> without a value skipped")
+        elif all(v[0] == "" for v in values):
+            self.notice(ctx, ctx.path, "<condition> selects only the empty string")
         return values
 
     def _condition_members(self, elem: ET.Element, ctx: Ctx) -> list[str | dict[str, Any]]:
@@ -490,7 +510,7 @@ class Converter:
         for cond in elem:
             if _local(cond.tag) != "condition":
                 continue
-            members.extend(self._member(*v) for v in self._condition_values(cond, ctx))
+            members.extend(self._member(ctx, *v) for v in self._condition_values(cond, ctx))
         return members
 
     def _unique(self, used: set[str], base: str) -> str:
@@ -870,18 +890,26 @@ class Converter:
             None.
         """
         branches: dict[str, list[dict[str, Any]]] = {}
+        defined_at: dict[str, int] = {}
+        ordinal = 0
         for cond in elem:
             if _local(cond.tag) != "condition":
                 continue
+            ordinal += 1
             self._check_attrs(ctx.file, cond)
             values = self._condition_values(cond, ctx)
             body = self.nodes(cond, ctx)
             for value, _version, _help in values:
-                if value in branches:
-                    self.notice(ctx, f"{ctx.path}={value}", "repeated branch value; nodes merged")
-                    branches[value].extend(copy.deepcopy(body))
-                else:
-                    branches[value] = copy.deepcopy(body)
+                if value in branches and defined_at[value] != ordinal:
+                    self.notice(
+                        ctx,
+                        f"{ctx.path}={value!r}",
+                        f"value defined by <condition> #{defined_at[value]} and "
+                        f"<condition> #{ordinal}; later definition (#{ordinal}) kept, "
+                        f"earlier (#{defined_at[value]}) replaced",
+                    )
+                branches[value] = copy.deepcopy(body)
+                defined_at[value] = ordinal
         return branches
 
     def cond_branches(self, key: str) -> dict[str, list[dict[str, Any]]] | None:
