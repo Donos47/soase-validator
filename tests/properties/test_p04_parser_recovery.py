@@ -79,7 +79,7 @@ def test_every_garbage_text_is_unparseable_on_its_own() -> None:
     """No garbage text is a valid value (hex token, number, list, bool, string).
 
     Guards the generator: the parser accepts bare hex tokens such as ``beef``,
-    the ``key = "v"`` form and keyless ``[`` rows, so each text used to corrupt
+    the ``key = "v"`` form and keyless ``[`` rows, so each text that corrupts
     a line must still be rejected after ``Broken<sep>``.
     """
     for garbage in _GARBAGE:

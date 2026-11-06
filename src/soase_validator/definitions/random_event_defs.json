@@ -58,7 +58,7 @@
             {
               "node": "condition_field",
               "name": "spawnType",
-              "type": "spawnType",
+              "type": "RandomEventDefType.spawnType",
               "branches": {
                 "Projectile": [
                   {
@@ -85,7 +85,7 @@
                 "RacialBuffAtLocation": [
                   {
                     "node": "iterative_field",
-                    "name": "racialBuff",
+                    "name": "race",
                     "count_key": "racialBuffCount",
                     "children": [
                       {
@@ -224,7 +224,7 @@
         {
           "node": "condition_field",
           "name": "spawnType",
-          "type": "spawnType",
+          "type": "RandomEventDefType.spawnType",
           "branches": {
             "Projectile": [
               {
@@ -251,7 +251,7 @@
             "RacialBuffAtLocation": [
               {
                 "node": "iterative_field",
-                "name": "racialBuff",
+                "name": "race",
                 "count_key": "racialBuffCount",
                 "children": [
                   {

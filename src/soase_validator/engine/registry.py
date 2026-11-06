@@ -66,6 +66,9 @@ class FieldDef:
         version: Version gate expression.
         help: Help text.
         constraint: Extra constraint expression.
+        values_from: Dotted key path from the file root (for example
+            ``player.designName``) naming string values declared elsewhere in
+            the same file; those values are allowed in addition to ``values``.
     """
 
     name: str
@@ -76,6 +79,7 @@ class FieldDef:
     version: str | None = None
     help: str | None = None
     constraint: str | None = None
+    values_from: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -314,6 +318,29 @@ def _opt_int(raw: Mapping[str, Any], key: str) -> int | None:
     return value
 
 
+def _key_path(raw: Mapping[str, Any], key: str) -> str | None:
+    """Read an optional dotted key path such as ``player.designName``.
+
+    Args:
+        raw: Source mapping.
+        key: Attribute name.
+
+    Returns:
+        The path or None.
+
+    Raises:
+        _BadElementError: If the value is not a string of two or more
+            non-empty dot-separated parts.
+    """
+    value = _opt_str(raw, key)
+    if value is None:
+        return None
+    parts = value.split(".")
+    if len(parts) < 2 or not all(parts):
+        raise _BadElementError(f"attribute '{key}' must be a dotted key path")
+    return value
+
+
 def _bool(raw: Mapping[str, Any], key: str) -> bool:
     """Read an optional boolean attribute, defaulting to False.
 
@@ -455,6 +482,7 @@ class _Loader:
                 validation=_opt_str(raw, "validation"),
                 values=_values(raw),
                 constraint=_opt_str(raw, "constraint"),
+                values_from=_key_path(raw, "values_from"),
                 **common,
             )
         if kind == "iterative_field":

@@ -1,7 +1,6 @@
 """Unit tests for the structural and value validator (Requirement 3).
 
-Definitions and files are synthetic. The shapes mirror the Rebellion 1.98
-reference files (shapes and counts only; no game content): particle
+Definitions and files are synthetic and real-shaped: particle
 ``NumEmitters`` followed by ``EmitterType`` + ``EmitterContents`` sibling
 sequences, ``.str`` ``NumStrings`` + ``StringInfo`` blocks, ``.galaxy``
 ``useRandomGenerator`` with a Boolean selector, count-prefixed repeated
@@ -99,9 +98,6 @@ class _Lookup:
         return self.result
 
 
-# ---- extension, header keys, file stamping --------------------------------
-
-
 def test_extension_without_definition_is_ignored() -> None:
     registry = _registry([_f("a", "Integer")])
     assert _run(registry, "zzz 1\n", name="a.unknown") == []
@@ -128,8 +124,6 @@ def test_no_output_on_stdout(capsys: pytest.CaptureFixture[str]) -> None:
     _run(registry, "a x\n")
     assert capsys.readouterr().out == ""
 
-
-# ---- 3.1 / 3.2 entity root --------------------------------------------------
 
 _ENTITY_ENUM = [
     {"name": "entityType", "values": ["Frigate", {"name": "Titan", "version": "Rebellion"}]}
@@ -172,9 +166,6 @@ def test_missing_entity_type_is_a_required_field_error() -> None:
     registry = _entity_registry()
     diags = _run(registry, "speed 1.0\n", header="TXT2", name="x.entity")
     assert _brief(diags) == [(dg.V040, 0, 0, len("TXT2"))]
-
-
-# ---- 3.3 primitives, constraint, Orientation -------------------------------
 
 
 @pytest.mark.parametrize(
@@ -262,9 +253,6 @@ def test_element_rule_supplies_the_validation_of_an_untyped_field() -> None:
     assert [d.code for d in _run(registry, "isShared 5\n")] == [dg.V050]
 
 
-# ---- 3.10 numeric preferences ----------------------------------------------
-
-
 def test_numeric_preferences_are_applied() -> None:
     registry = _registry([_f("i", "Integer"), _f("d", "Decimal")])
     body = "i 1.500000\nd 5\n"
@@ -273,8 +261,6 @@ def test_numeric_preferences_are_applied() -> None:
     diags = _run(registry, body, numeric=strict)
     assert _brief(diags) == [(dg.V050, 1, 2, 10), (dg.V050, 2, 2, 3)]
 
-
-# ---- 3.4 enumerations, 3.9 gates -------------------------------------------
 
 _KIND_ENUM = [
     {
@@ -327,9 +313,6 @@ def test_field_and_structure_gates_define_keys() -> None:
     # A gated-out required field is not required (and not reported missing).
     assert _run(registry, "old 1\n", version=GameVersion.REBELLION_185) == []
     assert [d.code for d in _run(registry, "old 1\n")] == [dg.V040]
-
-
-# ---- 3.5 required, 3.6 unknown ---------------------------------------------
 
 
 def test_required_field_missing_is_reported_on_the_file_header() -> None:
@@ -403,9 +386,9 @@ def test_skipped_parser_line_leaves_a_required_field_missing() -> None:
 
 
 def test_indentation_decides_which_block_a_line_belongs_to() -> None:
-    # Real galaxy files indent a planet's `owner` one level less than the rest
-    # of the planet. Block extent comes from indentation alone, so the line
-    # belongs to the star (the parent) and is reported there.
+    # Block extent comes from indentation alone: a line that is not a shallow
+    # member of the repeat before it belongs to the parent and is reported
+    # there.
     registry = _registry(
         [{"node": "structure_reference", "name": "star", "structure": "Star"}],
         extra=[
@@ -419,12 +402,10 @@ def test_indentation_decides_which_block_a_line_belongs_to() -> None:
             {"name": "Planet", "children": [_f("designName", "Any"), _f("owner", "Any")]},
         ],
     )
-    body = 'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "p"\n\towner "P0"\n'
+    body = 'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "p"\n\tstray "P0"\n'
     diags = _run(registry, body)
     assert _brief(diags) == [(dg.V020, 5, 1, 6)]
 
-
-# ---- 3.7 iterative fields --------------------------------------------------
 
 _STARS = [
     {
@@ -572,9 +553,6 @@ def test_sibling_sequence_selector_value_is_checked() -> None:
     assert dg.V050 in [d.code for d in diags]
 
 
-# ---- 3.8 condition branches ------------------------------------------------
-
-
 def _branches() -> Registry:
     return _registry(
         [
@@ -626,9 +604,6 @@ def test_boolean_selector_chooses_its_branch() -> None:
     assert [d.code for d in _run(registry, "flag FALSE\nf 1\n")] == []
 
 
-# ---- 4.x references ---------------------------------------------------------
-
-
 def _refs() -> Registry:
     return _registry([_f("b", "Brush"), _f("t", "Texture"), _f("e", "Entity")])
 
@@ -661,9 +636,6 @@ def test_reference_value_must_be_a_quoted_name() -> None:
     assert [d.code for d in _run(_refs(), "t 5\n")] == [dg.V050]
 
 
-# ---- nested structures and block shapes ------------------------------------
-
-
 def test_structure_reference_value_where_block_expected() -> None:
     registry = _registry(
         [{"node": "structure_reference", "name": "blk", "structure": "Inner"}],
@@ -690,9 +662,6 @@ def test_condition_reference_picks_structure_from_sibling_selector() -> None:
     assert [d.code for d in _run(registry, 't "y"\nblk\n\tp 1\n')] == [dg.V020]
 
 
-# ---- real-shaped bundled Definitions ---------------------------------------
-
-
 def test_particle_sequences_validate_with_bundled_definitions() -> None:
     registry = load_registry()
     body = (
@@ -709,9 +678,6 @@ def test_particle_sequences_validate_with_bundled_definitions() -> None:
     assert [d.code for d in diags] == [dg.V030]
 
 
-# ---- Reference Root (skipped without game files) ---------------------------
-
-
 def test_reference_root_particle_and_simple_files_validate_clean(reference_root: Path) -> None:
     registry = load_registry()
     checked = 0
@@ -724,27 +690,104 @@ def test_reference_root_particle_and_simple_files_validate_clean(reference_root:
     assert checked > 0
 
 
-def test_reference_root_has_no_order_or_duplicate_findings(reference_root: Path) -> None:
-    # Survey of the Rebellion 1.98 files (3066 text files): no key breaks the
-    # declared order and one `.entity` file repeats `buffType` in an Ability.
-    # The two galaxy files with the known indentation artefact are excluded.
+def _reference_root_findings(reference_root: Path) -> list[tuple[str, Diagnostic]]:
+    """Validate every text file under the Reference Root.
+
+    Args:
+        reference_root: The Reference Root.
+
+    Returns:
+        ``(path, Diagnostic)`` pairs in path order.
+    """
     registry = load_registry()
-    artefacts = {"Voruk's Labyrinth.galaxy", "Hyperion's Gates.galaxy"}
-    found: list[tuple[str, str]] = []
+    found: list[tuple[str, Diagnostic]] = []
     for path in sorted(reference_root.rglob("*")):
-        if not path.is_file() or path.name in artefacts:
+        if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8-sig", errors="replace")
         if not text.startswith("TXT"):
             continue
         ctx = ValidationContext(registry, GameVersion.REBELLION_198, path)
-        for diag in validate(parse(text, path), ctx):
-            if diag.code in (dg.V060, dg.V070):
-                found.append((diag.code, path.name))
-    assert found == [(dg.V070, "AbilityShieldProjection.entity")]
+        found.extend((str(path), diag) for diag in validate(parse(text, path), ctx))
+    return found
 
 
-# ---- declared order (V060) and duplicates (V070) ---------------------------
+def test_reference_root_has_no_unknown_count_order_or_duplicate_findings(
+    reference_root: Path,
+) -> None:
+    findings = _reference_root_findings(reference_root)
+    unexpected = [
+        (path, diag.code, diag.range.start.line + 1)
+        for path, diag in findings
+        if diag.code in (dg.V020, dg.V030, dg.V060)
+    ]
+    assert unexpected == []
+    duplicates = [
+        (path, diag.range.start.line + 1) for path, diag in findings if diag.code == dg.V070
+    ]
+    assert duplicates == []
+
+
+_AI_USE_TIME_VALUE = "OnlyWhenManyTargetsInCombatDoNotHaveBuff"
+
+
+def _ability_registry(root_name: str = "Ability") -> Registry:
+    """Registry with a root that repeats ``buffType`` in an ``aiUseTime`` branch."""
+    structure = {
+        "name": root_name,
+        "extension": ".foo",
+        "children": [
+            _f("buffType", "Integer"),
+            {
+                "node": "condition_field",
+                "name": "aiUseTime",
+                "type": "T",
+                "branches": {
+                    _AI_USE_TIME_VALUE: [_f("amount", "Integer"), _f("buffType", "Integer")],
+                    "Anytime": [_f("buffType", "Integer")],
+                },
+            },
+        ],
+    }
+    files = {
+        "s.json": json.dumps({"structures": [structure], "element_rules": []}),
+        "enums.json": json.dumps(
+            {"enums": [{"name": "T", "values": [_AI_USE_TIME_VALUE, "Anytime"]}]}
+        ),
+    }
+    registry = load_registry_from_texts(files)
+    assert registry.warnings == ()
+    return registry
+
+
+def test_second_buff_type_of_the_ai_use_time_branch_is_not_a_duplicate() -> None:
+    registry = _ability_registry()
+    body = f'buffType 1\naiUseTime "{_AI_USE_TIME_VALUE}"\namount 3\nbuffType 2\n'
+    assert _run(registry, body) == []
+
+
+def test_third_buff_type_is_still_a_duplicate() -> None:
+    registry = _ability_registry()
+    body = f'buffType 1\naiUseTime "{_AI_USE_TIME_VALUE}"\namount 3\nbuffType 2\nbuffType 3\n'
+    assert _brief(_run(registry, body)) == [(dg.V070, 5, 0, len("buffType"))]
+
+
+def test_second_buff_type_under_another_ai_use_time_value_is_a_duplicate() -> None:
+    registry = _ability_registry()
+    body = 'buffType 1\naiUseTime "Anytime"\nbuffType 2\n'
+    assert _brief(_run(registry, body)) == [(dg.V070, 3, 0, len("buffType"))]
+
+
+def test_second_buff_type_before_ai_use_time_is_a_duplicate() -> None:
+    registry = _ability_registry()
+    body = f'buffType 1\nbuffType 2\naiUseTime "{_AI_USE_TIME_VALUE}"\namount 3\n'
+    assert _brief(_run(registry, body)) == [(dg.V070, 2, 0, len("buffType"))]
+
+
+def test_second_buff_type_exception_is_scoped_to_the_ability_structure() -> None:
+    registry = _ability_registry("Other")
+    body = f'buffType 1\naiUseTime "{_AI_USE_TIME_VALUE}"\namount 3\nbuffType 2\n'
+    assert [d.code for d in _run(registry, body)] == [dg.V070]
 
 
 def _ordered() -> Registry:
@@ -893,9 +936,6 @@ def test_resolve_protocol_types_are_distinct() -> None:
     assert isinstance(NullReferenceLookup().resolve("Brush", "x"), Unknown)
 
 
-# ---- unexpected indentation (V080) -----------------------------------------
-
-
 def _v080(diags: list[Diagnostic]) -> list[tuple[int, int]]:
     """(zero-based line, column) of every V080."""
     return [(d.range.start.line, d.range.start.col) for d in diags if d.code == dg.V080]
@@ -961,22 +1001,58 @@ def _galaxy_registry() -> Registry:
     )
 
 
-def test_owner_shape_adds_one_v080_and_keeps_v020_v030() -> None:
-    # Real galaxy shape: a planet's `owner` sits one level too shallow, so it
-    # and the lines after it land in the star. The line after `owner` is
-    # deeper than it; `owner` is defined by the planet block right before it.
+_SHALLOW_OWNERS = (
+    "star\n\tplanetCount 2\n"
+    '\tplanet\n\t\tdesignName "a"\n\towner "P0"\n\t\tisHomePlanet TRUE\n'
+    '\tplanet\n\t\tdesignName "b"\n\towner "P1"\n\t\tisHomePlanet FALSE\n'
+)
+
+
+def test_shallow_owner_gives_one_v080_per_planet_and_nothing_else() -> None:
+    # A planet's `owner` written one level too shallow belongs to the planet it
+    # follows; the lines nested after it are the planet's other fields.
+    registry = _galaxy_registry()
+    diags = _run(registry, _SHALLOW_OWNERS)
+    assert [d.code for d in diags] == [dg.V080, dg.V080]
+    assert _v080(diags) == [(6, 2), (10, 2)]
+    message = diags[0].message
+    assert "'owner' on line 6" in message and "under-indented" in message
+
+
+def test_correctly_placed_owner_is_untouched() -> None:
+    registry = _galaxy_registry()
+    fixed = _SHALLOW_OWNERS.replace('\towner "', '\t\towner "')
+    assert _run(registry, fixed) == []
+
+
+def test_shallow_owner_without_deeper_lines_is_a_member_of_its_planet() -> None:
+    registry = _galaxy_registry()
+    body = 'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n'
+    assert _run(registry, body) == []
+
+
+def test_unknown_key_next_to_a_shallow_owner_is_still_v020() -> None:
     registry = _galaxy_registry()
     body = (
-        'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "p"\n\towner "P0"\n\t\tisHomePlanet TRUE\n'
+        'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n'
+        '\t\tisHomePlanet TRUE\n\tzzz "x"\n'
     )
     diags = _run(registry, body)
-    assert _v080(diags) == [(6, 2)]
-    v080 = next(d for d in diags if d.code == dg.V080)
-    assert "'owner' on line 6" in v080.message and "under-indented" in v080.message
-    others = [(d.code, d.range.start.line) for d in diags if d.code != dg.V080]
-    assert others == [(dg.V020, 5), (dg.V020, 6)]
-    fixed = body.replace('\towner "P0"', '\t\towner "P0"')
-    assert _run(registry, fixed) == []
+    assert sorted((d.code, d.range.start.line) for d in diags) == [(dg.V020, 7), (dg.V080, 6)]
+
+
+def test_shallow_owner_does_not_hide_problems_inside_its_planet() -> None:
+    registry = _galaxy_registry()
+    body = 'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n\t\tisHomePlanet 5\n'
+    diags = _run(registry, body)
+    assert sorted(d.code for d in diags) == [dg.V050, dg.V080]
+
+
+def test_shallow_line_after_an_unplaced_repeat_keeps_its_findings() -> None:
+    registry = _galaxy_registry()
+    body = 'star\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n'
+    codes = [d.code for d in _run(registry, body)]
+    assert dg.V030 in codes and dg.V020 in codes
 
 
 def test_repeats_one_level_under_their_count_line_pass() -> None:
@@ -1036,32 +1112,14 @@ def test_files_without_a_root_definition_give_no_v080() -> None:
     assert _run(registry, "a 1\n\tb 2\n", name="x.window") == []
 
 
-def test_reference_root_v080_set(reference_root: Path) -> None:
-    # Rebellion 1.98 survey: V080 appears in three files only. The two galaxy
-    # files carry the planet `owner` under-indentation (Voruk's Labyrinth is
-    # the owner's own artefact); RandomEventDefs line 90 (`racialBuffCount`)
-    # is a Definition gap (task 5.9). `.window` whitespace cases are not
-    # covered (no root Definition).
-    registry = load_registry()
-    tally: dict[str, int] = {}
-    for path in sorted(reference_root.rglob("*")):
-        if not path.is_file():
-            continue
-        text = path.read_text(encoding="utf-8-sig", errors="replace")
-        if not text.startswith("TXT"):
-            continue
-        ctx = ValidationContext(registry, GameVersion.REBELLION_198, path)
-        count = sum(1 for d in validate(parse(text, path), ctx) if d.code == dg.V080)
-        if count:
-            tally[path.relative_to(reference_root).as_posix().lower()] = count
-    assert tally == {
-        "galaxy/hyperion's gates.galaxy": 70,
-        "galaxy/voruk's labyrinth.galaxy": 62,
-        "gameinfo/randomeventdefs.randomeventdefs": 1,
-    }
+def test_reference_root_v080_total(reference_root: Path) -> None:
+    v080 = [
+        (path, diag.range.start.line + 1)
+        for path, diag in _reference_root_findings(reference_root)
+        if diag.code == dg.V080
+    ]
+    assert len(v080) == 132, v080[:5]
 
-
-# ---- file ruleset from SinsArchiveVersion (Requirement 3.9) -------------------
 
 _R193 = GameVersion.REBELLION_193
 _R198 = GameVersion.REBELLION_198
@@ -1152,8 +1210,6 @@ def test_entity_type_is_gated_by_the_files_version() -> None:
         ctx = ValidationContext(registry, _R198, Path("x.entity"))
         assert [d.code for d in validate(parsed, ctx)] == expected
 
-
-# ---- 5.8 one accepted and one rejected example per node type and primitive --
 
 _PRIMITIVE_CASES = [
     ("Boolean", "TRUE", "5"),
@@ -1254,3 +1310,76 @@ def test_iterative_field_node_accepted_and_rejected() -> None:
     assert _run(registry, "numItems 1\nitem\n\tp 1\n") == []
     diags = _run(registry, "numItems 2\nitem\n\tp 1\n")
     assert [d.code for d in diags] == [dg.V030]
+
+
+_OWNER_FIXED = ["", "PlanetOwner", "NoOwner", "Pirate", "RandomMilitia"]
+
+
+def _owner_registry() -> Registry:
+    """Registry with planets whose owner is a fixed value or a declared player."""
+    owner = _f("owner", "Any", values=_OWNER_FIXED, values_from="player.designName")
+    return _registry(
+        [
+            {
+                "node": "iterative_field",
+                "name": "planet",
+                "count_key": "planetCount",
+                "children": [_f("designName", "Any"), owner],
+            },
+            {
+                "node": "iterative_field",
+                "name": "player",
+                "count_key": "playerCount",
+                "children": [_f("designName", "Any")],
+            },
+        ]
+    )
+
+
+def _owner_body(owners: list[str], players: list[str]) -> str:
+    """Planets with the given owners followed by the given player blocks."""
+    lines = [f"planetCount {len(owners)}"]
+    for index, owner in enumerate(owners):
+        lines += ["planet", f'\tdesignName "p{index}"', f'\towner "{owner}"']
+    lines.append(f"playerCount {len(players)}")
+    for name in players:
+        lines += ["player", f'\tdesignName "{name}"']
+    return "\n".join(lines) + "\n"
+
+
+def test_owner_naming_a_declared_player_is_accepted_before_the_players() -> None:
+    registry = _owner_registry()
+    assert _run(registry, _owner_body(["Player1", "NewPlayer0"], ["Player1", "NewPlayer0"])) == []
+
+
+def test_owner_naming_an_undeclared_player_is_v050() -> None:
+    diags = _run(_owner_registry(), _owner_body(["Player3"], ["Player1"]))
+    assert [d.code for d in diags] == [dg.V050]
+    assert diags[0].message.startswith("owner:")
+
+
+@pytest.mark.parametrize("owner", _OWNER_FIXED)
+def test_fixed_owner_values_are_accepted_without_players(owner: str) -> None:
+    assert _run(_owner_registry(), _owner_body([owner], [])) == []
+
+
+def test_owner_values_are_case_sensitive_and_a_declared_name_is_not_a_fixed_value() -> None:
+    registry = _owner_registry()
+    for owner in ("planetowner", "NOOWNER", "pirate", "Player1"):
+        diags = _run(registry, _owner_body([owner], ["Player2"]))
+        assert [d.code for d in diags] == [dg.V050], owner
+    assert [d.code for d in _run(registry, _owner_body(["player1"], ["Player1"]))] == [dg.V050]
+
+
+def test_owner_in_a_file_without_players_accepts_only_the_fixed_values() -> None:
+    diags = _run(_owner_registry(), _owner_body(["Player1"], []))
+    assert [d.code for d in diags] == [dg.V050]
+
+
+def test_reference_root_galaxy_owner_findings_total(reference_root: Path) -> None:
+    owner_findings = [
+        (path, diag.range.start.line + 1)
+        for path, diag in _reference_root_findings(reference_root)
+        if diag.code == dg.V050 and path.endswith(".galaxy") and diag.message.startswith("owner:")
+    ]
+    assert len(owner_findings) == 58, owner_findings[:5]

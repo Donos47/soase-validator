@@ -29,12 +29,12 @@ class CodeInfo:
     summary: str
 
 
-# Parser
+# Parser codes.
 P001 = "SOASE-P001"
 P002 = "SOASE-P002"
 P003 = "SOASE-P003"
 P004 = "SOASE-P004"
-# Validator
+# Validator codes.
 V010 = "SOASE-V010"
 V020 = "SOASE-V020"
 V030 = "SOASE-V030"
@@ -43,20 +43,20 @@ V050 = "SOASE-V050"
 V060 = "SOASE-V060"
 V070 = "SOASE-V070"
 V080 = "SOASE-V080"
-# Reference
+# Reference codes.
 R010 = "SOASE-R010"
-# Chain / config
+# Chain and configuration codes.
 C010 = "SOASE-C010"
 C020 = "SOASE-C020"
 C030 = "SOASE-C030"
-# Manifest
+# Manifest codes.
 M010 = "SOASE-M010"
 M020 = "SOASE-M020"
 M030 = "SOASE-M030"
 M040 = "SOASE-M040"
-# Definition load
+# Definition load codes.
 D001 = "SOASE-D001"
-# Internal
+# Internal codes.
 X001 = "SOASE-X001"
 
 

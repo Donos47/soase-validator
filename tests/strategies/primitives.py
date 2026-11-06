@@ -2,7 +2,7 @@
 
 Values are built directly (not parsed) so each strategy states the exact
 token shape under test. Accepted and rejected shapes follow design.md,
-"Validator" > "Primitive rules and evidence" (Rebellion 1.98 evidence):
+"Validator" > "Primitive rules and evidence":
 
 * numbers: integers, decimals with a digit before the point, leading-point
   decimals, negatives; exponents, a leading ``+`` and a trailing point are

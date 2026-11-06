@@ -1,3 +1,5 @@
+"""Tests for game version gating and archive version helpers."""
+
 from hypothesis import given, settings
 from hypothesis import strategies as st
 

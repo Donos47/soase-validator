@@ -591,6 +591,90 @@
         "chatSessionId": "sess_0a8e6c0a-0e5d-4817-a361-4c39bf726a35",
         "timestamp": 1794001684593
       }
+    ],
+    "5.9 Correct Definitions against the Rebellion 1.98 survey": [
+      {
+        "executionId": "c828f6cb-3fdf-4b0c-943b-5d152e3a970c",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794001943373
+      },
+      {
+        "executionId": "350cd6b1-be77-4597-8ddf-18a03da583e0",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794002080799
+      },
+      {
+        "executionId": "350cd6b1-be77-4597-8ddf-18a03da583e0",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794003599808
+      }
+    ],
+    "5. Primitives and validator": [
+      {
+        "executionId": "350cd6b1-be77-4597-8ddf-18a03da583e0",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794003599880
+      }
+    ],
+    "5.13 Remove survey counts and findings history from code comments": [
+      {
+        "executionId": "53e9b054-f36b-42ee-a1ce-4ce66fec79e3",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794004549765
+      },
+      {
+        "executionId": "53e9b054-f36b-42ee-a1ce-4ce66fec79e3",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794004865204
+      }
+    ],
+    "5.10 Report the shallow planet `owner` line once, without follow-on findings": [
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794004985480
+      },
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794005426363
+      }
+    ],
+    "5.11 Allow the second `buffType` of `aiUseTime` `OnlyWhenManyTargetsInCombatDoNotHaveBuff`": [
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794005426472
+      },
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794005704280
+      }
+    ],
+    "5.12 Validate `.galaxy` planet `owner` against the file's declared players": [
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794005704365
+      },
+      {
+        "executionId": "536a0424-eb4e-4489-bc5d-2737ef98262d",
+        "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
+        "timestamp": 1794006165492
+      }
+    ],
+    "6. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "22a1e5b2-60e8-42ba-86ca-8ecdbdda9879",
+        "chatSessionId": "sess_7ddcb971-62ff-4737-bd9c-1110db42de92",
+        "timestamp": 1794006221449
+      },
+      {
+        "executionId": "22a1e5b2-60e8-42ba-86ca-8ecdbdda9879",
+        "chatSessionId": "sess_7ddcb971-62ff-4737-bd9c-1110db42de92",
+        "timestamp": 1794006271300
+      }
     ]
   }
 }

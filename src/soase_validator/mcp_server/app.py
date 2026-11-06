@@ -5,6 +5,6 @@ def main() -> None:
     """Start the MCP server.
 
     Raises:
-        NotImplementedError: Until the server is implemented.
+        NotImplementedError: Always; the server is a placeholder.
     """
     raise NotImplementedError("The MCP server is not implemented yet.")

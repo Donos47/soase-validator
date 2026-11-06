@@ -150,6 +150,322 @@
           "count": 1
         }
       ]
+    },
+    {
+      "structure": "Starscape, StarscapeData",
+      "field": ".starscapedata extension",
+      "change": "Starscape no longer claims the .starscapedata extension; new structure StarscapeData holds the keys the file uses (5 Decimal keys, then starTextureName:0 to :9 as Any)",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".starscapedata: 1 file, 15 keys, none of them a key of Starscape: starWidth, starHeight, starDistance, starBlinksPerSecond, starFadeDuration (decimal forms 4.0, 200.0, 20.0, 0.15) and starTextureName:0 to :9 (quoted, 2 non-empty and 8 empty). Starscape has no .entity use (entityType Starscape: 0 of 1872 .entity files). The plugin supports a file type only when the capitalised extension names a structure, so it never validated this file.",
+      "verify": [
+        {
+          "structure": "Starscape",
+          "extension": null
+        },
+        {
+          "structure": "StarscapeData",
+          "extension": ".starscapedata"
+        },
+        {
+          "structure": "StarscapeData",
+          "child_names": [
+            "starWidth",
+            "starHeight",
+            "starDistance",
+            "starBlinksPerSecond",
+            "starFadeDuration",
+            "starTextureName:0",
+            "starTextureName:1",
+            "starTextureName:2",
+            "starTextureName:3",
+            "starTextureName:4",
+            "starTextureName:5",
+            "starTextureName:6",
+            "starTextureName:7",
+            "starTextureName:8",
+            "starTextureName:9"
+          ]
+        },
+        {
+          "structure": "StarscapeData",
+          "field": "starWidth",
+          "validation": "Decimal",
+          "count": 1
+        },
+        {
+          "structure": "StarscapeData",
+          "field": "starTextureName:9",
+          "validation": "Any",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "Galaxy",
+      "field": "versionNumber",
+      "change": "added field versionNumber (Integer) as the first key",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".galaxy: 126 of 126 files have versionNumber as the first key after the TXT header, value 193 in all 126. The plugin reads that line without treating it as a field (the XML has the field commented out), so the Definitions never listed it.",
+      "verify": [
+        {
+          "structure": "Galaxy",
+          "first_child": "versionNumber"
+        },
+        {
+          "structure": "Galaxy",
+          "field": "versionNumber",
+          "validation": "Integer",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "Galaxy:useRandomGenerator=TRUE",
+      "field": "star (count key starCount)",
+      "change": "added the random-map star run at the top level of the TRUE branch, next to the existing one inside randomizerParams",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".galaxy with useRandomGenerator TRUE: 22 files. 16 write starCount (28 star blocks) at the top level after the randomizerParams block, 6 write starCount (6 star blocks) inside randomizerParams. The line order is the same; only the indentation differs.",
+      "verify": [
+        {
+          "structure": "Galaxy",
+          "selector": "useRandomGenerator",
+          "branch": "TRUE",
+          "node": "iterative_field",
+          "field": "star",
+          "count_key": "starCount",
+          "count": 1
+        },
+        {
+          "structure": "Galaxy.useRandomGenerator.randomizerParams",
+          "node": "iterative_field",
+          "field": "star",
+          "count_key": "starCount",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "Galaxy, GalaxyStarType, GalaxyPlanetType",
+      "field": "owner",
+      "change": "replaced the XML member list with the values '', PlanetOwner, NoOwner, Pirate and RandomMilitia plus the file's own player designName values (values_from player.designName)",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".galaxy planet owner, 126 files: 3923 uses; 3217 are empty; 548 equal a designName declared by a top-level player block of the same file (declared after the planets); 100 are PlanetOwner x81, NoOwner x13, Pirate x4 or RandomMilitia x2; 58 in 6 files name Player3, Player5 or Player8 without a matching player block and are reported as SOASE-V050 (bad base game data). 22 files declare no player and use no owner other than empty. Declared names include Player0 to Player9, NewPlayer, NewPlayer0 to NewPlayer9, P0 to P5 and 0 to 5. PlanetOwner, NoOwner and RandomMilitia are not in the XML list; the XML members Player-0 to Player-9 and the unquoted-digit members do not occur as fixed values.",
+      "verify": [
+        {
+          "structure": "Galaxy",
+          "field": "owner",
+          "validation": "Any",
+          "values": [
+            "",
+            "PlanetOwner",
+            "NoOwner",
+            "Pirate",
+            "RandomMilitia"
+          ],
+          "values_from": "player.designName",
+          "count": 1
+        },
+        {
+          "structure": "GalaxyStarType",
+          "field": "owner",
+          "validation": "Any",
+          "values": [
+            "",
+            "PlanetOwner",
+            "NoOwner",
+            "Pirate",
+            "RandomMilitia"
+          ],
+          "values_from": "player.designName",
+          "count": 1
+        },
+        {
+          "structure": "GalaxyPlanetType",
+          "field": "owner",
+          "validation": "Any",
+          "values": [
+            "",
+            "PlanetOwner",
+            "NoOwner",
+            "Pirate",
+            "RandomMilitia"
+          ],
+          "values_from": "player.designName",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "GalaxyStarType, GalaxyPlanetType",
+      "field": "pos",
+      "change": "added constraint count=2",
+      "game_version": "Rebellion 1.98",
+      "evidence": "These are the XML structures the inlined Galaxy star and planet fields come from (structure_reference targets); no file walk enters them. Their inlined twins carry count=2 from .galaxy: 4014 uses (187 star, 3827 planet), always 2 integers.",
+      "verify": [
+        {
+          "structure": "GalaxyStarType",
+          "field": "pos",
+          "validation": "Position",
+          "constraint": "count=2",
+          "count": 2
+        },
+        {
+          "structure": "GalaxyPlanetType",
+          "field": "pos",
+          "validation": "Position",
+          "constraint": "count=2",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "BrushType:content=Simple, BrushType:content=Margins",
+      "field": "pixelBox",
+      "change": "added constraint count=4",
+      "game_version": "Rebellion 1.98",
+      "evidence": "BrushType is the XML structure the inlined Brushes brush fields come from (structure_reference target); no file walk enters it. Its inlined twins carry count=4 from .brushes: 10022 uses (57 Margins, 1630 Simple, 8335 StatesType), always 4 integers.",
+      "verify": [
+        {
+          "structure": "BrushType",
+          "field": "pixelBox",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "structure": "ResearchBlock",
+      "field": "area",
+      "change": "added constraint count=4",
+      "game_version": "Rebellion 1.98",
+      "evidence": "ResearchBlock is the XML structure the inlined Player research block fields come from (structure_reference target); no file walk enters it. Its inlined twins carry count=4 from .entity (Player): 77 uses over the 6 block lists, always 4 integers.",
+      "verify": [
+        {
+          "structure": "ResearchBlock",
+          "field": "area",
+          "validation": "Position",
+          "constraint": "count=4",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "GameplayConstants",
+      "field": "outlawSectorsData",
+      "change": "listed the Rebellion193 variant before the Rebellion185 variant, so the later format wins in files at the 193 level and above",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".constants: 1 file (SinsArchiveVersion 194) uses the Rebellion193 format of outlawSectorsData (4 npcIconOffset blocks, outlawSpawnShipsType, numOutlawSpawnShipsOptionsCount 6 with 6 outlawSpawnShipsOptions). The two variants share one name and both gates are satisfied at that level, so the first listed won and the file's 12 lines were unknown keys.",
+      "verify": [
+        {
+          "structure": "GameplayConstants",
+          "field": "outlawSectorsData",
+          "versions_in_order": [
+            "Rebellion193",
+            "Rebellion185"
+          ]
+        }
+      ]
+    },
+    {
+      "structure": "Randomeventdefs, RandomEventDefType",
+      "field": "spawnType",
+      "change": "the selector now uses its own enumeration RandomEventDefType.spawnType (Projectile gated Rebellion, BuffAtLocation, RacialBuffAtLocation, PeriodicBuffAtLocation) instead of the unrelated spawnType enumeration",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".randomeventdefs: 12 randomEventDef blocks; spawnType values Projectile x4, PeriodicBuffAtLocation x5, BuffAtLocation x2, RacialBuffAtLocation x1. The enumeration named spawnType (CompletelyRandom, RandomFromUp) belongs to hasWeaponEffects, so all 12 values were rejected.",
+      "verify": [
+        {
+          "enum": "RandomEventDefType.spawnType",
+          "members": [
+            "Projectile",
+            "BuffAtLocation",
+            "RacialBuffAtLocation",
+            "PeriodicBuffAtLocation"
+          ]
+        },
+        {
+          "structure": "Randomeventdefs",
+          "node": "condition_field",
+          "field": "spawnType",
+          "type": "RandomEventDefType.spawnType",
+          "count": 1
+        },
+        {
+          "structure": "RandomEventDefType",
+          "node": "condition_field",
+          "field": "spawnType",
+          "type": "RandomEventDefType.spawnType",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "Randomeventdefs, RandomEventDefType",
+      "field": "racialBuffCount",
+      "change": "the repeat is a run of race/buff line pairs, so the iterative field is named race (first child) instead of the converter's invented block racialBuff",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".randomeventdefs: 1 racialBuffCount line (6) followed by 12 sibling lines, race and buff alternating, one level deeper than the count line; no racialBuff block exists. This is the only iterative field the converter reported as 'several children converted to one block'.",
+      "verify": [
+        {
+          "structure": "Randomeventdefs",
+          "node": "iterative_field",
+          "field": "race",
+          "count_key": "racialBuffCount",
+          "count": 1
+        },
+        {
+          "structure": "RandomEventDefType",
+          "node": "iterative_field",
+          "field": "race",
+          "count_key": "racialBuffCount",
+          "count": 1
+        },
+        {
+          "structure": "Randomeventdefs",
+          "node": "iterative_field",
+          "field": "racialBuff",
+          "count_key": "racialBuffCount",
+          "count": 0
+        },
+        {
+          "structure": "RandomEventDefType",
+          "node": "iterative_field",
+          "field": "racialBuff",
+          "count_key": "racialBuffCount",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "structure": "Buff:finishCondition",
+      "field": "instantActionTriggerType",
+      "change": "finishConditionType AnyInstantActionWithTriggerTypeDone now takes an instantActionTriggerType line (enumeration instantActionTriggerType)",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".entity (Buff): 1 of 711 finishCondition blocks uses AnyInstantActionWithTriggerTypeDone and it is followed by instantActionTriggerType (value OnColonizeAbilityUsed); the other two Rebellion no-child types (AbilityUsed 1, AnyOnConditionInstantActionDone 6) have no child line. Whether the key is required is not evidenced.",
+      "verify": [
+        {
+          "structure": "Buff",
+          "field": "instantActionTriggerType",
+          "type": "instantActionTriggerType",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "structure": "EmpireWindowNode",
+      "field": "hyperspaceNodeIcon",
+      "change": "gate widened from Vanilla to Vanilla Rebellion",
+      "game_version": "Rebellion 1.98",
+      "evidence": ".entity (EmpireWindowNode): 1 file, SinsArchiveVersion 194, whose only key after entityType is hyperspaceNodeIcon; EmpireWindowHyperspaceNodeIcon does not occur.",
+      "verify": [
+        {
+          "structure": "EmpireWindowNode",
+          "field": "hyperspaceNodeIcon",
+          "validation": "Brush",
+          "version": "Vanilla Rebellion",
+          "count": 1
+        }
+      ]
     }
   ]
 }

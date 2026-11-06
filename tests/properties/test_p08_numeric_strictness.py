@@ -12,10 +12,6 @@ for Integer, Decimal and Coordinate items:
 * ``decimal_allow_integer`` decides whether a Decimal may be written in
   integer form.
 
-Evidence (Rebellion 1.98 reference files, shapes and counts only): leading
-point forms occur about 140 times; exponent, leading ``+`` and trailing
-point forms never occur.
-
 **Validates: Requirements 3.10, 3.3.5**
 """
 

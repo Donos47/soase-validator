@@ -2129,6 +2129,18 @@
       ]
     },
     {
+      "name": "RandomEventDefType.spawnType",
+      "values": [
+        {
+          "name": "Projectile",
+          "version": "Rebellion"
+        },
+        "BuffAtLocation",
+        "RacialBuffAtLocation",
+        "PeriodicBuffAtLocation"
+      ]
+    },
+    {
       "name": "RandomEventDefType.spawnRequirement",
       "values": [
         "Timer",

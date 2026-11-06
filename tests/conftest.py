@@ -72,7 +72,7 @@ def build_mod_tree(root: Path, files: Mapping[str, str] | None = None) -> Path:
 
 @pytest.fixture
 def reference_root() -> Path:
-    """Reference Root for Rebellion 1.98; skips the test when unavailable."""
+    """Return the Reference Root for Rebellion 1.98, or skip the test when absent."""
     path = find_reference_root(DEFAULT_REFERENCE_VERSION)
     if path is None:
         pytest.skip(

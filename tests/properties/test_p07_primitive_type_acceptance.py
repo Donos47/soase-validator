@@ -70,9 +70,6 @@ def _rejected(result) -> bool:
     return (not result.ok) and bool(result.message)
 
 
-# Boolean ---------------------------------------------------------------
-
-
 @_SETTINGS
 @given(flag=st.booleans(), prefs=prefs_strategy)
 def test_boolean_accepts_true_and_false(flag: bool, prefs: NumericPrefs) -> None:
@@ -83,9 +80,6 @@ def test_boolean_accepts_true_and_false(flag: bool, prefs: NumericPrefs) -> None
 @given(raw=non_boolean_values, prefs=prefs_strategy)
 def test_boolean_rejects_everything_else(raw, prefs: NumericPrefs) -> None:
     assert _rejected(check_boolean(raw, prefs))
-
-
-# Integer and Decimal ---------------------------------------------------
 
 
 @_SETTINGS
@@ -133,9 +127,6 @@ def test_integer_and_decimal_reject_non_numbers(raw, prefs: NumericPrefs) -> Non
     assert _rejected(check_decimal(raw, prefs))
 
 
-# Color -----------------------------------------------------------------
-
-
 @_SETTINGS
 @given(text=color_texts, prefs=prefs_strategy)
 def test_color_accepts_8_6_4_hex_digits_or_zero(text: str, prefs: NumericPrefs) -> None:
@@ -164,9 +155,6 @@ def test_color_rejects_quoted_values(raw, prefs: NumericPrefs) -> None:
 )
 def test_color_rejects_non_token_values(raw, prefs: NumericPrefs) -> None:
     assert _rejected(check_color(raw, prefs))
-
-
-# Position --------------------------------------------------------------
 
 
 @_SETTINGS
@@ -241,9 +229,6 @@ def test_validate_constraint_rejects_constraint_on_other_types(validation: str, 
     assert validate_constraint(validation, None) is None
 
 
-# Coordinate ------------------------------------------------------------
-
-
 @_SETTINGS
 @given(items=coordinate_item_texts, prefs=prefs_strategy)
 def test_coordinate_accepts_three_space_separated_numbers(
@@ -278,9 +263,6 @@ def test_coordinate_rejects_bad_number_items(items: list[str], bad: str, index: 
 @given(raw=non_number_values.filter(lambda v: not isinstance(v, ListValue)))
 def test_coordinate_rejects_non_lists(raw) -> None:
     assert _rejected(check_coordinate(raw, NumericPrefs()))
-
-
-# Orientation -----------------------------------------------------------
 
 
 def _rows(item_sets: list[list[str]]):

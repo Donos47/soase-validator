@@ -1,7 +1,6 @@
 """Example tests for the primitive checkers.
 
-Shapes reproduce those surveyed in the Rebellion 1.98 reference files
-(synthetic values, no game content): TRUE/FALSE only, plain and negative
+Shapes are real-shaped synthetic values: TRUE/FALSE only, plain and negative
 integers, six-place and leading-point decimals, integer fields written as
 decimals and decimal fields written as integers.
 """
@@ -104,9 +103,6 @@ def test_any_accepts_everything(text: str) -> None:
     assert check_any(_value(text), DEFAULT).ok
 
 
-# --- Number form (rule 5) -------------------------------------------------
-
-
 @pytest.mark.parametrize("text", ["1e3", "+1", "5.", "-5.", "1E3", "+.5"])
 def test_numbers_reject_exponent_plus_and_trailing_point(text: str) -> None:
     assert not check_integer(_value(text), DEFAULT).ok
@@ -117,11 +113,6 @@ def test_numbers_reject_exponent_plus_and_trailing_point(text: str) -> None:
 def test_numbers_accept_leading_dot_and_negatives(text: str) -> None:
     assert check_integer(_value(text), DEFAULT).ok
     assert check_decimal(_value(text), DEFAULT).ok
-
-
-# --- Color (rule 1) --------------------------------------------------------
-# Survey shapes: 8 hex digits (lowercase, one uppercase), lone 0, 6 digits,
-# 4 digits; all unquoted.
 
 
 @pytest.mark.parametrize(
@@ -170,9 +161,6 @@ def test_color_rejects_prefix_quotes_and_other_kinds(text: str) -> None:
         assert not check_color(node[0].value, DEFAULT).ok
     else:
         assert not node
-
-
-# --- Position (rule 2) -----------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -232,9 +220,6 @@ def test_validate_constraint() -> None:
     assert validate_constraint("Integer", "count=2")
 
 
-# --- Coordinate (rule 3) ---------------------------------------------------
-
-
 @pytest.mark.parametrize(
     "text",
     [
@@ -267,8 +252,6 @@ def test_coordinate_rejects_other_shapes(text: str) -> None:
     assert node.value is not None
     assert not check_coordinate(node.value, DEFAULT).ok
 
-
-# --- Orientation (rule 3) --------------------------------------------------
 
 ROW = "\t[ 1.000000 0.000000 0.000000 ]"
 
@@ -323,9 +306,6 @@ def test_orientation_rejects_header_with_a_value() -> None:
 def test_orientation_rejects_keyed_rows() -> None:
     p = parse("TXT\nOrientation\n\ta [ 1.0 0.0 0.0 ]\n\tb [ 1.0 0.0 0.0 ]\n\tc [ 1.0 0.0 0.0 ]\n")
     assert not check_orientation(p.nodes[0], DEFAULT).ok
-
-
-# --- Bundled shapes (synthetic reproductions of surveyed fields) ----------
 
 
 def test_particle_style_block_checks_end_to_end() -> None:

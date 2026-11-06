@@ -731,14 +731,14 @@
         {
           "node": "structure_reference",
           "name": "outlawSectorsData",
-          "structure": "GameplayConstants.outlawSectorsData",
-          "version": "Rebellion185"
+          "structure": "GameplayConstants.outlawSectorsData#2",
+          "version": "Rebellion193"
         },
         {
           "node": "structure_reference",
           "name": "outlawSectorsData",
-          "structure": "GameplayConstants.outlawSectorsData#2",
-          "version": "Rebellion193"
+          "structure": "GameplayConstants.outlawSectorsData",
+          "version": "Rebellion185"
         },
         {
           "node": "structure_reference",

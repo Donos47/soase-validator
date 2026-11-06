@@ -82,7 +82,6 @@ _BASE_CAPABILITIES: dict[GameVersion, frozenset[str]] = {
         }
     ),
 }
-# Rebellion 1.98 starts from the 194 capability set.
 _BASE_CAPABILITIES[_V.REBELLION_198] = _BASE_CAPABILITIES[_V.REBELLION_194]
 
 _SPLIT = re.compile(r"[,\s]+")
@@ -117,8 +116,7 @@ VERSION_ORDER: tuple[GameVersion, ...] = (
 )
 
 #: ``SinsArchiveVersion`` integers the tool knows, mapped to the matching
-#: Rebellion capability level. Evidence: the Rebellion 1.98 Reference Root
-#: carries 193 and 194 only; 185 maps to the ``Rebellion185`` gate token.
+#: Rebellion capability level. 185 maps to the ``Rebellion185`` gate token.
 ARCHIVE_VERSIONS: dict[int, GameVersion] = {
     185: _V.REBELLION_185,
     193: _V.REBELLION_193,

@@ -131,8 +131,7 @@ def test_malformed_lists_are_still_rejected() -> None:
 
 
 def test_equals_form_reads_like_plain_quoted_form() -> None:
-    # Shape of the 22 `.constants` lines in the Rebellion 1.98 reference files:
-    # `key = "value"`, whitespace on both sides of the `=`, quoted value.
+    # Whitespace on both sides of the = and a quoted value.
     plain = parse('TXT2\nweaponDefName "Alpha"\n')
     equals = parse('TXT2\nweaponDefName = "Alpha"\n')
     assert equals.complete and not equals.diagnostics
@@ -163,8 +162,8 @@ def test_equals_form_unterminated_quote_still_reported() -> None:
 
 
 def test_key_containing_equals_is_skipped() -> None:
-    # `key= "v"` (no space before `=`) and any other key holding `=` are
-    # not the surveyed shape; 0 keys with `=` occur in the reference files.
+    # `key= "v"` (no space before `=`) and any other key holding `=` are not
+    # the accepted shape.
     for line in ('k= "v"', 'a=b "v"', "k= 5", "k=", '=k "v"'):
         p = parse(f"TXT2\n{line}\nz 1\n")
         assert [d.code for d in p.diagnostics] == ["SOASE-P002"], line
@@ -173,8 +172,8 @@ def test_key_containing_equals_is_skipped() -> None:
 
 
 def test_equals_without_quoted_value_is_still_skipped() -> None:
-    # Only the surveyed shape is accepted: no unquoted value, no missing
-    # space after `=`, no bare `=`.
+    # Only the quoted shape is accepted: no unquoted value, no missing space
+    # after `=`, no bare `=`.
     for line in ("k = 5", 'k ="v"', "k =", "k = TRUE"):
         p = parse(f"TXT2\n{line}\nz 1\n")
         assert [d.code for d in p.diagnostics] == ["SOASE-P002"], line
@@ -182,8 +181,8 @@ def test_equals_without_quoted_value_is_still_skipped() -> None:
 
 
 def test_text_after_closing_quote_is_skipped_as_p002() -> None:
-    # Shapes of the 6 Rebellion 1.98 lines (5 `.str`, 1 `.window`) plus the
-    # whitespace separated shapes, all reported by user decision.
+    # Text stuck to the closing quote and whitespace separated text are both
+    # reported, by user decision.
     cases = {
         "doubled closing quote": 'Value "text""',
         "letters after the quote": 'fontId "ButtonLabel"new',

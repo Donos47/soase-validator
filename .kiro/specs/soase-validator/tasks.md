@@ -122,7 +122,7 @@ Conventions for every task:
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
-- [ ] 5. Primitives and validator
+- [x] 5. Primitives and validator
   - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
@@ -162,14 +162,45 @@ Conventions for every task:
     - Add at least one example test per Definition node type and per primitive type using synthetic Definitions
     - _Requirements: 11.3_
 
-  - [ ] 5.9 Correct Definitions against the Rebellion 1.98 survey
+  - [x] 5.9 Correct Definitions against the Rebellion 1.98 survey
     - Work from `reference/primitive-survey.md` and re-survey the Reference Root read-only; correct the bundled JSON for each gap below, and record every correction in `PROVENANCE.json` with game version Rebellion 1.98 and evidence (shapes and counts only)
     - Gaps: `Starscape` structure versus the `.starscapedata` files (mismatch); `.galaxy` `star[]` keys not placed in the Definition (about 2,150 uses); `ResearchSubject` `researchModifier` keys (about 1,281 uses) and 589 selector values with no match; `Player` (about 180); `.constants` `outlawSectorsData` (12); `.randomeventdefs` (12, including line 89 `racialBuffCount` with its `race` line one level deeper, which gives the only non-galaxy `SOASE-V080` in the Reference Root); `Buff` (1)
     - Also list the Position fields the survey never reached (`BrushType` `pixelBox`, `GalaxyStarType` `pos` and `planet[]` `pos`, `GalaxyPlanetType` `pos`, `ResearchBlock` `area`) and decide each constraint from evidence, or leave it unset
     - The zombiesrus5 plugin may not have validated `.galaxy`, so weak `galaxy.xml` coverage is expected. `plugin.xml` registers a Galaxy Editor for `galaxy` and the Definitions ship `galaxy.xml`, but the builder's handling of `.galaxy` is not covered by `reference/plugin-bytecode-findings.md`; verify it before treating a gap as a plugin omission
     - _Requirements: 12.1, 13.5_
 
-- [ ] 6. Checkpoint - Ensure all tests pass
+  - [x] 5.10 Report the shallow planet `owner` line once, without follow-on findings
+    - Evidence: 2 Reference Root `.galaxy` files write the planet `owner` line one level shallower than the planet's other keys (132 planets: 70 and 62). The block-extent rule then puts the line outside its planet, which gives 1,980 follow-on `SOASE-V020`, `V030`, `V060` and `V070` findings. The shape is bad base game data
+    - Keep `SOASE-V080` (error, same code and message) on the shallow `owner` line, one per affected planet; add no new code and no new severity
+    - Treat that line as belonging to the planet it follows for all other block checks, so no follow-on finding is produced. Detect only the existing V080 shape (an unknown key that is a field of the repeat block ending right before it at the same indentation); every other indentation problem keeps its current behaviour
+    - Tests: the shape reports exactly one `SOASE-V080` per affected planet and nothing else; a genuinely unknown key next to it is still `SOASE-V020`; a real `owner` in the right place is untouched; Reference Root test for the two files (132 findings, all `SOASE-V080`)
+    - Rewrite the two Reference Root tests in `tests/test_validator.py` so they name no Reference Root files: no exclusion set for the two galaxy files, and assert the whole Reference Root has no `SOASE-V020`, `V030`, `V060` or `V070` except the one known `AbilityShieldProjection` `V070` until task 5.11 (assert by count, not by name), and a `SOASE-V080` total of 132. Failure messages print the path from the run
+    - Update `design.md` ("owner artefact") and the `validator.py` docstring
+    - _Requirements: 3.5, 3.6, 3.7_
+  - [x] 5.11 Allow the second `buffType` of `aiUseTime` `OnlyWhenManyTargetsInCombatDoNotHaveBuff`
+    - Evidence: Ability `AbilityShieldProjection.entity` (1 file in the Reference Root) has `buffType` once under `buffInstantActionType` and again after `aiUseTime "OnlyWhenManyTargetsInCombatDoNotHaveBuff"`; the second use is the one that branch declares. No other duplicate of this kind occurs in the Reference Root
+    - Add a narrow exception to the duplicate check (`SOASE-V070`) scoped to the Ability structure, the key `buffType` and that one `aiUseTime` value; every other duplicate stays an error
+    - Tests: valid shape; a third `buffType` still gives `SOASE-V070`; the second `buffType` with any other `aiUseTime` value still gives `SOASE-V070`; Reference Root test for the file
+    - Update the Reference Root test from task 5.10 to expect no `SOASE-V070` anywhere, and remove its one-finding allowance; no Reference Root file name may remain in the test source
+    - Document the exception in `design.md` and the `validator.py` docstring
+    - _Requirements: 3.5, 3.6, 3.7_
+
+  - [x] 5.12 Validate `.galaxy` planet `owner` against the file's declared players
+    - Collect `designName` values of the file's `player` blocks (declared at the bottom, after `playerCount`) in a pre-pass; accept an `owner` that equals one of them or one of a small fixed set (`""`, `PlanetOwner`, `NoOwner`, `Pirate`, `RandomMilitia`, plus the members of the XML list the Reference Root evidences)
+    - Add a Definition marker (for example `valuesFrom`) for the cross-field rule; the Engine and validator resolve it, not the primitives
+    - Remove the static `P0` to `P5` owner members and their `PROVENANCE.json` entry; record the new rule there instead
+    - Reference Root evidence (126 files): 3,923 owner uses, 3,217 empty, 548 equal to a declared player, 58 in 6 files name a player the file does not declare (`Player3`, `Player5`, `Player8`); the 58 are bad base game data and are reported as `SOASE-V050` errors, with no new diagnostic code or severity
+    - Tests: declared name accepted; undeclared name rejected; fixed extras accepted; real-shaped example per extra
+    - _Requirements: 3.3, 12.1_
+
+  - [x] 5.13 Remove survey counts and findings history from code comments
+    - Source comments, module and function docstrings and test docstrings in `src/` and `tests/` must state rules in present tense only. Remove survey counts (uses, files, runs, lines), file names from the Reference Root, "was reported until ..." history and pointers to `reference/` notes; keep the evidence in `PROVENANCE.json`, `design.md` and `reference/`
+    - Known places: the module docstring of `engine/validator.py` (evidence paragraph and the `SOASE-V080` count text), the evidence block in `engine/primitives.py`, comments in `engine/versions.py`, `engine/parser.py` and the Boolean, Integer and Position docstrings in `validator.py`; search `tests/` (for example `test_definition_audit.py`) for the same pattern
+    - Where the evidence is not yet in `design.md`, move it there (shapes and counts only) before deleting it from the code
+    - Apply the "Comments and docstrings" rules in .kiro/steering/tech.md to every file in src/, 	ests/ and 	ools/: remove banner and divider comments, commented-out code and comments that restate the code; fix comment capitalization, periods and inline spacing; fix docstring summary lines
+    - Tighten `pyproject.toml` ruff: add `ERA` and `W505` (`max-doc-length = 100`) to `select`; enable `D` for `tests/` (keep the `tools/` ignore only if it cannot be fixed cheaply, and say so); fix what they report
+    - Comments only: no behaviour change; `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` still pass
+- [x] 6. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Configuration and chain resolution

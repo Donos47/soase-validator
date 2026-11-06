@@ -77,8 +77,6 @@ class DefinitionSet:
     enums: tuple[EnumDef, ...] = ()
 
 
-# ---------------------------------------------------------------- strategies
-
 _identifiers = st.text(alphabet=string.ascii_letters + string.digits, min_size=1, max_size=8).map(
     lambda s: "N" + s
 )
@@ -246,9 +244,6 @@ def definitions(draw: st.DrawFn, max_structures: int = 5) -> DefinitionSet:
     enum_names = draw(st.lists(_identifiers, max_size=3, unique=True))
     enums = tuple(draw(_enum(n)) for n in enum_names)
     return DefinitionSet(tuple(structures), rules, enums)
-
-
-# --------------------------------------------------------------- serializer
 
 
 def _put(out: dict[str, Any], key: str, value: Any) -> None:

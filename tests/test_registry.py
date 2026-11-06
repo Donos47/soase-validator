@@ -102,3 +102,25 @@ def test_field_constraint_is_carried() -> None:
     box, plain = struct.children
     assert isinstance(box, FieldDef) and box.constraint == "count=4"
     assert isinstance(plain, FieldDef) and plain.constraint is None
+
+
+def test_field_values_from_is_carried_and_malformed_path_warns() -> None:
+    data = {
+        "structures": [
+            {
+                "name": "S",
+                "children": [
+                    {"name": "owner", "validation": "Any", "values_from": "player.designName"},
+                    {"name": "plain", "validation": "Any"},
+                    {"name": "bad", "validation": "Any", "values_from": "player"},
+                ],
+            }
+        ]
+    }
+    reg = load_registry_from_texts({"s.json": json.dumps(data)})
+    assert [w.element for w in reg.warnings] == ["S.bad"]
+    struct = reg.structure("S")
+    assert struct is not None
+    owner, plain = struct.children
+    assert isinstance(owner, FieldDef) and owner.values_from == "player.designName"
+    assert isinstance(plain, FieldDef) and plain.values_from is None

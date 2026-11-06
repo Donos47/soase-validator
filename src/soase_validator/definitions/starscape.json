@@ -2,8 +2,88 @@
   "schema": 1,
   "structures": [
     {
-      "name": "Starscape",
+      "name": "StarscapeData",
       "extension": ".starscapedata",
+      "children": [
+        {
+          "node": "field",
+          "name": "starWidth",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "starHeight",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "starDistance",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "starBlinksPerSecond",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "starFadeDuration",
+          "validation": "Decimal"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:0",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:1",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:2",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:3",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:4",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:5",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:6",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:7",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:8",
+          "validation": "Any"
+        },
+        {
+          "node": "field",
+          "name": "starTextureName:9",
+          "validation": "Any"
+        }
+      ]
+    },
+    {
+      "name": "Starscape",
       "children": [
         {
           "node": "field",

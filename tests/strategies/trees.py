@@ -82,8 +82,6 @@ TAB_INDENT = IndentStyle(tuple("\t" * d for d in range(MAX_DEPTH + 1)))
 """One tab per level (the canonical style of ``format_tree``)."""
 
 
-# ---------------------------------------------------------------- values
-
 _keys = st.builds(
     lambda head, rest: head + rest,
     st.sampled_from(_KEY_START),
@@ -147,8 +145,6 @@ _hex_values = (
 )
 _values: st.SearchStrategy[Value] = st.one_of(_strings, _numbers, _bools, _lists, _hex_values)
 
-
-# ----------------------------------------------------------------- trees
 
 _leaves = st.builds(lambda k, v: [GenNode(k, v)], _keys, _values)
 
@@ -307,9 +303,6 @@ separators: st.SearchStrategy[str] = st.sampled_from(["\t", " ", "  ", "\t\t", "
 
 headers: st.SearchStrategy[str] = st.sampled_from(["TXT", "TXT2"])
 """Strategy of file headers."""
-
-
-# -------------------------------------------------------------- rendering
 
 
 def render_tree(

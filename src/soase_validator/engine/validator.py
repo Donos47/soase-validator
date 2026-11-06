@@ -70,30 +70,37 @@ Walk rules
   strictly increasing run of declared positions is "in order"; each other
   key gets one ``SOASE-V060``, so one misplaced key never blames the keys
   after it.
+* Second ``buffType``: in an Ability block, the second ``buffType`` line
+  after an ``aiUseTime`` line with the value
+  ``OnlyWhenManyTargetsInCombatDoNotHaveBuff`` is the field that branch
+  declares and is not a duplicate. A third ``buffType``, a second one before
+  the ``aiUseTime`` line, or one under any other ``aiUseTime`` value stays
+  ``SOASE-V070``.
+* Declared values: a field with ``values_from`` (a dotted key path from
+  the file root, for example ``player.designName``) accepts its ``values``
+  plus every quoted value found at that path anywhere in the file, so a
+  planet ``owner`` may name a player declared after the planets. Matching
+  is case-sensitive. A file with no such values accepts only ``values``.
+* Shallow members: a line with a value that follows a block repeat at the
+  repeat's own indentation and is unknown to the enclosing block, but is a
+  field of that repeat block, belongs to that repeat, together with the
+  deeper lines after it (the galaxy planet ``owner`` shape). The repeat
+  block validates them as its own members, so they give no unknown-key,
+  count, order or duplicate findings. The shape is reported once, as
+  ``SOASE-V080`` on the first deeper line after the shallow line. Any
+  other unknown key keeps ``SOASE-V020``.
 * Indentation: after the walk, every line deeper than the line before it
   is checked. A block header (no value) may be followed by a deeper line;
   so may a count line, by the first repeat of its run exactly one level
   deeper. Any other deeper line gets ``SOASE-V080`` when the previous line
   is known: matched in its block as a field, count line or repeat, or an
   unknown key that is a field of the repeat block ending right before it
-  at the same indentation (the galaxy ``owner`` shape). Other unknown keys,
-  repeats without a count line and lines inside unmatched blocks are
-  skipped. The repeats of a run sit at the count line's level or one level
-  deeper, one style per run. The pass leaves the tree and the other
-  findings unchanged.
+  at the same indentation, when that repeat is not placed by a count line.
+  Other unknown keys, repeats without a count line and lines inside
+  unmatched blocks are skipped. The repeats of a run sit at the count
+  line's level or one level deeper, one style per run. The pass leaves the
+  tree and the other findings unchanged.
 
-Evidence for the interpretation of the Definitions (Rebellion 1.98
-Reference Root, shapes and counts; see ``reference/primitive-survey.md``):
-642 iterative fields in the bundled Definitions; exactly 2 (particle
-``NumEmitters`` and ``NumAffectors``) are sequences of sibling lines and
-account for 8546 repeats in 872 particle files; 5 iterative fields share the
-repeat key ``SoundID`` in each entity structure and are told apart only by
-the count line before the run. Counted repeats sit at the count line's
-level (14,989 runs plus 1,669 particle sequences) or one level deeper (174
-runs), never at another offset and never mixed in one run. ``SOASE-V080``
-reports 133 lines in 3 files: two galaxy files with the planet ``owner``
-under-indentation (70 and 62) and one ``.randomeventdefs`` line after
-``racialBuffCount`` (a Definition gap).
 """
 
 from __future__ import annotations
@@ -192,6 +199,10 @@ ENTITY_TYPE_ENUM = "entityType"
 ENTITY_TYPE_KEY = "entityType"
 ARCHIVE_VERSION_KEY = "SinsArchiveVersion"
 ENTITY_EXTENSION = ".entity"
+AI_USE_TIME_BUFF_ROOT = "Ability"
+AI_USE_TIME_BUFF_KEY = "buffType"
+AI_USE_TIME_KEY = "aiUseTime"
+AI_USE_TIME_BUFF_VALUE = "OnlyWhenManyTargetsInCombatDoNotHaveBuff"
 
 
 @dataclass(frozen=True, slots=True)
@@ -484,6 +495,34 @@ def _walk_defs(nodes: Iterable[DefNode]) -> Iterable[DefNode]:
                 yield from _walk_defs(branch)
 
 
+def _is_ai_use_time_buff_type(node: Node, nodes: Sequence[Node], label: str) -> bool:
+    """Tell whether a repeated ``buffType`` is the one the ``aiUseTime`` branch declares.
+
+    Args:
+        node: The repeated plain key.
+        nodes: The block's child nodes.
+        label: Name of the block's structure.
+
+    Returns:
+        True for the second ``buffType`` of an Ability block that follows an
+        ``aiUseTime`` line with the value ``OnlyWhenManyTargetsInCombatDoNotHaveBuff``.
+
+    Raises:
+        None.
+    """
+    if label != AI_USE_TIME_BUFF_ROOT or node.key != AI_USE_TIME_BUFF_KEY:
+        return False
+    uses = [n for n in nodes if n.key == AI_USE_TIME_BUFF_KEY]
+    if len(uses) < 2 or uses[1] is not node:
+        return False
+    selector = next((n for n in nodes if n.key == AI_USE_TIME_KEY), None)
+    return (
+        selector is not None
+        and selector.key_span.line < node.key_span.line
+        and _text_of(selector.value) == AI_USE_TIME_BUFF_VALUE
+    )
+
+
 def _text_of(value: Value | None) -> str | None:
     """Return the text a scalar value is matched by.
 
@@ -512,9 +551,8 @@ def _member_text(value: Value | None) -> str | None:
     """Return the text an enumeration member is compared with.
 
     The written form must match the member: ``TRUE`` and ``FALSE`` members
-    are unquoted booleans (266 uses, never quoted), words are quoted strings
-    (33645 uses, never bare), and numeric members are either an unquoted
-    number (155 uses) or a quoted string (12 uses).
+    are unquoted booleans, words are quoted strings, and numeric members are
+    either an unquoted number or a quoted string.
 
     Args:
         value: Parsed value or None.
@@ -610,8 +648,8 @@ class _Walker:
         self._unknown_ids: set[int] = set()
         self._block_keys: dict[int, frozenset[str]] = {}
         self._runs: dict[int, list[Node]] = {}
-
-    # ---- helpers -------------------------------------------------------
+        self._roots: Sequence[Node] = ()
+        self._declared: dict[str, tuple[str, ...]] = {}
 
     def allowed(self, gate: str | None) -> bool:
         """Evaluate a version gate for the active Game Version (memoised).
@@ -665,8 +703,6 @@ class _Walker:
             return None
         return struct
 
-    # ---- entry ---------------------------------------------------------
-
     def run(self, parsed: ParsedFile) -> list[Diagnostic]:
         """Validate a whole file.
 
@@ -680,6 +716,7 @@ class _Walker:
             None.
         """
         self._set_file_version(parsed)
+        self._roots = parsed.nodes
         ext = self.ctx.file.suffix.lower()
         header_end = len(parsed.header) if parsed.header else 0
         anchor = Span(0, 0, 0, header_end)
@@ -811,8 +848,6 @@ class _Walker:
             )
         return struct
 
-    # ---- blocks --------------------------------------------------------
-
     def _expand(self, defs: Iterable[DefNode], nodes: Sequence[Node], out: list[DefNode]) -> None:
         """Gate-filter Definition nodes and merge the selected branches.
 
@@ -902,7 +937,7 @@ class _Walker:
             node = nodes[i]
             iterative = cursor.counts.get(node.key)
             if iterative is not None:
-                self._place(cursor, node, label)
+                self._place(cursor, node, nodes, label)
                 self._matched.add(id(node))
                 i = self._iterate(cursor, iterative, nodes, i, label)
                 continue
@@ -910,7 +945,7 @@ class _Walker:
             if definition is None:
                 self._unknown(cursor, defs, node, label)
             else:
-                self._place(cursor, node, label)
+                self._place(cursor, node, nodes, label)
                 self._matched.add(id(node))
                 cursor.seen.add(node.key)
                 self._check_node(definition, node, nodes, label)
@@ -922,12 +957,15 @@ class _Walker:
                 f"'{node.key}' is out of order in {label}: it must come {side} '{neighbour}'",
             )
 
-    def _place(self, cursor: StructureCursor, node: Node, label: str) -> None:
+    def _place(
+        self, cursor: StructureCursor, node: Node, nodes: Sequence[Node], label: str
+    ) -> None:
         """Give a matched key its declared position or report a duplicate.
 
         Args:
             cursor: Cursor for the block.
             node: A plain field or a count line.
+            nodes: The block's child nodes.
             label: Name used in messages.
 
         Returns:
@@ -937,7 +975,7 @@ class _Walker:
             None.
         """
         earlier = cursor.place(node)
-        if earlier is not None:
+        if earlier is not None and not _is_ai_use_time_buff_type(node, nodes, label):
             self.emit(
                 node.key_span,
                 V070,
@@ -1010,8 +1048,6 @@ class _Walker:
                         return f"defined only when {node.name} is {value}"
         return None
 
-    # ---- single nodes --------------------------------------------------
-
     def _check_node(
         self,
         definition: DefNode,
@@ -1074,9 +1110,39 @@ class _Walker:
             shared = self.registry.element_rule(definition.name)
             if shared is not None:
                 return _Rule(shared.type, shared.validation, shared.values, shared.constraint)
-        return _Rule(
-            definition.type, definition.validation, definition.values, definition.constraint
-        )
+        values = definition.values
+        if definition.values_from is not None:
+            values = (*(values or ()), *self._declared_values(definition.values_from))
+        return _Rule(definition.type, definition.validation, values, definition.constraint)
+
+    def _declared_values(self, path: str) -> tuple[str, ...]:
+        """Collect the string values a key path names anywhere in the file.
+
+        The path is read from the file root, one key per segment, so values
+        declared after the field that uses them are found too.
+
+        Args:
+            path: Dotted key path such as ``player.designName``.
+
+        Returns:
+            The quoted values in file order (empty when the file has none).
+
+        Raises:
+            None.
+        """
+        cached = self._declared.get(path)
+        if cached is None:
+            level: Sequence[Node] = self._roots
+            *blocks, leaf = path.split(".")
+            for key in blocks:
+                level = [child for node in level if node.key == key for child in node.children]
+            cached = tuple(
+                node.value.text
+                for node in level
+                if node.key == leaf and isinstance(node.value, StringValue)
+            )
+            self._declared[path] = cached
+        return cached
 
     def _check_block(self, node: Node, structure_name: str) -> None:
         """Validate a block node against a named structure.
@@ -1098,8 +1164,6 @@ class _Walker:
         if struct is None:
             return
         self._scope(struct.children, node.children, node, struct.name, node.key_span)
-
-    # ---- iteration -----------------------------------------------------
 
     def _iterate(
         self,
@@ -1132,7 +1196,7 @@ class _Walker:
         if flat:
             end, found = self._flat_run(iterative, nodes, index + 1, repeats)
         else:
-            end, found = self._repeat_run(iterative, nodes, index + 1, repeats)
+            end, found = self._repeat_run(cursor, iterative, nodes, index + 1, repeats)
         self._runs[id(count_node)] = repeats
         if count is not None:
             line = _line_span(count_node)
@@ -1175,6 +1239,7 @@ class _Walker:
 
     def _repeat_run(
         self,
+        cursor: StructureCursor,
         iterative: IterativeFieldDef,
         nodes: Sequence[Node],
         start: int,
@@ -1182,7 +1247,13 @@ class _Walker:
     ) -> tuple[int, int]:
         """Validate the consecutive block or value repeats after a count line.
 
+        A line that follows a block repeat at the repeat's own indentation,
+        has a value, is unknown to the enclosing block and is a field of the
+        repeat block belongs to that repeat, together with the deeper lines
+        after it.
+
         Args:
+            cursor: Cursor for the block that holds the run.
             iterative: The iterative field.
             nodes: The block's child nodes.
             start: Index just after the count line.
@@ -1195,10 +1266,13 @@ class _Walker:
             None.
         """
         end = start
+        found = 0
         while end < len(nodes) and nodes[end].key == iterative.name:
             repeat = nodes[end]
             repeats.append(repeat)
+            found += 1
             self._matched.add(id(repeat))
+            end += 1
             if iterative.children:
                 if repeat.value is not None:
                     self.emit(
@@ -1206,21 +1280,81 @@ class _Walker:
                         V050,
                         f"'{repeat.key}' must be a block, found a value",
                     )
-                else:
-                    cursor = self._scope(
-                        iterative.children,
-                        repeat.children,
-                        repeat,
-                        repeat.key,
-                        repeat.key_span,
-                    )
-                    self._block_keys[id(repeat)] = frozenset(cursor.plain) | frozenset(
-                        cursor.counts
-                    )
+                    continue
+                members = list(repeat.children)
+                keys = self._repeat_keys(iterative, repeat)
+                while end < len(nodes) and self._is_shallow_member(
+                    cursor, iterative, repeat, nodes[end], keys
+                ):
+                    members.append(nodes[end])
+                    end += 1
+                    while end < len(nodes) and nodes[end].indent > repeat.indent:
+                        members.append(nodes[end])
+                        end += 1
+                inner = self._scope(
+                    iterative.children,
+                    members,
+                    repeat,
+                    repeat.key,
+                    repeat.key_span,
+                )
+                self._block_keys[id(repeat)] = frozenset(inner.plain) | frozenset(inner.counts)
             else:
                 self._check_value(repeat, _Rule(iterative.type, iterative.validation, None, None))
-            end += 1
-        return end, end - start
+        return end, found
+
+    def _repeat_keys(self, iterative: IterativeFieldDef, repeat: Node) -> frozenset[str]:
+        """List the keys a repeat block defines.
+
+        Args:
+            iterative: The iterative field the repeat belongs to.
+            repeat: The repeat block.
+
+        Returns:
+            Plain field names and count keys active for the repeat.
+
+        Raises:
+            None.
+        """
+        active: list[DefNode] = []
+        self._expand(iterative.children, repeat.children, active)
+        inner = StructureCursor(active)
+        return frozenset(inner.plain) | frozenset(inner.counts)
+
+    @staticmethod
+    def _is_shallow_member(
+        cursor: StructureCursor,
+        iterative: IterativeFieldDef,
+        repeat: Node,
+        node: Node,
+        keys: frozenset[str],
+    ) -> bool:
+        """Whether a line after a repeat block is a member written one level too shallow.
+
+        Args:
+            cursor: Cursor for the block that holds the run.
+            iterative: The iterative field the repeat belongs to.
+            repeat: The repeat block.
+            node: The line right after the repeat.
+            keys: Keys the repeat block defines.
+
+        Returns:
+            True for a line with a value whose key the repeat block defines
+            and the enclosing block does not.
+
+        Raises:
+            None.
+        """
+        key = node.key
+        return (
+            node.value is not None
+            and node.indent == repeat.indent
+            and key != iterative.name
+            and key in keys
+            and key not in cursor.plain
+            and key not in cursor.counts
+            and key not in cursor.repeats
+        )
 
     def _flat_run(
         self,
@@ -1285,8 +1419,6 @@ class _Walker:
             index = end
         return index, found
 
-    # ---- indentation ---------------------------------------------------
-
     def _check_indentation(self, roots: Sequence[Node]) -> None:
         """Report lines indented deeper than a value line (``SOASE-V080``).
 
@@ -1301,8 +1433,9 @@ class _Walker:
         * an unknown key (``SOASE-V020``) that is a field of the repeat block
           (an entry of an iterative field) ending right before it at the same
           indentation: the line was meant to sit one level deeper, inside
-          that repeat (the galaxy planet ``owner`` shape). The repeat may
-          itself be unplaced (``SOASE-V030``) after an earlier break.
+          that repeat. This applies to a repeat that is unplaced
+          (``SOASE-V030``), because a placed repeat takes such a line as
+          one of its own members.
 
         Every other previous line is skipped: other unknown keys (including
         keys that a preceding non-repeat block defines, which is a
@@ -1394,8 +1527,6 @@ class _Walker:
             return False
         keys = self._block_keys.get(id(block))
         return keys is not None and line.key in keys
-
-    # ---- values --------------------------------------------------------
 
     def _enum_allows(self, enum: EnumDef, text: str) -> bool:
         """Whether a text is a member of an enumeration for the version.
@@ -1523,9 +1654,7 @@ class _Walker:
             self.emit(_value_span(node), V050, f"{node.key}: expected a quoted {kind} name")
             return
         if kind not in REFERENCE_KINDS or not node.value.text:
-            # An empty name means "none": it is used 15000+ times in the
-            # Rebellion 1.98 files for Brush, Entity, Mesh, Particle, Sound,
-            # StringInfo and GalaxyTemplate fields and is never resolved.
+            # An empty name means "none" and is never resolved.
             return
         result = self.ctx.lookup.resolve(kind, node.value.text)
         if isinstance(result, NotFound):

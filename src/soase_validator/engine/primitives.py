@@ -7,52 +7,46 @@ returns a ``PrimitiveResult``. ``check_orientation`` takes the header
 are children. The checkers have no side effects. Reference types are not
 primitives and are handled elsewhere.
 
-The checkers accept exactly the shapes the Rebellion 1.98 reference files
-use and reject everything else. In several places this is deliberately
+The checkers accept exactly the shapes listed below and reject everything
+else. In several places this is deliberately
 stricter than the zombiesrus5 plugin (see "Differences from the plugin").
 
-Evidence (Rebellion 1.98 reference files, shapes and counts only)
------------------------------------------------------------------
+Accepted shapes
+---------------
 Boolean
-    Only ``TRUE`` and ``FALSE`` occur (68956 uses, 228 contexts). No other
-    spelling or case variant occurs.
+    Only ``TRUE`` and ``FALSE``, in exactly that case.
 Integer and Decimal number forms
     Plain integers (``42``, ``-3``), decimals with a digit before the point
     (``0.000000``, ``-1.5``) and decimals with no digit before the point
-    (``.5``, ``-.111111``) occur. A leading ``+``, an exponent and a
-    trailing point (``5.``) do not occur, so they are rejected.
+    (``.5``, ``-.111111``). A leading ``+``, an exponent and a trailing
+    point (``5.``) are rejected.
 Integer fields written as decimals
-    Integer fields hold decimal forms in real files (``dec6`` 199 uses in 15
-    contexts, ``dec1`` 106, ``leading-dot1`` 22), so the default accepts
-    them. ``integer_strict`` rejects the decimal point.
+    The default accepts the decimal form. ``integer_strict`` rejects the
+    decimal point.
 Decimal fields written as integers
-    Decimal fields hold integer forms in real files (666 uses in 84
-    contexts), so ``decimal_allow_integer`` defaults to True.
+    ``decimal_allow_integer`` defaults to True.
 Color
-    4208 uses in 34 contexts: 8 hex digits (4109 lowercase, 1 uppercase),
-    a lone ``0`` (94), 6 hex digits (3) and 4 hex digits (1). All are
-    unquoted. No ``0x`` prefix occurs in Colors. The parser yields a
-    ``NumberValue`` for all-digit tokens (``0``, ``00000000``) and a
-    ``HexValue`` otherwise, so the raw token text is checked.
+    An unquoted token of 8, 6 or 4 hex digits, or a lone ``0``. The parser
+    yields a ``NumberValue`` for all-digit tokens (``0``, ``00000000``) and a
+    ``HexValue`` otherwise, so the raw token text is checked. A ``0x`` prefix
+    is rejected.
 Position
-    14699 uses in 13 contexts, always a bracketed, comma separated list of
-    integers (negatives occur, decimals do not). The item count is fixed per
-    field: 2 for ``pos`` (``.galaxy`` star and planet, ``ResearchSubject``
+    A bracketed, comma separated list of integers (negatives allowed,
+    decimals rejected). The item count is fixed per field: 2 for ``pos``
+    (``.galaxy`` star and planet, ``ResearchSubject``
     ``researchWindowLocation``) and 4 for ``pixelBox`` (``.brushes``),
     ``area`` (``Player`` research screen blocks) and
     ``mainViewIconAreaOffsetFromCenter`` (``PipCloud``). The count lives in
     the Definition as ``constraint`` ``count=N``.
 Coordinate
-    7876 uses in 11 contexts (``.particle``), always a bracketed,
-    space separated list of exactly 3 numbers (six-place decimals,
-    negatives). Integer items do not occur; they are accepted by user
-    decision, to match the plugin (``BigDecimal`` items).
+    A bracketed, space separated list of exactly 3 numbers. Integer items
+    are accepted by user decision, to match the plugin (``BigDecimal``
+    items).
 Orientation
-    3625 uses in 3 contexts (``.particle``): a header with no value and
-    exactly 3 keyless child rows, each a Coordinate.
-
-Differences from the plugin (the reference files are the authority)
--------------------------------------------------------------------
+    A header with no value and exactly 3 keyless child rows, each a
+    Coordinate.
+Differences from the plugin
+---------------------------
 * Color: every digit is checked (the plugin skips trailing characters),
   quotes are not stripped (the plugin blanks them) and a ``0x`` prefix is
   rejected.
@@ -83,9 +77,9 @@ _DECIMAL_FORM = re.compile(r"-?(?:\d+\.\d+|\.\d+)")
 _COLOR_FORM = re.compile(r"0|[0-9A-Fa-f]{8}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{4}")
 _COUNT_CONSTRAINT = re.compile(r"count=([1-9]\d*)")
 
-#: Orientation rows, fixed by the reference files.
+#: Keyless rows of an Orientation.
 ORIENTATION_ROWS = 3
-#: Coordinate items, fixed by the reference files.
+#: Numbers in a Coordinate.
 COORDINATE_ITEMS = 3
 
 #: Validation types that accept a ``constraint`` in a Definition.

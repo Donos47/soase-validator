@@ -255,10 +255,9 @@ def _parse_list(text: str) -> ListValue | None:
 def _skip_equals(line: str, offset: int) -> int:
     """Skip the ``=`` of the ``key = "value"`` form.
 
-    The form occurs in ``.constants`` (22 lines in the Rebellion 1.98
-    reference files, all ``key = "value"`` with whitespace on both sides of
-    the ``=`` and a quoted value). Only that shape is accepted; any other use
-    of ``=`` is left for the caller to report.
+    The form is ``key = "value"`` with whitespace on both sides of the ``=``
+    and a quoted value. Only that shape is accepted; any other use of ``=``
+    is left for the caller to report.
 
     Args:
         line: The full source line.
@@ -348,7 +347,7 @@ def parse(
         value: Value | None = None
         value_span: Span | None = None
         # A key never contains "=": the only accepted "=" shape is the
-        # `key = "value"` form handled above (0 keys with "=" in the reference).
+        # `key = "value"` form handled above.
         bad = "=" in key
         if rest and not bad:
             value_span = Span(lineno, rest_off, lineno, rest_off + len(rest))

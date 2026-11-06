@@ -31065,7 +31065,13 @@
                     "required": true
                   }
                 ],
-                "AnyInstantActionWithTriggerTypeDone": [],
+                "AnyInstantActionWithTriggerTypeDone": [
+                  {
+                    "node": "field",
+                    "name": "instantActionTriggerType",
+                    "type": "instantActionTriggerType"
+                  }
+                ],
                 "AbilityUsed": [],
                 "AnyOnConditionInstantActionDone": [],
                 "TargetNoLongerActivelyBeingConstructed": [],

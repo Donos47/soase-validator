@@ -210,8 +210,6 @@ class Converter:
         self._used_structs: set[str] = set()
         self._used_enums: set[str] = set()
 
-    # -- reporting -----------------------------------------------------------
-
     def issue(self, ctx: Ctx | str, where: str, message: str) -> None:
         """Record something that could not be converted.
 
@@ -249,8 +247,6 @@ class Converter:
         line = f"{file}: {where}: {message}"
         if line not in self.report.notices:
             self.report.notices.append(line)
-
-    # -- loading -------------------------------------------------------------
 
     def load_text(self, file: str, text: str) -> None:
         """Parse one XML document and register its top-level elements.
@@ -369,8 +365,6 @@ class Converter:
             if key not in seen:
                 seen.add(key)
                 enum["values"].append(member)
-
-    # -- value helpers -------------------------------------------------------
 
     @staticmethod
     def _help(elem: ET.Element) -> str | None:
@@ -557,8 +551,6 @@ class Converter:
         self._used_enums.add(name)
         self.enums[name] = {"name": name, "values": members}
         return name
-
-    # -- node conversion -----------------------------------------------------
 
     def _common(self, elem: ET.Element, ctx: Ctx, node: dict[str, Any]) -> None:
         """Copy ``required``, ``version`` and ``help`` into a node.
@@ -942,8 +934,6 @@ class Converter:
             self._in_progress.discard(marker)
         self._cond_branches[key] = result
         return result
-
-    # -- structures and rules ------------------------------------------------
 
     def root_structure(self, name: str) -> dict[str, Any] | None:
         """Convert a top-level structure once.

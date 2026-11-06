@@ -41,6 +41,20 @@ inclusion: always
 - Prefer frozen dataclasses with `slots=True` for data models.
 - Use `get_diagnostics` for quick JSON and Python file checks before writing ad hoc scripts.
 
+## Comments and docstrings (PEP 8, PEP 257)
+
+Applies to `src/`, `tests/` and `tools/`. Strict: fix violations in any file you touch.
+
+- Comments say why, never what. Delete a comment that restates the code.
+- Block comments start with `# `, sit at the indentation of the code they describe, and are complete sentences: capital first letter, ending in a period.
+- Inline comments are rare, separated from code by at least two spaces, and short.
+- No commented-out code, no banner or divider comments (`# ---- name ----`, `# ====`). Split the module or use a descriptive name instead.
+- No `TODO` or `FIXME` without a task reference from `tasks.md`.
+- Docstrings use triple double quotes. The first line is a one-sentence summary in the imperative mood, ending in a period, on its own line, followed by a blank line before any further text. Use Google sections (`Args`, `Returns`, `Raises`) as in the code style above.
+- Comments and docstrings describe current behaviour in present tense. They contain no survey counts, file counts, Reference Root file names, change history ("was", "used to", "no longer", "until"), task numbers or chat history. Evidence lives in `PROVENANCE.json`, `design.md` and `reference/`.
+- Do not use the Reference Root's machine path or any absolute path.
+- `ruff` enforces what it can (`D`, `E501`, `W505` doc line length, `ERA001`); the content rules above are checked in review.
+
 ## Testing
 
 - pytest plus Hypothesis (`@given`, `settings(max_examples=100)` minimum).
