@@ -22,3 +22,6 @@ sins-rebellion-reference/
 *.mesh
 *.dds
 *.ogg
+
+# Local-only steering (describes how reference material is examined)
+.kiro/steering/reference-verification.md
