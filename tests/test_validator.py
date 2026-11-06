@@ -1059,3 +1059,95 @@ def test_reference_root_v080_set(reference_root: Path) -> None:
         "galaxy/voruk's labyrinth.galaxy": 62,
         "gameinfo/randomeventdefs.randomeventdefs": 1,
     }
+
+
+# ---- file ruleset from SinsArchiveVersion (Requirement 3.9) -------------------
+
+_R193 = GameVersion.REBELLION_193
+_R198 = GameVersion.REBELLION_198
+
+
+def _gated_registry() -> Registry:
+    return _registry(
+        [
+            _f("old", "Integer"),
+            _f("new", "Integer", version="Rebellion194"),
+            _f("need", "Integer", required=True, version="Rebellion194"),
+            _f("tail", "Integer"),
+            {"node": "field", "name": "kind", "type": "kind"},
+        ],
+        enums=[{"name": "kind", "values": ["A", {"name": "B", "version": "Rebellion194"}]}],
+    )
+
+
+def _run_all(body: str, archive: int | None, project: GameVersion = _R198) -> list[Diagnostic]:
+    """Parser plus validator Diagnostics for a file labelled with ``archive``."""
+    header = "TXT" if archive is None else "TXT2"
+    label = "" if archive is None else f"SinsArchiveVersion {archive}\n"
+    path = Path("a.foo")
+    parsed = parse(f"{header}\n{label}{body}", path, game_version=project)
+    ctx = ValidationContext(_gated_registry(), project, path)
+    return [*parsed.diagnostics, *validate(parsed, ctx)]
+
+
+def test_newer_field_in_older_labelled_file_is_reported_with_hint() -> None:
+    diags = _run_all("old 1\nnew 2\ntail 3\n", 193)
+    assert [(d.code, d.range.start.line) for d in diags] == [(dg.V020, 3)]
+    assert diags[0].message == (
+        "'new' was introduced in Rebellion 194; this file is SinsArchiveVersion 193"
+    )
+    # Gated-out keys take no position: no order or duplicate findings.
+    assert [d.code for d in _run_all("old 1\nnew 2\nnew 3\ntail 3\n", 193)] == [dg.V020, dg.V020]
+
+
+def test_field_required_only_from_newer_version_is_not_required_in_older_file() -> None:
+    assert _run_all("old 1\ntail 3\n", 193) == []
+    assert [d.code for d in _run_all("old 1\ntail 3\n", 194)] == [dg.V040]
+    assert _run_all("old 1\nneed 4\ntail 3\n", 194) == []
+
+
+def test_current_label_and_txt_files_use_project_version() -> None:
+    body = "old 1\nnew 2\nneed 3\ntail 4\n"
+    assert _run_all(body, 194) == []
+    # No SinsArchiveVersion (TXT): the project's Game Version applies.
+    assert _run_all(body, None) == []
+    assert [d.code for d in _run_all("old 1\ntail 4\n", None)] == [dg.V040]
+
+
+def test_lower_known_archive_versions_give_no_p004() -> None:
+    for archive in (185, 193):
+        assert _run_all("old 1\ntail 3\n", archive) == []
+
+
+def test_newer_archive_version_gets_info_p004_and_project_level_rules() -> None:
+    # A 194 file in a 193 project: validated at 193, so `new` is unknown there.
+    diags = _run_all("old 1\nnew 2\ntail 3\n", 194, _R193)
+    assert [(d.code, d.severity.value) for d in diags] == [(dg.P004, "info"), (dg.V020, "error")]
+    assert "introduced" not in diags[1].message
+
+
+def test_unknown_archive_version_gets_info_p004_and_project_level_rules() -> None:
+    diags = _run_all("old 1\nnew 2\nneed 3\ntail 3\n", 999)
+    assert [(d.code, d.severity.value) for d in diags] == [(dg.P004, "info")]
+    assert [d.code for d in _run_all("old 1\ntail 3\n", 999)] == [dg.P004, dg.V040]
+
+
+def test_enum_member_is_gated_by_the_files_version() -> None:
+    older = _run_all('old 1\ntail 3\nkind "B"\n', 193)
+    assert [d.code for d in older] == [dg.V050]
+    assert "rebellion-193" in older[0].message
+    assert _run_all('old 1\nneed 1\ntail 3\nkind "B"\n', 194) == []
+
+
+def test_entity_type_is_gated_by_the_files_version() -> None:
+    registry = _registry(
+        [],
+        extra=[{"name": "Titan", "children": []}],
+        enums=[{"name": "entityType", "values": [{"name": "Titan", "version": "Rebellion194"}]}],
+    )
+    for archive, expected in ((194, []), (193, [dg.V010])):
+        parsed = parse(
+            f'TXT2\nSinsArchiveVersion {archive}\nentityType "Titan"\n', Path("x.entity")
+        )
+        ctx = ValidationContext(registry, _R198, Path("x.entity"))
+        assert [d.code for d in validate(parsed, ctx)] == expected

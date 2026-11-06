@@ -72,6 +72,8 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 13. IF a key contains `=`, or an `=` appears in any shape other than the one in criterion 12 (`key= "v"`, `key ="v"`, `key = 5`, a bare `=`), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
 14. IF a value is none of the forms in criterion 3 (including its sub-criteria), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
 15. IF any text follows a complete quoted value on the same line, whether stuck to the closing quote (`Value "text""`) or separated by whitespace (`a "x" "y"`, `a = "v" tail`), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line. An unterminated quote remains `SOASE-P003` (criterion 3.4).
+16. WHEN `SinsArchiveVersion` is a known number (185, 193 or 194) that is not newer than the Project's Game Version, THE Engine SHALL NOT report it; archive versions are backwards compatible, so a file labelled with an older known version is valid in a newer Project (refines criterion 11).
+17. IF `SinsArchiveVersion` is not a known number, or is newer than the Project's Game Version, THEN THE Engine SHALL report it as informational (`SOASE-P004`) and SHALL validate the file at the Project's Game Version. A `TXT` file has no `SinsArchiveVersion` and is validated at the Project's Game Version.
 
 ### Requirement 3: Structural and value validation
 
@@ -94,6 +96,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 7. WHEN an iterative count exceeds its `limit` or does not match the number of repeated blocks, THE Engine SHALL report an error Diagnostic.
 8. WHEN a `condition_field` value selects a branch, THE Engine SHALL validate the following fields against that branch only.
 9. WHEN a field, structure, or enumeration value carries a `version` gate that excludes the active Game Version, THE Engine SHALL treat it as undefined for that version.
+   1. THE Engine SHALL evaluate the gates of a `TXT2` file against the version its own `SinsArchiveVersion` names (185, 193, 194 map to the matching Rebellion levels), capped at the Project's Game Version, for structures, fields, enumeration members, `entityType` values, required fields, declared order, duplicates and indentation. A 194 file in a Rebellion 1.98 Project is evaluated as Rebellion 1.98, which starts from the 194 rules (Requirement 13.8).
+   2. WHEN a key is defined for the Project's Game Version but gated out for the file's own version, THE Engine SHALL report `SOASE-V020` on the key with a hint naming the version that introduced it and the file's `SinsArchiveVersion` (for example `'x' was introduced in Rebellion 194; this file is SinsArchiveVersion 193`).
+   3. THE Engine SHALL NOT require, in a file labelled with an older version, a field that is required only from a later version, and SHALL NOT report the lack of fields introduced later.
 10. WHERE the user has configured numeric strictness preferences, THE Engine SHALL apply them to integer and decimal validation.
 11. WHEN keys of a block appear in a different order than the Definition declares them (after version gates are applied, the selected `condition_field` branch counting as sitting right after its selector, and an iterative field's count line with its repeats occupying that field's position), THE Engine SHALL report `SOASE-V060` once on each key that breaks the order, naming the key it must come before or after, and SHALL NOT report the keys that follow a misplaced key. Optional fields MAY be absent.
 12. WHEN a plain key or a count line is used more than once in the same block, THE Engine SHALL report `SOASE-V070` on each later use, giving the line of the first use, and SHALL NOT also report it as out of order. Repeats inside a counted run (blocks, value lines or sibling sequences after a count line) are not duplicates.
@@ -122,6 +127,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
    5. THE informational Diagnostic in 6.2 SHALL be suppressible through configuration.
 7. WHEN a file is saved, THE Engine SHALL update the affected portion of the Reference Index without rebuilding the entire index.
 8. WHEN a file referenced by a validated file changes, THE Engine SHALL re-validate the dependent open files.
+9. WHEN a field references a file by name (texture, sound file, mesh, particle or a similar file reference), THE Engine SHALL verify that a matching file exists at the expected location in the Chain, searching from the highest Layer, and SHALL NOT validate the content of the referenced file. The expected folder, extension and name rules for each kind SHALL come from the Reference Root survey recorded in design.md.
 
 ### Requirement 5: Diagnostics on save
 

@@ -19,12 +19,12 @@ stack. Tabs and spaces each count as one unit of indentation width.
 from __future__ import annotations
 
 import re
-from collections.abc import Collection
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from soase_validator.engine.diagnostics import P001, P002, P003, P004
 from soase_validator.engine.model import Diagnostic, Severity, Span
+from soase_validator.engine.versions import GameVersion, archive_level, is_newer_than
 
 HEADERS = ("TXT", "TXT2")
 VERSION_KEY = "SinsArchiveVersion"
@@ -286,16 +286,17 @@ def _skip_equals(line: str, offset: int) -> int:
 def parse(
     text: str,
     file: Path | None = None,
-    known_archive_versions: Collection[int] | None = None,
+    game_version: GameVersion | None = None,
 ) -> ParsedFile:
     """Parse mod file text into a tree.
 
     Args:
         text: Full file text.
         file: Path used in Diagnostics (defaults to an empty path).
-        known_archive_versions: ``SinsArchiveVersion`` integers recognised for
-            the active Game Version. When None, the recognition check is
-            skipped.
+        game_version: The project's Game Version. A ``SinsArchiveVersion``
+            that is known and not newer than it gives no Diagnostic; an
+            unknown or newer one gives an informational ``SOASE-P004``. When
+            None, the check is skipped.
 
     Returns:
         The ``ParsedFile``. Never raises for malformed input.
@@ -416,7 +417,7 @@ def parse(
             stack.append(node)
 
         if header == "TXT2" and parent is None and key == VERSION_KEY:
-            _check_version(node, path, known_archive_versions, diags)
+            _check_version(node, path, game_version, diags)
 
     return ParsedFile(header, roots, diags, complete)
 
@@ -424,15 +425,19 @@ def parse(
 def _check_version(
     node: Node,
     path: Path,
-    known: Collection[int] | None,
+    project: GameVersion | None,
     diags: list[Diagnostic],
 ) -> None:
     """Validate a ``SinsArchiveVersion`` node in a TXT2 file.
 
+    Archive versions are backwards compatible: a known version that is not
+    newer than the project is fine. An unknown version, or one newer than the
+    project, is informational and the file is validated at the project level.
+
     Args:
         node: The version node.
         path: File path for Diagnostics.
-        known: Recognised integers, or None to skip the recognition check.
+        project: The project's Game Version, or None to skip the check.
         diags: Diagnostic list to append to.
 
     Returns:
@@ -447,16 +452,20 @@ def _check_version(
         diags.append(
             _diag(path, span, Severity.ERROR, P004, "SinsArchiveVersion must be an integer")
         )
-    elif known is not None and val.value not in known:
-        diags.append(
-            _diag(
-                path,
-                span,
-                Severity.INFO,
-                P004,
-                f"SinsArchiveVersion {val.value} is not recognised for this game version",
+    elif project is not None:
+        level = archive_level(val.value)
+        if level is None:
+            message = (
+                f"SinsArchiveVersion {val.value} is not recognised; validating at {project.value}"
             )
-        )
+        elif is_newer_than(level, project):
+            message = (
+                f"SinsArchiveVersion {val.value} is newer than {project.value}; "
+                f"validating at {project.value}"
+            )
+        else:
+            return
+        diags.append(_diag(path, span, Severity.INFO, P004, message))
 
 
 def _format_value(value: Value) -> str:

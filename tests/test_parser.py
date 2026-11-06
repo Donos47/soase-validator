@@ -13,6 +13,7 @@ from soase_validator.engine.parser import (
     parse,
     read_text_file,
 )
+from soase_validator.engine.versions import GameVersion
 
 
 def _codes(text: str, **kw) -> list[str]:
@@ -58,7 +59,18 @@ def test_unterminated_quote_and_skipped_line() -> None:
 
 
 def test_archive_version_checks() -> None:
-    assert _codes("TXT2\nSinsArchiveVersion 999\n", known_archive_versions={194}) == ["SOASE-P004"]
+    v198, v193 = GameVersion.REBELLION_198, GameVersion.REBELLION_193
+    # Unknown number and a number newer than the project: informational P004.
+    assert _codes("TXT2\nSinsArchiveVersion 999\n", game_version=v198) == ["SOASE-P004"]
+    assert _codes("TXT2\nSinsArchiveVersion 194\n", game_version=v193) == ["SOASE-P004"]
+    infos = parse("TXT2\nSinsArchiveVersion 999\n", game_version=v198).diagnostics
+    assert infos[0].severity == "info"
+    # Known and not newer than the project (backwards compatible): no P004.
+    for n in (185, 193, 194):
+        assert _codes(f"TXT2\nSinsArchiveVersion {n}\n", game_version=v198) == []
+    assert _codes("TXT2\nSinsArchiveVersion 193\n", game_version=v193) == []
+    # No project version: the recognition check is skipped.
+    assert _codes("TXT2\nSinsArchiveVersion 999\n") == []
     d = parse("TXT2\nSinsArchiveVersion 1.5\n").diagnostics[0]
     assert d.severity == "error"
     assert _codes("TXT\nSinsArchiveVersion xyz\n") == ["SOASE-P002"]

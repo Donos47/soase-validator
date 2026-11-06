@@ -104,6 +104,120 @@ _ALIASES: dict[str, GameVersion] = {
 }
 
 
+#: Game Versions from oldest to newest. ``REBELLION_198`` starts from the
+#: Rebellion 194 capability set (plus overrides), so it ranks after 194.
+VERSION_ORDER: tuple[GameVersion, ...] = (
+    _V.VANILLA,
+    _V.ENTRENCHMENT,
+    _V.DIPLOMACY,
+    _V.REBELLION_185,
+    _V.REBELLION_193,
+    _V.REBELLION_194,
+    _V.REBELLION_198,
+)
+
+#: ``SinsArchiveVersion`` integers the tool knows, mapped to the matching
+#: Rebellion capability level. Evidence: the Rebellion 1.98 Reference Root
+#: carries 193 and 194 only; 185 maps to the ``Rebellion185`` gate token.
+ARCHIVE_VERSIONS: dict[int, GameVersion] = {
+    185: _V.REBELLION_185,
+    193: _V.REBELLION_193,
+    194: _V.REBELLION_194,
+}
+
+#: Display names used in "introduced in" hints.
+_DISPLAY_NAMES: dict[GameVersion, str] = {
+    _V.VANILLA: "Vanilla",
+    _V.ENTRENCHMENT: "Entrenchment",
+    _V.DIPLOMACY: "Diplomacy",
+    _V.REBELLION_185: "Rebellion 185",
+    _V.REBELLION_193: "Rebellion 193",
+    _V.REBELLION_194: "Rebellion 194",
+    _V.REBELLION_198: "Rebellion 1.98",
+}
+
+
+def display_name(version: GameVersion) -> str:
+    """Return the human-readable name of a Game Version.
+
+    Args:
+        version: The Game Version.
+
+    Returns:
+        A name such as ``"Rebellion 194"``.
+    """
+    return _DISPLAY_NAMES[version]
+
+
+def is_newer_than(version: GameVersion, other: GameVersion) -> bool:
+    """Tell whether a Game Version ranks after another in ``VERSION_ORDER``.
+
+    Args:
+        version: The version to test.
+        other: The version to compare against.
+
+    Returns:
+        True when ``version`` is strictly newer than ``other``.
+    """
+    return VERSION_ORDER.index(version) > VERSION_ORDER.index(other)
+
+
+def archive_level(archive_version: int) -> GameVersion | None:
+    """Map a ``SinsArchiveVersion`` integer to its Rebellion level.
+
+    Args:
+        archive_version: The integer from the file header.
+
+    Returns:
+        The matching GameVersion, or None for an unknown number.
+    """
+    return ARCHIVE_VERSIONS.get(archive_version)
+
+
+def effective_version(archive_version: int | None, project: GameVersion) -> GameVersion:
+    """Choose the ruleset version a file is validated against.
+
+    A file is validated at its own ``SinsArchiveVersion`` level, capped at the
+    project's Game Version. An unknown number, a number newer than the
+    project, or no number at all (``TXT`` files) gives the project version.
+    Rebellion 1.98 files are labelled 194 and 1.98 starts from the 194
+    capability set, so a 194 file in a 1.98 project uses 1.98 (with its
+    overrides). Older labels (185, 193) use their own level.
+
+    Args:
+        archive_version: Integer ``SinsArchiveVersion``, or None.
+        project: The project's Game Version.
+
+    Returns:
+        The GameVersion whose capability set applies to the file.
+    """
+    if archive_version is None:
+        return project
+    level = archive_level(archive_version)
+    if level is None or is_newer_than(level, project):
+        return project
+    if level is _V.REBELLION_194 and project is _V.REBELLION_198:
+        return project
+    return level
+
+
+def introduced_in(gate: str | None, data: VersionData | None = None) -> GameVersion | None:
+    """Find the oldest Rebellion version that satisfies a gate.
+
+    Args:
+        gate: Gate expression.
+        data: Version data to apply; defaults to the bundled file.
+
+    Returns:
+        The oldest version from Rebellion 185 on whose capabilities allow the
+        gate, or None when no such version does.
+    """
+    for version in VERSION_ORDER[3:]:
+        if gate_allows(gate, version, data):
+            return version
+    return None
+
+
 @dataclass(frozen=True, slots=True)
 class VersionData:
     """Contents of ``definitions/versions.json``.

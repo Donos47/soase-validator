@@ -215,6 +215,8 @@ def gate_allows(gate: str | None, version: GameVersion) -> bool: ...
 
 `REBELLION_198` starts from the `REBELLION_194` capability set. The audit may add or remove tokens via an `overrides` section in `definitions/versions.json`, each with evidence. Tokens that cannot be verified are flagged `unverified` and shown by `versions`. Non-198 versions are all labelled `unaudited`.
 
+**File ruleset from `SinsArchiveVersion` (Requirements 2.16, 2.17, 3.9.1 to 3.9.3).** Archive versions are backwards compatible and tell the Engine which ruleset a file uses. `ARCHIVE_VERSIONS` maps 185, 193 and 194 to `REBELLION_185`, `REBELLION_193` and `REBELLION_194` (the Reference Root carries 193 and 194). `VERSION_ORDER` ranks the versions `VANILLA < ENTRENCHMENT < DIPLOMACY < REBELLION_185 < REBELLION_193 < REBELLION_194 < REBELLION_198`; 1.98 ranks last because it starts from the 194 set. `effective_version(archive_version, project)` returns the project version for `None` (TXT files), an unknown number or a level newer than the project; the level itself for an older known level; and the project version when the level is 194 and the project is 1.98, so 1.98 overrides still apply to the 194-labelled base game files. `is_newer_than`, `archive_level` and `introduced_in(gate)` (the oldest Rebellion version satisfying a gate, for hints) are pure helpers in `versions.py`.
+
 ### Parser (Requirement 2)
 
 The parser is a tolerant, line-oriented scanner producing a tree of `Node`s with exact source positions.
@@ -279,7 +281,7 @@ Algorithm:
 4. Block extent is decided by indentation alone, compared relatively with an indent stack as in Python. A key with no value opens a block, and its children are the following lines whose indentation is wider than the block key's indentation. The block ends at the first line whose indentation is not wider than the block key's. Spaces are accepted silently with no Diagnostic. Mixed tabs and spaces are compared by leading-whitespace length, with a tab counted as one unit, so a line is never rejected for its indentation characters. Nesting levels are therefore defined by the stack of widths seen so far, not by absolute widths.
 5. A count key such as `starCount N` is an ordinary key-value node. The N repeated blocks (for example `star`) or repeated value lines (for example `recommendedGameType "FFA"`) that follow are sibling nodes with the matching name. The validator compares the count with the number of repeats (Requirement 2.5, 3.7); the parser does not depend on the count to find block extents.
 6. Unrecoverable lines produce `SOASE-P002` and are skipped so that later lines are still parsed. A line is unrecoverable when its value is none of the forms in step 2 (including a malformed bracket list), or when its key contains `=`. The only accepted `=` shape is `key = "value"` (whitespace on both sides of the `=`, quoted value), which is read as `key "value"`; `key= "v"`, `key ="v"`, `key = 5` and a bare `=` are all `SOASE-P002`. Any text after a complete quoted value on the same line, stuck to the closing quote or whitespace separated, is also `SOASE-P002` (user decision, see Verified format facts). A skipped line can cause follow-on validator diagnostics: for a `.str` `Value` line the entry then has no `Value`, so task 5.4 may report a missing required field for it and should account for this.
-7. `SinsArchiveVersion` is validated only in `TXT2` files, must be an integer, and an integer unknown to the active Game Version gives an informational `SOASE-P004` (Requirement 2.10, 2.11). A `TXT` file never gets a missing-version error.
+7. `SinsArchiveVersion` is validated only in `TXT2` files, must be an integer, and gives an informational `SOASE-P004` only when it is unknown or newer than the Project's Game Version; a known number not newer (185, 193, 194 against 1.98) gives nothing (Requirements 2.10, 2.11, 2.16, 2.17). `parse(text, file, game_version=None)` takes the Project's Game Version for this check (None skips it); the parser stays pure. A `TXT` file never gets a missing-version error. Galaxy `TXT` files carry `versionNumber 193`; it is an ordinary key and selects no ruleset.
 
 Parsing is exposed as `parse(text: str) -> ParsedFile` and a printer `format_tree(parsed) -> str` used only in tests for round-tripping. The scanner is format-agnostic and needs no per-extension options.
 
@@ -310,6 +312,7 @@ These were checked against the Rebellion 1.98 reference set and drive the parser
 
 Steps:
 
+0. **Choose the file's version** (Requirements 3.9.1 to 3.9.3): in a `TXT2` file, read the top-level integer `SinsArchiveVersion` and compute `effective_version(archive, ctx.version)` once. Every gate check (`allowed`, memoised per walk) uses it: structures, fields, enumeration members, `entityType`, required fields, and the order, duplicate and indentation passes. When a key is unknown but defined for `ctx.version` and gated out for the file's version, the `SOASE-V020` message is `'x' was introduced in <version>; this file is SinsArchiveVersion <n>`.
 1. **Select the root structure**: by file extension; for `.entity`, read the `entityType` value, check it against the version-filtered enumeration (error `SOASE-V010` if unknown) and choose the structure from it (Requirements 3.1, 3.2).
 2. **Walk nodes against the structure**, using a `StructureCursor` that tracks which keys of the current structure have been seen:
    - Unknown key → `SOASE-V020` on the key (Requirement 3.6).
@@ -382,7 +385,7 @@ class LayerIndex:
     files: Mapping[str, Path]            # casefolded relative path -> absolute path
 ```
 
-- `RefKind` covers entities, brushes, string IDs, sounds, sound files, meshes, particles, explosions, galaxy designs, galaxy templates, and orbit body types (Requirement 4.1).
+- `RefKind` covers entities, brushes, string IDs, sounds, sound files, meshes, particles, textures, explosions, galaxy designs, galaxy templates, and orbit body types (Requirements 4.1, 4.9).
 - Only standard game data directories and files directly in the Layer root are scanned. Directories starting with `.` and VCS directories (`.git`, `.svn`, `.hg`) are skipped (Requirement 14.4.1).
 - Each Layer index is built independently, cached in memory keyed by `(resolved path, game version)` and persisted as a pickle-free JSON file in the platform cache directory. The cache is reused across Projects sharing a Layer and is invalidated when the signature changes (Requirement 14.10).
 - Incremental update: on save, only the changed file is re-parsed and its names replaced in the owning Layer's index (Requirement 4.7). Changing the Game Version rebuilds all indexes (Requirement 4.2.1).
@@ -390,6 +393,12 @@ class LayerIndex:
 **Merged lookup** (`ChainIndex`): resolves `resolve(kind, name)` by casefolding the name and scanning Layers from highest to lowest, returning the first hit as `Resolution(layer, entry)` plus `overrides: Layer | None` for the next lower hit (Requirements 4.3, 4.4, 14.5, 14.12). Name sets for manifest-governed kinds are limited to names listed in the manifest selected by Requirement 14.4 (see below).
 
 **Incomplete chains**: when `Chain.complete` is false, `ReferenceLookup.resolve` returns `Unknown` rather than `NotFound`, so the validator emits no unresolved-reference diagnostic. The Engine then adds one informational `SOASE-C030` per validated file, naming the missing Layers and how to configure them; this is suppressible with `suppress_limited_reference_notice` (Requirement 4.6.2, 4.6.5). Reference completions use only names from usable Layers (Requirement 4.6.4).
+
+**File references** (Requirement 4.9): kinds that resolve to files (Texture, SoundFile, Mesh, Particle and any other file-reference kind) are answered from `LayerIndex.files` by existence only. The lookup scans Layers from highest to lowest and compares the relative path case-insensitively (Requirement 4.4). The referenced file's content is never read or validated. An incomplete Chain gives `Unknown`, so no diagnostic is emitted.
+
+The per-kind folder, extension and name-normalisation table (whether the value includes the extension, subfolder handling, case) is **TO BE FILLED** from a Reference Root survey in task 8.1. It has not been surveyed yet, so no folders or extensions are specified here and none may be assumed.
+
+The validator currently checks `Texture` values for shape only (`UNRESOLVED_NAME_TYPES` in `validator.py`). Task 8.1 moves `Texture` into the reference kinds once the index can answer it. `MeshPoint` is not a file and stays shape-only.
 
 **Dependency tracking**: the Engine records for each validated file the set of `(Layer, RefKind, name)` it resolved. When `on_file_saved` or a file watcher reports a change, the names added or removed in the index are intersected with these sets to find dependents to re-validate (Requirements 4.8, 14.11).
 

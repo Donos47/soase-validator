@@ -152,7 +152,13 @@ from soase_validator.engine.registry import (
     StructureReferenceDef,
 )
 from soase_validator.engine.registry import Node as DefNode
-from soase_validator.engine.versions import GameVersion, gate_allows
+from soase_validator.engine.versions import (
+    GameVersion,
+    display_name,
+    effective_version,
+    gate_allows,
+    introduced_in,
+)
 
 _LOG = logging.getLogger(__name__)
 
@@ -590,6 +596,10 @@ class _Walker:
         self.ctx = ctx
         self.registry = ctx.registry
         self.diags: list[Diagnostic] = []
+        # Version whose capability set applies to the file; ``run`` narrows it
+        # to the file's SinsArchiveVersion level.
+        self.version = ctx.version
+        self.archive_version: int | None = None
         self._gates: dict[str | None, bool] = {}
         # State for the V080 pass, by node id: lines matched to a known field,
         # count line or repeat; matched lines whose block has no structure;
@@ -617,7 +627,7 @@ class _Walker:
         """
         cached = self._gates.get(gate)
         if cached is None:
-            cached = gate_allows(gate, self.ctx.version)
+            cached = gate_allows(gate, self.version)
             self._gates[gate] = cached
         return cached
 
@@ -669,6 +679,7 @@ class _Walker:
         Raises:
             None.
         """
+        self._set_file_version(parsed)
         ext = self.ctx.file.suffix.lower()
         header_end = len(parsed.header) if parsed.header else 0
         anchor = Span(0, 0, 0, header_end)
@@ -687,6 +698,66 @@ class _Walker:
         self._scope(root.children, nodes, None, root.name, anchor)
         self._check_indentation(parsed.nodes)
         return self.diags
+
+    def _set_file_version(self, parsed: ParsedFile) -> None:
+        """Choose the version whose rules apply to this file.
+
+        A ``TXT2`` file is validated at its own ``SinsArchiveVersion`` level,
+        capped at the project's Game Version; ``TXT`` files, and files whose
+        version is missing, malformed, unknown or newer than the project, use
+        the project's Game Version.
+
+        Args:
+            parsed: The parsed file.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        if parsed.header != "TXT2":
+            return
+        node = next((n for n in parsed.nodes if n.key == ARCHIVE_VERSION_KEY), None)
+        if node is None or not isinstance(node.value, NumberValue):
+            return
+        if not node.value.is_integer:
+            return
+        self.archive_version = int(node.value.value)
+        self.version = effective_version(self.archive_version, self.ctx.version)
+
+    def _introduced_hint(self, defs: Iterable[DefNode], key: str) -> str | None:
+        """Explain a key that is defined for the project but newer than the file.
+
+        Args:
+            defs: Unexpanded Definition nodes of the block.
+            key: The unknown key.
+
+        Returns:
+            Text such as ``'x' was introduced in Rebellion 194; this file is
+            SinsArchiveVersion 193``, or None when the key is not gated out by
+            the file's version alone.
+
+        Raises:
+            None.
+        """
+        if self.version is self.ctx.version:
+            return None
+        for node in defs:
+            names = {node.name}
+            if isinstance(node, IterativeFieldDef):
+                names.add(node.count_key)
+            if key not in names or self.allowed(node.version):
+                continue
+            if not gate_allows(node.version, self.ctx.version):
+                continue
+            since = introduced_in(node.version)
+            if since is not None:
+                return (
+                    f"'{key}' was introduced in {display_name(since)}; "
+                    f"this file is SinsArchiveVersion {self.archive_version}"
+                )
+        return None
 
     def _defines(self, struct: StructureDef, key: str) -> bool:
         """Whether a structure defines a top-level key.
@@ -736,7 +807,7 @@ class _Walker:
             self.emit(
                 _value_span(node),
                 V010,
-                f"Unknown entityType '{text}' for {self.ctx.version.value}",
+                f"Unknown entityType '{text}' for {self.version.value}",
             )
         return struct
 
@@ -911,6 +982,10 @@ class _Walker:
             )
             return
         self._unknown_ids.add(id(node))
+        newer = self._introduced_hint(defs, node.key)
+        if newer:
+            self.emit(node.key_span, V020, newer)
+            return
         hint = self._branch_hint(defs, node.key)
         suffix = f" ({hint})" if hint else ""
         self.emit(node.key_span, V020, f"Unknown key '{node.key}' in {label}{suffix}")
@@ -1428,7 +1503,7 @@ class _Walker:
             self.emit(
                 _value_span(node),
                 V050,
-                f"{node.key}: {shown!r} is not a valid value for {self.ctx.version.value}",
+                f"{node.key}: {shown!r} is not a valid value for {self.version.value}",
             )
 
     def _check_name(self, node: Node, kind: str) -> None:

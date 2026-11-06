@@ -82,7 +82,7 @@ Conventions for every task:
 - [x] 4. Parser
   - [x] 4.1 Implement `engine/parser.py`
     - Implement the tolerant line-oriented parser with `Node`, `Value` variants, `ParsedFile` and `parse(text)`, relative-indentation block extents using an indent stack (tabs and spaces each count as one unit), keys containing colons, quoted strings including empty and unterminated, numbers, `TRUE`/`FALSE`, bracket lists, and count keys as ordinary nodes
-    - Emit `SOASE-P001` for a missing header, `SOASE-P002` for skipped unparseable lines, `SOASE-P003` for unterminated quotes and `SOASE-P004` for unrecognised `SinsArchiveVersion` integers; validate `SinsArchiveVersion` only in `TXT2` files
+    - Emit `SOASE-P001` for a missing header, `SOASE-P002` for skipped unparseable lines, `SOASE-P003` for unterminated quotes and informational `SOASE-P004` for a `SinsArchiveVersion` that is unknown or newer than the Project's Game Version (`parse(text, file, game_version)`; known older versions 185 and 193 give none); validate `SinsArchiveVersion` only in `TXT2` files
     - Implement `format_tree(parsed)` for tests, and file reading with `utf-8-sig` falling back to `latin-1`
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.10, 2.11_
 
@@ -140,7 +140,7 @@ Conventions for every task:
     - **Validates: Requirements 3.10**
 
   - [x] 5.4 Implement `engine/validator.py`
-    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), keys out of the declared order (`SOASE-V060`), duplicate plain keys or count lines (`SOASE-V070`) and lines indented deeper than a known value line or counted repeats at another depth or in mixed styles (`SOASE-V080`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
+    - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), keys out of the declared order (`SOASE-V060`), duplicate plain keys or count lines (`SOASE-V070`) and lines indented deeper than a known value line or counted repeats at another depth or in mixed styles (`SOASE-V080`), evaluate `condition_field` branches, apply version gates to structures, fields, enum values and `entityType` using the file's effective version (its own `SinsArchiveVersion` level capped at the Project's Game Version; `TXT` files use the Project's; a field gated to a later version used in an earlier-labelled file gives `SOASE-V020` with an "introduced in" hint, and a field required only from a later version is not required), and apply numeric preferences
     - Pass each field's `constraint` to its checker and report `validate_constraint` problems as Definition load warnings; call `check_orientation` with the header node
     - Treat an `iterative_field` as a count line followed by that many repeats, where a repeat may be a sequence of sibling lines (for example particle `NumEmitters N` followed by N repeats of an `EmitterType "x"` line plus an `EmitterContents` block), not only a named block; block extents still come from indentation
     - Define the `ReferenceLookup` protocol (`resolve(kind, name)` returning found, not found or unknown) with a null implementation, and a validation context bundling Registry, GameVersion, settings and lookup
@@ -205,7 +205,11 @@ Conventions for every task:
   - [ ] 8.1 Implement `engine/refindex.py`
     - Define a `FileSystem` protocol with real and in-memory implementations, `RefKind`, `Entry`, `LayerIndex` (casefolded names, manifests, files, signature) and the per-Layer builder that scans only standard game data directories and root files and skips hidden and VCS directories
     - Implement incremental update of a single changed file and signature computation from `(relpath, size, mtime_ns)`
-    - _Requirements: 4.1, 4.2, 4.2.1, 4.7, 14.4.1, 14.10_
+    - Survey the Reference Root read-only for each file-reference kind (Texture, SoundFile, Mesh, Particle, Brush `fileName` textures): folder(s), extensions, whether names include the extension, case handling, subfolders, and how many referenced files are missing in the base game itself
+    - Record the resulting per-kind table in design.md (Reference Index, File references) with the evidence; stop and ask the user if a kind maps to more than one folder or extension without a clear rule
+    - Implement existence-only resolution for these kinds from `LayerIndex.files` (no content checks)
+    - Switch `Texture` from shape-only (`UNRESOLVED_NAME_TYPES`) to a reference kind in `validator.py` and update its tests
+    - _Requirements: 4.1, 4.2, 4.2.1, 4.7, 4.9, 14.4.1, 14.10_
 
   - [ ] 8.2 Implement `engine/layercache.py`
     - Add the in-memory cache keyed by `(resolved path, game version)` and the JSON on-disk cache in the platform cache directory with schema version, discarding corrupt or stale files and ignoring write failures
