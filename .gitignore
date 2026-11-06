@@ -1,0 +1,24 @@
+# Environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Audit output
+audit-output/
+
+# Local reference copies of game data (never commit game files)
+reference/
+reference-root/
+sins-rebellion-reference/
+*.mesh
+*.dds
+*.ogg

@@ -16,8 +16,8 @@ Conventions for every task:
 
 ## Tasks
 
-- [ ] 1. Project scaffolding
-  - [ ] 1.1 Create the Python project with uv
+- [x] 1. Project scaffolding
+  - [x] 1.1 Create the Python project with uv
     - Create `pyproject.toml` with `requires-python = ">=3.14"`, the `src/sose_validator` layout, package data for `definitions/*.json`, and `[project.scripts]` entry points `sose-validator`, `sose-validator-lsp` and `sose-validator-mcp`
     - Add runtime dependencies `pygls`, `lsprotocol`, `mcp` and `platformdirs`, and a dev dependency group with `pytest`, `hypothesis`, `ruff` and `pip-audit`, checking current versions on PyPI and using ranges as in the design (`pygls>=2.1,<3`, `mcp>=2.3,<3`)
     - Create the empty package modules from the design's package layout (`engine/`, `lsp/`, `mcp_server/`, `cli/`, `audit/`, `definitions/`) with placeholder entry points so the scripts import
@@ -25,7 +25,7 @@ Conventions for every task:
     - Create the venv with `uv venv`, run `uv sync`, and run `pip-audit`
     - _Requirements: 10.1, 10.2, 10.3, 11.1, 11.4, 12.6_
 
-  - [ ] 1.2 Set up shared test infrastructure
+  - [x] 1.2 Set up shared test infrastructure
     - Create `tests/conftest.py` with a `reference_root` fixture that reads configuration or `SOSE_REFERENCE_ROOT_<VERSION>` and skips with a message when absent, a Hypothesis profile (minimum 100 examples), and a helper that builds small synthetic mod trees under `tmp_path`
     - Create `tests/properties/` and `tests/strategies/` packages
     - Add one trivial test proving the package imports under Python 3.14

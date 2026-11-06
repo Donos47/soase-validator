@@ -1,0 +1,62 @@
+[project]
+name = "sose-validator"
+version = "0.1.0"
+description = "Java-free language tooling for Sins of a Solar Empire mod files."
+readme = "README.md"
+requires-python = ">=3.14"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "pygls>=2.1,<3",
+    "lsprotocol>=2025.0.0",
+    "mcp>=2.3,<3",
+    "platformdirs>=4.0",
+]
+
+[project.scripts]
+sose-validator = "sose_validator.cli.main:main"
+sose-validator-lsp = "sose_validator.lsp.server:main"
+sose-validator-mcp = "sose_validator.mcp_server.app:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.8",
+    "pip-audit>=2.7",
+]
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+# Bundled JSON Definitions (src/sose_validator/definitions/*.json) live inside
+# the package, so uv_build includes them in wheels and sdists by default.
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["src", "tests"]
+extend-exclude = [".kiro"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+"tools/**" = ["D"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-m 'not perf' -ra"
+markers = [
+    "perf: performance checks excluded from the default run",
+]
