@@ -20,8 +20,8 @@ One shared Engine, three thin front ends: LSP server, MCP server (for AI agents)
 
 ## Targets
 
-- Game versions: Vanilla, Entrenchment, Diplomacy, Rebellion (gate levels 185, 193, 194) and Rebellion 1.96.
-- Rebellion 1.96 is the primary target and the only audited version. All others are "unaudited, best-effort". A bare "Rebellion" means 1.96.
+- Game versions: Vanilla, Entrenchment, Diplomacy, Rebellion (gate levels 185, 193, 194) and Rebellion 1.98.
+- Rebellion 1.98 is the primary target and the only audited version. Its files use the template format `SinsArchiveVersion` 194, which is a file-format revision and not a game version. All others are "unaudited, best-effort". A bare "Rebellion" means 1.98.
 - Out of scope: Sins II, binary assets (`.mesh`, `.dds`, `.ogg`), formatting and refactoring.
 
 ## Key rules

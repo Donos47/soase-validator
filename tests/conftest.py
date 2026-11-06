@@ -15,17 +15,17 @@ settings.register_profile(
 )
 settings.load_profile("soase")
 
-DEFAULT_REFERENCE_VERSION = "REBELLION_196"
+DEFAULT_REFERENCE_VERSION = "REBELLION_198"
 
 
 def reference_root_env_var(version: str) -> str:
     """Return the environment variable name holding a Reference Root path.
 
     Args:
-        version: Game Version token such as ``REBELLION_196``.
+        version: Game Version token such as ``REBELLION_198``.
 
     Returns:
-        The variable name, for example ``SOASE_REFERENCE_ROOT_REBELLION_196``.
+        The variable name, for example ``SOASE_REFERENCE_ROOT_REBELLION_198``.
     """
     return f"SOASE_REFERENCE_ROOT_{version.upper()}"
 
@@ -34,7 +34,7 @@ def find_reference_root(version: str = DEFAULT_REFERENCE_VERSION) -> Path | None
     """Locate a Reference Root for a Game Version from the environment.
 
     Args:
-        version: Game Version token such as ``REBELLION_196``.
+        version: Game Version token such as ``REBELLION_198``.
 
     Returns:
         The directory path, or None when unset or not an existing directory.
@@ -72,7 +72,7 @@ def build_mod_tree(root: Path, files: Mapping[str, str] | None = None) -> Path:
 
 @pytest.fixture
 def reference_root() -> Path:
-    """Reference Root for Rebellion 1.96; skips the test when unavailable."""
+    """Reference Root for Rebellion 1.98; skips the test when unavailable."""
     path = find_reference_root(DEFAULT_REFERENCE_VERSION)
     if path is None:
         pytest.skip(

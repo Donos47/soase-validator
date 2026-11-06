@@ -19,7 +19,7 @@ The package targets Python 3.14+, runs offline on Windows, macOS, and Linux, and
 | Hand-written tolerant parser | Requirement 2.8 requires Diagnostics for the parsed portion of a broken file. Parser generators handle error recovery poorly for this line-oriented, indentation-structured format. |
 | Pure functions at the core | Parser, value checks, version gating, manifest parsing and sync planning are pure and deterministic, which makes them suited to property-based tests. |
 | Per-Layer index cache keyed by file signature | Requirement 14.10: reuse a Layer's index across Projects sharing that Layer. |
-| Unknown keys are errors | Matches the original plugin (Decisions 1). Definition gaps are therefore found through the Rebellion 1.96 audit tool (Requirement 13). |
+| Unknown keys are errors | Matches the original plugin (Decisions 1). Definition gaps are therefore found through the Rebellion 1.98 audit tool (Requirement 13). |
 | Dependencies kept small | `pygls>=2.1,<3` and `lsprotocol>=2025.0.0` for LSP, `mcp>=2.3,<3` (the official SDK) for MCP, `platformdirs` for the user config path, `hypothesis` and `pytest` for tests, `ruff` for lint. The latter four are resolved at project creation using ranges that include the current release. |
 
 ### Research Findings
@@ -200,13 +200,13 @@ Malformed Definitions and dangling structure references produce a `LoadWarning(f
 
 ### Version Gating (Requirements 3.9, 13.8)
 
-`GameVersion` is an enum: `VANILLA`, `ENTRENCHMENT`, `DIPLOMACY`, `REBELLION_185`, `REBELLION_193`, `REBELLION_194`, `REBELLION_196`. A bare "Rebellion" maps to `REBELLION_196`. Each version has an ordered **capability set** of gate tokens it satisfies. A gate expression is a comma/space separated token list; an element is visible when any token is satisfied (matching the legacy semantics, documented in `docs/version-gates.md` per Requirement 13.8).
+`GameVersion` is an enum: `VANILLA`, `ENTRENCHMENT`, `DIPLOMACY`, `REBELLION_185`, `REBELLION_193`, `REBELLION_194`, `REBELLION_198`. A bare "Rebellion" maps to `REBELLION_198`. Each version has an ordered **capability set** of gate tokens it satisfies. A gate expression is a comma/space separated token list; an element is visible when any token is satisfied (matching the legacy semantics, documented in `docs/version-gates.md` per Requirement 13.8).
 
 ```python
 def gate_allows(gate: str | None, version: GameVersion) -> bool: ...
 ```
 
-`REBELLION_196` starts from the `REBELLION_194` capability set. The audit may add or remove tokens via an `overrides` section in `definitions/versions.json`, each with evidence. Tokens that cannot be verified are flagged `unverified` and shown by `versions`. Non-196 versions are all labelled `unaudited`.
+`REBELLION_198` starts from the `REBELLION_194` capability set. The audit may add or remove tokens via an `overrides` section in `definitions/versions.json`, each with evidence. Tokens that cannot be verified are flagged `unverified` and shown by `versions`. Non-198 versions are all labelled `unaudited`.
 
 ### Parser (Requirement 2)
 
@@ -248,7 +248,7 @@ Parsing is exposed as `parse(text: str) -> ParsedFile` and a printer `format_tre
 
 #### Verified format facts
 
-These were checked against the Rebellion 1.96 reference set and drive the parser and the tests' generators:
+These were checked against the Rebellion 1.98 reference set and drive the parser and the tests' generators:
 
 - Entity files start with `TXT2`, then `SinsArchiveVersion 194`, then `key value` lines. Galaxy and manifest files start with `TXT`; galaxy files carry `versionNumber 193` instead of `SinsArchiveVersion`.
 - Nesting uses tab indentation in the base game files, and those files contain no space-indented lines. Parsing does not require tabs: spaces are accepted without a Diagnostic and block extent is decided by relative indentation width.
@@ -328,7 +328,7 @@ class LayerIndex:
 
 ### Manifest Service (Requirement 15)
 
-Per-type rules are data in `definitions/manifest_rules.json`. All manifests use the `TXT` header, a count line first, then one quoted name per line. The keys below were verified against the Rebellion 1.96 reference:
+Per-type rules are data in `definitions/manifest_rules.json`. All manifests use the `TXT` header, a count line first, then one quoted name per line. The keys below were verified against the Rebellion 1.98 reference:
 
 ```json
 {
@@ -412,14 +412,14 @@ Settings are resolved per setting, highest precedence first (Requirement 8.1):
 2. environment variables (`SOASE_VALIDATOR_GAME_VERSION`, `SOASE_VALIDATOR_REFERENCE_ROOT_<VERSION>`, ...),
 3. editor-supplied settings from LSP initialization options and `didChangeConfiguration` (Requirement 8.14),
 4. user-level file (`platformdirs.user_config_dir("soase-validator")/config.json`),
-5. built-in defaults: Game Version `rebellion-1.96`, Mod Root is the nearest directory containing a manifest (Requirement 8.3).
+5. built-in defaults: Game Version `rebellion-1.98`, Mod Root is the nearest directory containing a manifest (Requirement 8.3).
 
 `soase.json` example:
 
 ```json
 {
-  "gameVersion": "rebellion-1.96",
-  "referenceRoots": {"rebellion-1.96": "~/path/to/sins-rebellion-reference"},
+  "gameVersion": "rebellion-1.98",
+  "referenceRoots": {"rebellion-1.98": "~/path/to/sins-rebellion-reference"},
   "modRoots": ["."],
   "layers": ["@e4x", "@interregnum"],
   "disabledCodes": ["SOASE-C030"],
@@ -506,7 +506,7 @@ Resources: `soase://definitions/{structure}` returns the Definition as JSON (Req
 | `manifest check` | Runs all manifest checks (Requirement 15.7). |
 | `manifest sync [--write] [--remove-stale]` | See Manifest Service. |
 | `audit --reference-root PATH` | See below. |
-| `versions` | Lists Game Versions with audit status (Rebellion 1.96 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). |
+| `versions` | Lists Game Versions with audit status (Rebellion 1.98 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). |
 
 ### Audit Tool (Requirement 13)
 
@@ -591,7 +591,7 @@ class ManifestData:
 {
   "schema": 1,
   "layerPath": "...",
-  "gameVersion": "rebellion-1.96",
+  "gameVersion": "rebellion-1.98",
   "signature": "sha256:...",
   "names": {"entity": {"<casefolded>": {"name": "...", "file": "..."}}},
   "manifests": {}
@@ -660,9 +660,9 @@ For any enumeration, Game Version and candidate value, validation accepts the va
 
 **Validates: Requirements 3.2, 3.4, 3.9**
 
-### Property 10: Gate monotonicity for Rebellion 1.96
+### Property 10: Gate monotonicity for Rebellion 1.98
 
-For any gate expression without an audited override, `gate_allows(gate, REBELLION_196)` equals `gate_allows(gate, REBELLION_194)`, and any element excluded by the active version's gate is reported as an undefined key.
+For any gate expression without an audited override, `gate_allows(gate, REBELLION_198)` equals `gate_allows(gate, REBELLION_194)`, and any element excluded by the active version's gate is reported as an undefined key.
 
 **Validates: Requirements 3.9, 13.8**
 
@@ -880,7 +880,7 @@ Filesystem properties build small trees under a temporary directory with fewer e
 
 ### Golden-File Test
 
-`tests/test_golden.py` runs the audit routine over each Reference Root available through configuration or the `SOASE_REFERENCE_ROOT_<VERSION>` environment variable, and asserts zero errors for the matching Game Version. It is skipped with an explanatory message when no Reference Root is available, so CI runners without game files pass (Requirement 11.2). Only Rebellion 1.96 is audited, and other versions are tested only if a root is supplied.
+`tests/test_golden.py` runs the audit routine over each Reference Root available through configuration or the `SOASE_REFERENCE_ROOT_<VERSION>` environment variable, and asserts zero errors for the matching Game Version. It is skipped with an explanatory message when no Reference Root is available, so CI runners without game files pass (Requirement 11.2). Only Rebellion 1.98 is audited, and other versions are tested only if a root is supplied.
 
 ### Why Some Areas Skip PBT
 

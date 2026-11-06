@@ -45,7 +45,7 @@ inclusion: always
 - pytest plus Hypothesis (`@given`, `settings(max_examples=100)` minimum).
 - Property tests: one file each at `tests/properties/test_pNN_<name>.py`, tagged `# Feature: soase-validator, Property N: <text>`.
 - Strategies live in `tests/strategies/`. Shared fixtures in `tests/conftest.py`.
-- Tests needing game files read the path from config or `SOASE_REFERENCE_ROOT_<VERSION>` (for example `SOASE_REFERENCE_ROOT_REBELLION_196`) and `pytest.skip` when absent. Other tests build small synthetic mod trees under `tmp_path`.
+- Tests needing game files read the path from config or `SOASE_REFERENCE_ROOT_<VERSION>` (for example `SOASE_REFERENCE_ROOT_REBELLION_198`) and `pytest.skip` when absent. Other tests build small synthetic mod trees under `tmp_path`.
 - Performance test is marked `perf` and excluded by default.
 
 ## Common commands

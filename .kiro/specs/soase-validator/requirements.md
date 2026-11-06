@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`soase-validator` is a Java-free language tooling package for Sins of a Solar Empire (Sins 1) mod files. It supports the same game versions as the original Eclipse SoaSE plugin by zombiesrus5: Vanilla, Entrenchment, Diplomacy, and Rebellion, including the Rebellion gate levels 185, 193, and 194 used by the original plugin's definitions, and adds Rebellion 1.96 (the current game version) as its primary target. It reproduces the two capabilities of the legacy Eclipse SoaSE plugin in a form usable from modern editors and AI coding tools:
+`soase-validator` is a Java-free language tooling package for Sins of a Solar Empire (Sins 1) mod files. It supports the same game versions as the original Eclipse SoaSE plugin by zombiesrus5: Vanilla, Entrenchment, Diplomacy, and Rebellion, including the Rebellion gate levels 185, 193, and 194 used by the original plugin's definitions, and adds Rebellion 1.98 (the current game version) as its primary target. It reproduces the two capabilities of the legacy Eclipse SoaSE plugin in a form usable from modern editors and AI coding tools:
 
 1. Validation of mod files when they are saved, reported as editor diagnostics.
 2. Discovery of valid options for a field (for example `entityType`), offered as completions and hover help.
@@ -28,7 +28,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 - **Manifest**: A `*.manifest` file that lists the names the game will load for one resource type. The game loads only names listed in the manifest of the highest Layer that has one.
 - **Reference Index**: A lookup of names (entities, brushes, string IDs, sounds, and so on) built from Mod Roots and Reference Roots.
 - **Diagnostic**: A located message with a severity, produced by the Engine.
-- **Game Version**: One of Vanilla, Entrenchment, Diplomacy, Rebellion at gate level 185, 193, or 194, or Rebellion 1.96, selecting which version-gated rules apply. The gate levels follow the version tokens in the original plugin's definitions (`Rebellion185`, `Rebellion193`, `Rebellion194`). Rebellion 1.96 is the current game version and the primary target; its file format is largely identical to `SinsArchiveVersion` 194, so it starts from the gate level 194 rules and is corrected by the audit in Requirement 13. A bare "Rebellion" means Rebellion 1.96.
+- **Game Version**: One of Vanilla, Entrenchment, Diplomacy, Rebellion at gate level 185, 193, or 194, or Rebellion 1.98, selecting which version-gated rules apply. The gate levels follow the version tokens in the original plugin's definitions (`Rebellion185`, `Rebellion193`, `Rebellion194`). Rebellion 1.98 is the current game version and the primary target; its files use the template format `SinsArchiveVersion` 194 (a file-format revision, not a game version), so it starts from the gate level 194 rules and is corrected by the audit in Requirement 13. A bare "Rebellion" means Rebellion 1.98.
 
 ## Requirements
 
@@ -146,7 +146,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 
 1. THE package SHALL resolve each setting from the following sources, highest precedence first: the project file (`soase.json`) located at or above the validated file, environment variables, editor-supplied settings (see criterion 14), a user-level configuration file, and built-in defaults.
 2. THE configuration SHALL include the Game Version, an optional Reference Root for each Game Version the user wants to validate against, one or more Mod Roots, and an optional ordered list of parent Layers as described in Requirement 14.
-3. WHERE no configuration file is present, THE Engine SHALL default the Game Version to Rebellion 1.96 and SHALL treat the nearest directory containing a manifest file as the Mod Root.
+3. WHERE no configuration file is present, THE Engine SHALL default the Game Version to Rebellion 1.98 and SHALL treat the nearest directory containing a manifest file as the Mod Root.
 4. IF the configuration is invalid, THEN THE package SHALL report a clear error naming the setting and SHALL continue with defaults for unaffected settings.
 5. THE configuration SHALL allow disabling individual Diagnostic codes.
 6. THE user-level configuration file SHALL allow a default Reference Root per Game Version, so that a new project does not need to repeat the location.
@@ -225,14 +225,14 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 4. THE audit tool SHALL report Definition fields and enumeration values that never occur in any base game file, as candidates for review.
 5. WHEN the audit finds a Definition gap, THE project SHALL record the correction in the Definitions with a note identifying the Game Version and the evidence.
 6. THE audit tool SHALL produce a report in a machine-readable format and a human-readable summary.
-7. THE project SHALL complete the audit for Rebellion 1.96 before the first release. THE project SHALL NOT audit any other Game Version, and SHALL mark every other Game Version as unaudited and best-effort in the README and in the tool's version listing.
-8. THE project SHALL document its interpretation of each version-gate token (`Vanilla`, `Entrenchment`, `EntrenchmentOnly`, `Diplomacy`, `DiplomacyOnly`, `Rebellion`, `NotRebellion`, `NotDiplomacyOrRebellion`, `Rebellion185`, `Rebellion193`, `Rebellion194`), SHALL verify that interpretation against the base game files for Rebellion 1.96, and SHALL determine whether Rebellion 1.96 needs rules beyond gate level 194. Support for earlier Game Versions SHALL follow the original plugin's definitions on a best-effort basis, and tokens whose interpretation cannot be verified against available data SHALL be marked as unverified.
+7. THE project SHALL complete the audit for Rebellion 1.98 before the first release. THE project SHALL NOT audit any other Game Version, and SHALL mark every other Game Version as unaudited and best-effort in the README and in the tool's version listing.
+8. THE project SHALL document its interpretation of each version-gate token (`Vanilla`, `Entrenchment`, `EntrenchmentOnly`, `Diplomacy`, `DiplomacyOnly`, `Rebellion`, `NotRebellion`, `NotDiplomacyOrRebellion`, `Rebellion185`, `Rebellion193`, `Rebellion194`), SHALL verify that interpretation against the base game files for Rebellion 1.98, and SHALL determine whether Rebellion 1.98 needs rules beyond gate level 194. Support for earlier Game Versions SHALL follow the original plugin's definitions on a best-effort basis, and tokens whose interpretation cannot be verified against available data SHALL be marked as unverified.
 
 ### Requirement 14: Layered mod chains
 
 **User Story:** As a developer of a mod built on other mods, I want to declare the full stack of parent mods and the base game, so that references resolve correctly across the whole chain.
 
-For example, a project's Chain might be the Sins 1.96 base game, then E4X, then Interregnum, then the mod being edited.
+For example, a project's Chain might be the Sins 1.98 base game, then E4X, then Interregnum, then the mod being edited.
 
 #### Acceptance Criteria
 
@@ -315,13 +315,13 @@ For example, a project's Chain might be the Sins 1.96 base game, then E4X, then 
 2. **Definition currency.** The bundled Definitions date from 2020, so the audit in Requirement 13 is how gaps are found and fixed.
 3. **Golden-file testing** against the base game files is accepted (Requirement 11.2), and the fixes it drives are in scope.
 4. **Chains come from configuration only.** The set of enabled mods in the game changes with how a developer plays or works across projects, so a Chain is never read from `EnabledMods.txt` or other per-user game state.
-5. **Primary target is Rebellion 1.96.** Its file format is largely identical to `SinsArchiveVersion` 194, so the gate level 194 rules are the starting point.
+5. **Primary target is Rebellion 1.98.** Its files use the template format `SinsArchiveVersion` 194, which is a file-format revision and not a game version, so the gate level 194 rules are the starting point.
 6. **Manifest behaviour.** A file must appear in the manifest of the highest loaded Layer to be loaded, and an unlisted file crashes the game. Overlay mods work around this by having the base mod list reserved entries for files that only the overlay supplies.
 7. **Manifest checking and synchronisation are in scope** (Requirement 15), replacing the legacy single-purpose Python script.
-8. **The 1.94 reference set stands in for 1.96.** The base game data in the available reference folder is treated as the Rebellion 1.96 reference, since the two are close enough for audit purposes.
-9. **Manifest types differ in structure, not in rule.** Surveying the reference set and the E4X and Interregnum mods showed six manifest types with different key names. In the base game, `entity.manifest` omits 29 of 1,872 entity files, none referenced by any loaded file; `galaxy.manifest` omits 9 of 126 files (the front end, tutorials, and a random template); `skybox.manifest` names the 7 meshes used as skybox backdrops out of 430 `.mesh` files; and the `brush`, `playerPictures`, and `playerThemes` manifests match their files exactly. The maintainer regards the base game's unlisted files as artifacts of its development, so for mod validation a governed file missing from its manifest is an error for every manifest type (Requirement 15.3).
+8. **The reference data is Rebellion 1.98.** The audit and the reference checks use a Rebellion 1.98 base game copy with its binary data files converted to text by the game's own `ConvertData_Rebellion` tool. Compared with the earlier 1.94 data it has the same `GameInfo`, `Galaxy`, `Mesh` and `Sound` file lists, the same `entityType` values and an identical `entity.manifest`, and adds only `explosion_techstarbase2.particle` and `playersetup.window`.
+9. **Manifest types differ in structure, not in rule.** Surveying the Rebellion 1.98 reference set and the E4X and Interregnum mods showed six manifest types with different key names. In the base game, `entity.manifest` omits 29 of 1,872 entity files, none referenced by any loaded file; `galaxy.manifest` omits 9 of 126 files (the front end, tutorials, and a random template); `skybox.manifest` names the 7 meshes used as skybox backdrops out of 430 `.mesh` files; and the `brush`, `playerPictures`, and `playerThemes` manifests match their files exactly. The maintainer regards the base game's unlisted files as artifacts of its development, so for mod validation a governed file missing from its manifest is an error for every manifest type (Requirement 15.3).
 10. **Credits for incorporated tooling.** zombiesrus5 and GoaFan77 are credited for the portions of their tooling that this project incorporates (Requirements 12 and 16).
-11. **Version gates are best effort.** Most mod development targets current Rebellion, so Rebellion 1.96 is verified against the reference data and earlier versions follow zombiesrus5's definitions on a best-effort basis (Requirement 13.8). Only Rebellion 1.96 is audited (Requirement 13.7).
+11. **Version gates are best effort.** Most mod development targets current Rebellion, so Rebellion 1.98 is verified against the reference data and earlier versions follow zombiesrus5's definitions on a best-effort basis (Requirement 13.8). Only Rebellion 1.98 is audited (Requirement 13.7).
 12. **Per-folder configuration.** A Chain is set by the nearest `soase.json`. A repository of overlay mods places one in each overlay folder, and no path-pattern chain selection is provided (Requirement 14.18).
 13. **Permissions are handled outside this project.** The maintainer arranges any redistribution permission with the original authors separately; the project records credit (Requirements 12 and 16).
 14. **The project's original code is MIT licensed** (Requirement 16.7).

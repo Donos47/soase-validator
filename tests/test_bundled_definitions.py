@@ -125,5 +125,5 @@ def test_manifest_rules_content() -> None:
 
 def test_versions_file_present() -> None:
     versions = _read("versions.json")
-    assert versions["audit_status"]["rebellion-1.96"] == "audited"
+    assert versions["audit_status"]["rebellion-1.98"] == "audited"
     assert "overrides" in versions

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The plan builds the shared Engine bottom-up (model, versions, definitions, parser, validator, configuration, reference index, manifests, completion), then the Engine facade, then the three front ends (LSP, MCP, CLI), then the audit tool and the Rebellion 1.96 audit, and finally documentation and distribution checks. The implementation language is Python 3.14, as the design specifies. Each step builds on the previous ones and ends wired into the facade or a front end.
+The plan builds the shared Engine bottom-up (model, versions, definitions, parser, validator, configuration, reference index, manifests, completion), then the Engine facade, then the three front ends (LSP, MCP, CLI), then the audit tool and the Rebellion 1.98 audit, and finally documentation and distribution checks. The implementation language is Python 3.14, as the design specifies. Each step builds on the previous ones and ends wired into the facade or a front end.
 
 Conventions for every task:
 
@@ -11,7 +11,7 @@ Conventions for every task:
 - Python code uses 4-space indents, double quotes, type hints, `snake_case` names, underscore-prefixed private helpers, and module and function docstrings with Args, Returns and Raises sections.
 - Run `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` before finishing a task. Use `get_diagnostics` for quick file checks of JSON and Python files before writing ad hoc scripts.
 - Each property test lives in its own file `tests/properties/test_pNN_<name>.py`, uses `@given` with `settings(max_examples=100)` at minimum, and carries the tag comment `# Feature: soase-validator, Property N: <property text>`.
-- The reference game files live wherever the user keeps them and are supplied through `--reference-root`, configuration, or `SOASE_REFERENCE_ROOT_<VERSION>`. They are read in place only and MUST NOT be copied into the repository, and no test may embed their content. Tests that need them read the path from configuration or `SOASE_REFERENCE_ROOT_REBELLION_196` (and the other version variants) and call `pytest.skip` with a message when it is absent. Other tests build tiny synthetic mod trees.
+- The reference game files live wherever the user keeps them and are supplied through `--reference-root`, configuration, or `SOASE_REFERENCE_ROOT_<VERSION>`. They are read in place only and MUST NOT be copied into the repository, and no test may embed their content. Tests that need them read the path from configuration or `SOASE_REFERENCE_ROOT_REBELLION_198` (and the other version variants) and call `pytest.skip` with a message when it is absent. Other tests build tiny synthetic mod trees.
 - No source file, test, fixture, default configuration or documentation example may contain a machine-specific absolute path. Use placeholders such as `~/path/to/sins-rebellion-reference`.
 
 ## Tasks
@@ -42,12 +42,12 @@ Conventions for every task:
     - **Validates: Requirements 8.5**
 
   - [x] 2.3 Implement `engine/versions.py`
-    - Define the `GameVersion` enum (Vanilla, Entrenchment, Diplomacy, Rebellion 185, 193, 194, 196), map bare "Rebellion" to 1.96, and implement capability sets and `gate_allows(gate, version)` over the gate tokens
-    - Make Rebellion 1.96 start from the 194 capability set and load optional `overrides` and `unverified` token lists and per-version audit status from `definitions/versions.json`
+    - Define the `GameVersion` enum (Vanilla, Entrenchment, Diplomacy, Rebellion 185, 193, 194, 198), map bare "Rebellion" to 1.98, and implement capability sets and `gate_allows(gate, version)` over the gate tokens
+    - Make Rebellion 1.98 start from the 194 capability set and load optional `overrides` and `unverified` token lists and per-version audit status from `definitions/versions.json`
     - _Requirements: 3.9, 13.7, 13.8_
 
   - [x] 2.4 Write property test for gate monotonicity
-    - **Property 10: Gate monotonicity for Rebellion 1.96**
+    - **Property 10: Gate monotonicity for Rebellion 1.98**
     - **Validates: Requirements 3.9, 13.8**
 
 - [x] 3. Definitions: registry, converter and bundled data
@@ -162,7 +162,7 @@ Conventions for every task:
 - [ ] 7. Configuration and chain resolution
   - [ ] 7.1 Implement `engine/config.py`
     - Implement `ResolvedSettings`, `NumericPrefs`, `ManifestPrefs`, `ConfigProblem` and per-setting `SettingSource`
-    - Resolve per setting in the order project `soase.json` (nearest, falling through to the next one above), environment variables, editor settings, user file via `platformdirs`, defaults (Rebellion 1.96, nearest manifest directory as Mod Root)
+    - Resolve per setting in the order project `soase.json` (nearest, falling through to the next one above), environment variables, editor settings, user file via `platformdirs`, defaults (Rebellion 1.98, nearest manifest directory as Mod Root)
     - Resolve relative paths against the containing file, expand `~` and `%VAR%`/`$VAR`, report invalid settings by name and fall back to defaults, support `disabledCodes`, `defaultReferenceRoots` and `aliases`, and implement `effective_config`
     - Implement helpers that write `soase.json`/user-file values for Reference Roots and Layers (used by `init`, `config` and the MCP tools)
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.12, 8.14, 8.15, 14.7, 14.18_
@@ -366,14 +366,14 @@ Conventions for every task:
     - _Requirements: 15.7, 15.8, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
   - [ ] 15.3 Add the `versions` command
-    - List Game Versions with audit status (Rebellion 1.96 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`
+    - List Game Versions with audit status (Rebellion 1.98 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`
     - _Requirements: 13.7, 13.8_
 
   - [ ] 15.4 Write CLI tests
     - Cover `init` with and without a root and with a user default, `set-reference-root` warnings, dry-run default for `manifest sync`, `--write` backup creation, `--remove-stale` listing and `versions` output
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 13.7, 15.7, 15.8_
 
-- [ ] 16. Audit tool and Rebellion 1.96 audit
+- [ ] 16. Audit tool and Rebellion 1.98 audit
   - [ ] 16.1 Implement `audit/audit.py`
     - Validate every file in a Reference Root with no Chain beyond that root, classify diagnostics as likely Definition gap (key or value in at least `N` distinct files, default 3) or likely file problem, list keys and enum values seen in files but absent from Definitions, list Definition fields and enum values never seen, and write `audit-report.json` and a human summary to a git-ignored output directory
     - Exit non-zero with a clear message when no Reference Root is supplied or configured
@@ -387,14 +387,14 @@ Conventions for every task:
     - **Property 34: Audit classification and coverage sets**
     - **Validates: Requirements 13.2, 13.3, 13.4**
 
-  - [ ] 16.4 Run the Rebellion 1.96 audit and correct the Definitions
-    - Run the audit with `--reference-root` or `SOASE_REFERENCE_ROOT_REBELLION_196` using the path the user supplies (ask the user for it if it is not configured), reading it in place and writing reports only to the git-ignored output directory
+  - [ ] 16.4 Run the Rebellion 1.98 audit and correct the Definitions
+    - Run the audit with `--reference-root` or `SOASE_REFERENCE_ROOT_REBELLION_198` using the path the user supplies (ask the user for it if it is not configured), reading it in place and writing reports only to the git-ignored output directory
     - Fix each Definition gap in the bundled JSON, record every correction with the Game Version and evidence in `PROVENANCE.json`, and re-run until the audit reports zero errors
     - Do not copy any reference file or content into the repository
     - _Requirements: 13.5, 13.7, 11.2, 12.6_
 
   - [ ] 16.5 Verify version gates and derive the base-game-unlisted list
-    - Verify each gate token interpretation against the Rebellion 1.96 data, determine whether 1.96 needs rules beyond gate level 194, record overrides and `unverified` tokens in `versions.json`, and write `docs/version-gates.md`
+    - Verify each gate token interpretation against the Rebellion 1.98 data, determine whether 1.98 needs rules beyond gate level 194, record overrides and `unverified` tokens in `versions.json`, and write `docs/version-gates.md`
     - Derive the list of base-game files left unlisted by each manifest and store it in `manifest_rules.json` as names only, with no game content
     - _Requirements: 13.7, 13.8, 15.3.4_
 

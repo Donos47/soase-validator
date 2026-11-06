@@ -5,7 +5,7 @@ guarded by a gate is visible for a Game Version when any token is satisfied.
 A missing or empty gate allows every version.
 
 Each Game Version has a capability set: the gate tokens it satisfies.
-Rebellion 1.96 starts from the Rebellion 194 set. The optional
+Rebellion 1.98 starts from the Rebellion 194 set. The optional
 ``definitions/versions.json`` file can add or remove tokens for a version
 (``overrides``), flag tokens as ``unverified``, and record audit status.
 
@@ -32,11 +32,11 @@ class GameVersion(Enum):
     REBELLION_185 = "rebellion-185"
     REBELLION_193 = "rebellion-193"
     REBELLION_194 = "rebellion-194"
-    REBELLION_196 = "rebellion-1.96"
+    REBELLION_198 = "rebellion-1.98"
 
 
 #: Version used when a bare "Rebellion" is given.
-DEFAULT_REBELLION = GameVersion.REBELLION_196
+DEFAULT_REBELLION = GameVersion.REBELLION_198
 
 #: Every gate token the tool recognises.
 GATE_TOKENS: frozenset[str] = frozenset(
@@ -82,8 +82,8 @@ _BASE_CAPABILITIES: dict[GameVersion, frozenset[str]] = {
         }
     ),
 }
-# Rebellion 1.96 starts from the 194 capability set.
-_BASE_CAPABILITIES[_V.REBELLION_196] = _BASE_CAPABILITIES[_V.REBELLION_194]
+# Rebellion 1.98 starts from the 194 capability set.
+_BASE_CAPABILITIES[_V.REBELLION_198] = _BASE_CAPABILITIES[_V.REBELLION_194]
 
 _SPLIT = re.compile(r"[,\s]+")
 _NORMALIZE = re.compile(r"[\s_.\-]+")
@@ -96,11 +96,11 @@ _ALIASES: dict[str, GameVersion] = {
     "rebellion185": _V.REBELLION_185,
     "rebellion193": _V.REBELLION_193,
     "rebellion194": _V.REBELLION_194,
-    "rebellion196": _V.REBELLION_196,
+    "rebellion198": _V.REBELLION_198,
     "185": _V.REBELLION_185,
     "193": _V.REBELLION_193,
     "194": _V.REBELLION_194,
-    "196": _V.REBELLION_196,
+    "198": _V.REBELLION_198,
 }
 
 
@@ -122,10 +122,10 @@ class VersionData:
 def parse_game_version(text: str) -> GameVersion | None:
     """Parse a user-supplied version name.
 
-    A bare "Rebellion" maps to Rebellion 1.96.
+    A bare "Rebellion" maps to Rebellion 1.98.
 
     Args:
-        text: Name such as ``"rebellion"``, ``"Rebellion 1.96"`` or ``"194"``.
+        text: Name such as ``"rebellion"``, ``"Rebellion 1.98"`` or ``"194"``.
 
     Returns:
         The matching GameVersion, or None when the name is not recognised.

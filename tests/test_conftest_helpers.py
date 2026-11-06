@@ -22,9 +22,9 @@ def test_build_mod_tree_rejects_escaping_paths(tmp_path) -> None:
 
 
 def test_find_reference_root_reads_env(monkeypatch, tmp_path) -> None:
-    var = reference_root_env_var("rebellion_196")
-    assert var == "SOASE_REFERENCE_ROOT_REBELLION_196"
+    var = reference_root_env_var("rebellion_198")
+    assert var == "SOASE_REFERENCE_ROOT_REBELLION_198"
     monkeypatch.delenv(var, raising=False)
-    assert find_reference_root("REBELLION_196") is None
+    assert find_reference_root("REBELLION_198") is None
     monkeypatch.setenv(var, str(tmp_path))
-    assert find_reference_root("REBELLION_196") == tmp_path
+    assert find_reference_root("REBELLION_198") == tmp_path
