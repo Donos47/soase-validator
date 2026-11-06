@@ -123,23 +123,23 @@ Conventions for every task:
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
 - [ ] 5. Primitives and validator
-  - [-] 5.1 Implement `engine/primitives.py`
+  - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
     - Read the `key = "value"` form in the parser, correct `GroupType.condition` `param` to `Any`, add the `count=N` constraints to the bundled Definitions and record each in `PROVENANCE.json`
     - _Requirements: 3.3, 3.10_
 
-  - [~] 5.2 Write property test for primitive type acceptance
+  - [ ] 5.2 Write property test for primitive type acceptance
     - Test each checker over (value, prefs, constraint): accept exactly the shapes in the design (Primitive rules and evidence), reject near-miss shapes; `check_orientation` takes the header `Node`; a malformed `constraint` raises `ValueError` in `check_position` and is reported by `validate_constraint`
     - **Property 7: Primitive type acceptance**
     - **Validates: Requirements 3.3**
 
-  - [~] 5.3 Write property test for numeric strictness
+  - [ ] 5.3 Write property test for numeric strictness
     - Cover `integer_strict` and `decimal_allow_integer`, and check that exponents, a leading `+` and a trailing `.` are rejected for every preference setting
     - **Property 8: Numeric strictness**
     - **Validates: Requirements 3.10**
 
-  - [x] 5.4 Implement `engine/validator.py`
+  - [ ] 5.4 Implement `engine/validator.py`
     - Select the root structure by extension and by `entityType` for `.entity` files (`SOASE-V010`), walk nodes with a `StructureCursor`, report unknown keys (`SOASE-V020`), iterative count mismatches and limits (`SOASE-V030`), missing required fields (`SOASE-V040`), evaluate `condition_field` branches, apply version gates to structures, fields and enum values, and apply numeric preferences
     - Pass each field's `constraint` to its checker and report `validate_constraint` problems as Definition load warnings; call `check_orientation` with the header node
     - Treat an `iterative_field` as a count line followed by that many repeats, where a repeat may be a sequence of sibling lines (for example particle `NumEmitters N` followed by N repeats of an `EmitterType "x"` line plus an `EmitterContents` block), not only a named block; block extents still come from indentation

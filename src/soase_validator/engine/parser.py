@@ -9,7 +9,8 @@ Values are quoted strings, ``TRUE``/``FALSE``, numbers, bare hexadecimal
 tokens (colors such as ``ffffffff``) and bracket lists separated by commas or
 whitespace. A line that starts with ``[`` is a keyless row. The form
 ``key = "value"`` (``.constants``) is read as ``key "value"``; any other use of
-``=`` (for example ``key= "v"``) is reported as ``SOASE-P002``.
+``=`` (for example ``key= "v"``) is reported as ``SOASE-P002``. Any text
+after a complete quoted value on the same line is also ``SOASE-P002``.
 
 Block extents are decided purely by relative indentation using an indent
 stack. Tabs and spaces each count as one unit of indentation width.
@@ -367,6 +368,9 @@ def parse(
                 else:
                     value = StringValue(rest[1:close])
                     value_span = Span(lineno, rest_off, lineno, rest_off + close + 1)
+                    # Any text after the closing quote (stuck to it or
+                    # whitespace separated) makes the line unparseable.
+                    bad = bool(rest[close + 1 :].strip())
             elif rest[0] == "[":
                 value = _parse_list(rest)
                 bad = value is None

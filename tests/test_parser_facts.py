@@ -179,3 +179,36 @@ def test_equals_without_quoted_value_is_still_skipped() -> None:
         p = parse(f"TXT2\n{line}\nz 1\n")
         assert [d.code for d in p.diagnostics] == ["SOASE-P002"], line
         assert [n.key for n in p.nodes] == ["z"], line
+
+
+def test_text_after_closing_quote_is_skipped_as_p002() -> None:
+    # Shapes of the 6 Rebellion 1.98 lines (5 `.str`, 1 `.window`) plus the
+    # whitespace separated shapes, all reported by user decision.
+    cases = {
+        "doubled closing quote": 'Value "text""',
+        "letters after the quote": 'fontId "ButtonLabel"new',
+        "second string": 'a "x" "y"',
+        "equals form with tail": 'k = "v" tail',
+    }
+    for name, line in cases.items():
+        p = parse(f"TXT2\n{line}\nz 1\n")
+        assert [d.code for d in p.diagnostics] == ["SOASE-P002"], name
+        assert [n.key for n in p.nodes] == ["z"], name
+        assert not p.complete, name
+
+
+def test_trailing_text_p002_span_covers_the_line() -> None:
+    d = parse('TXT2\n\ta "x" "y"\n').diagnostics[0]
+    assert (d.range.start.line, d.range.start.col) == (1, 1)
+    assert (d.range.end.line, d.range.end.col) == (1, 10)
+
+
+def test_unterminated_quote_stays_p003_not_p002() -> None:
+    p = parse('TXT2\na "x" "y\nb "open\n')
+    assert [d.code for d in p.diagnostics] == ["SOASE-P002", "SOASE-P003"]
+
+
+def test_complete_quoted_values_still_parse() -> None:
+    p = parse('TXT2\na ""\nb "v"\nc = "v"\nd "v"   \n')
+    assert not p.diagnostics and p.complete
+    assert [n.key for n in p.nodes] == ["a", "b", "c", "d"]

@@ -71,6 +71,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 12. WHEN a line has the form key, whitespace, `=`, whitespace, quoted value (the `.constants` form `key = "value"`), THE Engine SHALL parse it as the same key and value as `key "value"`, with the key span covering the key and the value span covering the quoted value.
 13. IF a key contains `=`, or an `=` appears in any shape other than the one in criterion 12 (`key= "v"`, `key ="v"`, `key = 5`, a bare `=`), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
 14. IF a value is none of the forms in criterion 3 (including its sub-criteria), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line.
+15. IF any text follows a complete quoted value on the same line, whether stuck to the closing quote (`Value "text""`) or separated by whitespace (`a "x" "y"`, `a = "v" tail`), THEN THE Engine SHALL report `SOASE-P002` on the line, skip the line, and continue with the next line. An unterminated quote remains `SOASE-P003` (criterion 3.4).
 
 ### Requirement 3: Structural and value validation
 
@@ -344,8 +345,3 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
 12. **Per-folder configuration.** A Chain is set by the nearest `soase.json`. A repository of overlay mods places one in each overlay folder, and no path-pattern chain selection is provided (Requirement 14.18).
 13. **Permissions are handled outside this project.** The maintainer arranges any redistribution permission with the original authors separately; the project records credit (Requirements 12 and 16).
 14. **The project's original code is MIT licensed** (Requirement 16.7).
-
-## Open Questions
-
-1. **Text after a complete quoted value (Requirement 2).** Six lines in the Rebellion 1.98 reference files have text directly after the closing quote (5 in `.str`, 1 in `.window`). The Engine currently reads up to the first closing quote and drops the rest without a Diagnostic. Whether to report these lines is undecided (see design.md, Verified format facts).
-
