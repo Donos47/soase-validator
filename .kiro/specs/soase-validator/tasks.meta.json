@@ -926,6 +926,92 @@
         "chatSessionId": "sess_8a2a628c-4252-4e2d-af16-3a8685b84952",
         "timestamp": 1794071974458
       }
+    ],
+    "12.1 Implement `engine/facade.py`": [
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072024353
+      },
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072815212
+      }
+    ],
+    "12.2 Write Engine integration tests": [
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072817507
+      },
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072819572
+      }
+    ],
+    "12.3 Write the opt-in performance check": [
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072817831
+      },
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072819870
+      }
+    ],
+    "12. Engine facade": [
+      {
+        "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
+        "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
+        "timestamp": 1794072819923
+      }
+    ],
+    "13.1 Implement `lsp/server.py`": [
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794072884859
+      },
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794072965407
+      }
+    ],
+    "13.2 Add code actions, file watching and configuration reload": [
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794072974543
+      },
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794073237536
+      }
+    ],
+    "13.3 Write LSP tests with the pygls test client": [
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794073238081
+      },
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794073437264
+      }
+    ],
+    "13. LSP server": [
+      {
+        "executionId": "20295615-ebae-4d2b-8ca9-73e2ed9e7656",
+        "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
+        "timestamp": 1794073437349
+      }
     ]
   }
 }

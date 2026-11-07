@@ -356,37 +356,37 @@ Conventions for every task:
     - Cover `entityType` completion, hover with no Definition, hover on overridden references and go-to-definition across Layers
     - _Requirements: 6.7, 7.3, 14.12, 14.13_
 
-- [ ] 12. Engine facade
-  - [ ] 12.1 Implement `engine/facade.py`
+- [x] 12. Engine facade
+  - [x] 12.1 Implement `engine/facade.py`
     - Implement the `Engine` class with the methods in the design: settings and effective config, `validate_file`, `validate_directory`, `complete`, `hover`, `definition`, `field_help`, `entity_types`, `on_file_saved`, `on_layer_files_changed`, `manifest_check`, `manifest_plan`, `manifest_apply`
     - Combine parser, validator, chain and manifest diagnostics, apply disabled codes in one place, report optional override informational diagnostics when `reportOverrides` is set, cache the Registry, indexes and Chain, and catch unexpected exceptions logging to stderr, returning partial diagnostics plus `SOASE-X001`
     - Validate only files within the Project's Mod Roots and rebuild indexes when the Game Version changes
     - _Requirements: 4.2.1, 4.7, 4.8, 8.5, 9.6, 11.5, 14.3, 14.15, 15.7_
 
-  - [ ] 12.2 Write Engine integration tests
+  - [x] 12.2 Write Engine integration tests
     - Cover internal-error recovery, `validate_directory`, `on_file_saved` dependent discovery, overlay projects, and per-folder `soase.json` chains using synthetic trees
     - _Requirements: 4.8, 11.5, 14.11, 14.18, 14.19_
 
-  - [ ] 12.3 Write the opt-in performance check
+  - [x] 12.3 Write the opt-in performance check
     - Add a test marked `perf` (excluded from the default run) that checks a typical `.entity` validation completes within 500 ms on a warm index using a synthetic file, and skips when the reference root is absent
     - _Requirements: 5.6_
 
-- [ ] 13. LSP server
-  - [ ] 13.1 Implement `lsp/server.py`
+- [x] 13. LSP server
+  - [x] 13.1 Implement `lsp/server.py`
     - Build the pygls server with full-text sync, publishing diagnostics on `didOpen` and `didSave`, clearing on `didClose`, completion, hover and definition handlers, running Engine calls via `asyncio.to_thread`, and logging to stderr only
     - Convert Engine `Diagnostic` to `lsprotocol` types (info maps to Information) and wire the `soase-validator-lsp` entry point
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 7.1, 14.13_
 
-  - [ ] 13.2 Add code actions, file watching and configuration reload
+  - [x] 13.2 Add code actions, file watching and configuration reload
     - Offer the "Add to manifest" code action for `SOASE-M010` only when the governing manifest is in the Project, using `plan_sync` to build the `WorkspaceEdit`
     - Handle `didChangeWatchedFiles` for Layer files, `soase.json` and the user file, and handle initialization options and `didChangeConfiguration` as the editor settings tier, re-validating open files and dependents
     - _Requirements: 4.8, 8.13, 8.14, 14.11, 15.9_
 
-  - [ ] 13.3 Write LSP tests with the pygls test client
+  - [x] 13.3 Write LSP tests with the pygls test client
     - Cover publish on open and save, clearing on close and after a fix, completion, hover, definition, the code action and configuration reload
     - _Requirements: 5.1, 5.3, 5.4, 5.5, 8.13, 15.9_
 
-- [ ] 14. MCP server
+- [~] 14. MCP server
   - [ ] 14.1 Implement `mcp_server/app.py` core tools
     - Using `MCPServer` from `mcp.server`, register `validate_file`, `validate_directory`, `complete`, `field_help`, `list_entity_types`, `manifest_check` and `manifest_sync` (dry run by default) and the `soase://definitions/{structure}` resource, returning diagnostics as structured data with one-based `file`, `line`, `column`, `severity`, `code`, `message`
     - Keep all SDK-specific code in this module, keep stdout clean for the stdio transport, and wire the `soase-validator-mcp` entry point
