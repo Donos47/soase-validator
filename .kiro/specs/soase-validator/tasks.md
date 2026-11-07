@@ -404,7 +404,7 @@ Conventions for every task:
     - Invoke each tool function directly and through the SDK in-memory client, covering validation, completion, help, entity types, config tools (including the Reference Root warnings), manifest tools (including the lower-Layer advisories of `manifest_sync`), `versions`, resources, and identical diagnostics to the Engine
     - _Requirements: 4.6.3, 8.11, 8.15, 8.16, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.8, 13.7, 15.8.5, 15.10_
 
-- [ ] 15. Command-line interface
+- [x] 15. Command-line interface
   - [x] 15.1 Implement `cli/main.py` with `init` and `config`
     - Add the argparse entry point, `init` (options and TTY prompts, using the user-level default Reference Root and printing which path was used, succeeding without a root and printing how to add one), `config set-reference-root` (warn when the path is missing or not game data but still save) and `config show`
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 8.15_
@@ -421,7 +421,7 @@ Conventions for every task:
     - Cover `init` with and without a root and with a user default, `set-reference-root` warnings, dry-run default for `manifest sync`, `--write` backup creation, `--remove-stale` listing and `versions` output
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 13.7, 15.7, 15.8_
 
-  - [ ] 15.5 Add the `validate` command and its tests
+  - [x] 15.5 Add the `validate` command and its tests
     - Add `soase-validator validate PATH...` taking files and directories, calling `Engine.validate_file` and `Engine.validate_directory` (no validation logic in the CLI), with `--game-version`, `--path`, and `--format text|json` (text is `file:line:column: severity code message` with one-based positions; json uses the MCP structured fields `file`, `line`, `column`, `severity`, `code`, `message`); exit 1 when any Diagnostic is an error, otherwise 0
     - Tests: a file and a directory give the same Diagnostics as the MCP tools for the same input; text and JSON output; exit status for errors, warnings only and clean input; a missing path gives a clear message and a non-zero exit; no Reference Root configured reports unresolved references against the Project and declared Layers
     - Update the CLI section of `README.md` and remove its statement that the CLI has no validation command

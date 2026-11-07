@@ -97,9 +97,22 @@ soase-validator versions
   changed manifest after copying the old one to `<name>.old`. It adds missing
   names and removes stale entries only with `--remove-stale`.
 
-File validation is available through the language server and the MCP server
-(`validate_file`, `validate_directory`). The command line has no validation
-command yet.
+- `validate` checks files and directories with the same Engine as the MCP
+  `validate_file` and `validate_directory` tools, so the Diagnostics are
+  identical.
+
+```
+soase-validator validate PATH... [--path DIR] [--game-version VERSION] [--format text|json]
+```
+
+  Text output has one line per Diagnostic, `file:line:column: severity code
+  message`, with one-based positions. `--format json` prints
+  `{"diagnostics": [...]}` using the MCP fields (`file`, `line`, `column`,
+  `severity`, `code`, `message`, `end_line`, `end_column`). Without a `PATH`,
+  the directory given by `--path` (default: current) is validated.
+  `--game-version` applies when no `soase.json` or environment variable sets
+  one. The exit status is 1 when any Diagnostic is an error, 2 for a missing
+  path or an unknown Game Version, and 0 otherwise. Errors go to stderr.
 
 ## Configuration
 

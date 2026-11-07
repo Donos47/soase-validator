@@ -5,6 +5,7 @@ made by the Engine facade.
 """
 
 import argparse
+import json
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -233,6 +234,70 @@ def _format_diagnostic(diagnostic: Diagnostic) -> str:
     )
 
 
+def _collect_diagnostics(paths: Sequence[Path], engine: Engine) -> list[Diagnostic]:
+    """Validate files and directories through the Engine.
+
+    Args:
+        paths: Existing files and directories.
+        engine: The Engine.
+
+    Returns:
+        The Diagnostics in argument order; files of a directory follow the
+        Engine's order.
+    """
+    found: list[Diagnostic] = []
+    for path in paths:
+        if path.is_dir():
+            for diagnostics in engine.validate_directory(path).values():
+                found.extend(diagnostics)
+        else:
+            found.extend(engine.validate_file(path))
+    return found
+
+
+def _run_validate(args: argparse.Namespace, engine: Engine) -> int:
+    """Run ``validate``: print the Diagnostics of files and directories.
+
+    Args:
+        args: The parsed arguments.
+        engine: The Engine.
+
+    Returns:
+        1 when any Diagnostic is an error, 2 when a path does not exist or
+        the Game Version is unknown, otherwise 0.
+    """
+    paths = [Path(item) for item in (args.paths or [args.path])]
+    missing = [path for path in paths if not path.exists()]
+    if missing:
+        for path in missing:
+            _print_error(f"path does not exist: {path}")
+        return 2
+    if args.game_version is not None:
+        try:
+            version = _parse_version(args.game_version)
+        except ValueError as error:
+            _print_error(str(error))
+            return 2
+        engine.set_editor_settings({"gameVersion": version.value})
+    diagnostics = _collect_diagnostics(paths, engine)
+    if args.format == "json":
+        # The MCP module imports the SDK, so only the JSON format loads it.
+        from soase_validator.mcp_server.app import diagnostic_to_dict
+
+        print(json.dumps({"diagnostics": [diagnostic_to_dict(item) for item in diagnostics]}))
+    else:
+        for diagnostic in diagnostics:
+            start = diagnostic.range.start
+            print(
+                f"{diagnostic.file}:{start.line + 1}:{start.col + 1}: "
+                f"{diagnostic.severity.value} {diagnostic.code} {diagnostic.message}"
+            )
+    errors = sum(1 for item in diagnostics if item.severity is Severity.ERROR)
+    if args.format == "text":
+        print(f"{len(diagnostics)} diagnostics, {errors} errors", file=sys.stderr)
+    return 1 if errors else 0
+
+
 def _run_manifest_check(args: argparse.Namespace, engine: Engine) -> int:
     """Run ``manifest check``: print manifest Diagnostics.
 
@@ -360,6 +425,24 @@ def build_parser() -> argparse.ArgumentParser:
     show = config_commands.add_parser("show", help="print the effective configuration")
     show.add_argument("--path", default=".", help="project file or directory (default: current)")
     show.set_defaults(handler=_run_config_show)
+
+    validate = commands.add_parser(
+        "validate", help="validate mod files and directories; exit 1 when there are errors"
+    )
+    validate.add_argument("paths", nargs="*", metavar="PATH", help="files or directories")
+    validate.add_argument(
+        "--path",
+        default=".",
+        help="directory validated when no PATH is given (default: current)",
+    )
+    validate.add_argument(
+        "--game-version",
+        help="Game Version used when no soase.json or environment setting names one",
+    )
+    validate.add_argument(
+        "--format", choices=("text", "json"), default="text", help="output format (default: text)"
+    )
+    validate.set_defaults(handler=_run_validate)
 
     manifest = commands.add_parser("manifest", help="check or sync *.manifest files")
     manifest_commands = manifest.add_subparsers(
