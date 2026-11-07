@@ -319,6 +319,7 @@ Planned, not yet available:
 - A VS Code extension that starts the language server, registers the
   supported file types and exposes the `soase.json` settings in the editor.
 - Syntax coloring for the supported file types in code editors.
+- Research tier cost standardization
 
 ## Game files
 
