@@ -27,5 +27,7 @@ def test_modules_import(module: str) -> None:
     importlib.import_module(module)
 
 
-def test_cli_entry_point_runs() -> None:
-    assert cli_main([]) == 0
+def test_cli_version_flag_exits_cleanly() -> None:
+    with pytest.raises(SystemExit) as raised:
+        cli_main(["--version"])
+    assert raised.value.code == 0
