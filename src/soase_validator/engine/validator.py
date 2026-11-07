@@ -85,14 +85,17 @@ Walk rules
   at a key path listed in ``FILE_LOCAL_NAME_SOURCES`` for its kind and the
   file's extension resolves without asking the lookup. Matching is
   case-insensitive.
-* Shallow members: a line with a value that follows a block repeat at the
-  repeat's own indentation and is unknown to the enclosing block, but is a
-  field of that repeat block, belongs to that repeat, together with the
-  deeper lines after it (the galaxy planet ``owner`` shape). The repeat
-  block validates them as its own members, so they give no unknown-key,
-  count, order or duplicate findings. The shape is reported once, as
-  ``SOASE-V080`` on the first deeper line after the shallow line. Any
-  other unknown key keeps ``SOASE-V020``.
+* Shallow members: a line with a value at the indentation of the block
+  that ends right before it, unknown to the enclosing block (not a field,
+  count key or repeat key there) but a field or count key of that block,
+  belongs to that block, together with the deeper lines after it (the
+  galaxy planet ``owner`` shape, and a count line one level short in any
+  block whose lines sit one level deeper). The block validates them as its
+  own members, so they give no unknown-key, count, order or duplicate
+  findings. The shape is reported once, as ``SOASE-V080`` on the first
+  deeper line after the shallow line, or on the shallow line itself when
+  a block (not a counted repeat) has no deeper line after it. Any other
+  unknown key keeps ``SOASE-V020``.
 * Indentation: after the walk, every line deeper than the line before it
   is checked. A block header (no value) may be followed by a deeper line;
   so may a count line, by the first repeat of its run exactly one level
@@ -659,6 +662,8 @@ class _Walker:
         self._unknown_ids: set[int] = set()
         self._block_keys: dict[int, frozenset[str]] = {}
         self._runs: dict[int, list[Node]] = {}
+        self._shallow: dict[int, Node] = {}
+        self._shallow_more: set[int] = set()
         self._roots: Sequence[Node] = ()
         self._declared: dict[str, tuple[str, ...]] = {}
 
@@ -959,7 +964,7 @@ class _Walker:
                 self._place(cursor, node, nodes, label)
                 self._matched.add(id(node))
                 cursor.seen.add(node.key)
-                self._check_node(definition, node, nodes, label)
+                i += self._check_node(definition, node, nodes, label, cursor, i + 1)
             i += 1
         for node, side, neighbour in cursor.out_of_order():
             self.emit(
@@ -1065,7 +1070,9 @@ class _Walker:
         node: Node,
         siblings: Sequence[Node],
         label: str,
-    ) -> None:
+        cursor: StructureCursor,
+        following: int,
+    ) -> int:
         """Validate one node against its non-iterative Definition node.
 
         Args:
@@ -1073,9 +1080,12 @@ class _Walker:
             node: The file node.
             siblings: The block's nodes (for a condition reference selector).
             label: Name used in messages.
+            cursor: Cursor for the block that holds ``node``.
+            following: Index in ``siblings`` of the node after ``node``.
 
         Returns:
-            None.
+            The number of following siblings that were validated as members
+            of ``node`` (shallow members of a block).
 
         Raises:
             None.
@@ -1085,7 +1095,7 @@ class _Walker:
         elif isinstance(definition, ConditionFieldDef):
             self._check_value(node, _Rule(definition.type, definition.validation, None, None))
         elif isinstance(definition, StructureReferenceDef):
-            self._check_block(node, definition.structure)
+            return self._check_block(node, definition.structure, cursor, siblings, following)
         elif isinstance(definition, ConditionReferenceDef):
             selector = next((n for n in siblings if n.key == definition.selector), None)
             text = _text_of(selector.value) if selector is not None else None
@@ -1099,7 +1109,8 @@ class _Walker:
                     f"is {text!r}",
                 )
             else:
-                self._check_block(node, target)
+                return self._check_block(node, target, cursor, siblings, following)
+        return 0
 
     def _field_rule(self, definition: FieldDef) -> _Rule:
         """Build the value rule of a field.
@@ -1155,26 +1166,47 @@ class _Walker:
             self._declared[path] = cached
         return cached
 
-    def _check_block(self, node: Node, structure_name: str) -> None:
+    def _check_block(
+        self,
+        node: Node,
+        structure_name: str,
+        cursor: StructureCursor,
+        siblings: Sequence[Node],
+        following: int,
+    ) -> int:
         """Validate a block node against a named structure.
 
         Args:
             node: The block node.
             structure_name: Name of the structure describing it.
+            cursor: Cursor for the block that holds ``node``.
+            siblings: The nodes of the block that holds ``node``.
+            following: Index in ``siblings`` of the node after ``node``.
 
         Returns:
-            None.
+            The number of following siblings validated as shallow members of
+            the block.
 
         Raises:
             None.
         """
         if node.value is not None:
             self.emit(_value_span(node), V050, f"'{node.key}' must be a block, found a value")
-            return
+            return 0
         struct = self.registry.structure(structure_name)
         if struct is None:
-            return
-        self._scope(struct.children, node.children, node, struct.name, node.key_span)
+            return 0
+        members = list(node.children)
+        end = following
+        if members and members[0].indent == node.indent + 1:
+            keys = self._member_keys(struct.children, node)
+            end = self._take_shallow(cursor, node, siblings, following, keys, members)
+            heads = [m for m in members[len(node.children) :] if m.indent == node.indent]
+            if heads:
+                self._shallow[id(heads[0])] = node
+                self._shallow_more.update(id(m) for m in heads[1:])
+        self._scope(struct.children, members, node, struct.name, node.key_span)
+        return end - following
 
     def _iterate(
         self,
@@ -1293,15 +1325,8 @@ class _Walker:
                     )
                     continue
                 members = list(repeat.children)
-                keys = self._repeat_keys(iterative, repeat)
-                while end < len(nodes) and self._is_shallow_member(
-                    cursor, iterative, repeat, nodes[end], keys
-                ):
-                    members.append(nodes[end])
-                    end += 1
-                    while end < len(nodes) and nodes[end].indent > repeat.indent:
-                        members.append(nodes[end])
-                        end += 1
+                keys = self._member_keys(iterative.children, repeat)
+                end = self._take_shallow(cursor, repeat, nodes, end, keys, members)
                 inner = self._scope(
                     iterative.children,
                     members,
@@ -1314,58 +1339,71 @@ class _Walker:
                 self._check_value(repeat, _Rule(iterative.type, iterative.validation, None, None))
         return end, found
 
-    def _repeat_keys(self, iterative: IterativeFieldDef, repeat: Node) -> frozenset[str]:
-        """List the keys a repeat block defines.
+    def _member_keys(self, defs: Iterable[DefNode], block: Node) -> frozenset[str]:
+        """List the keys a block defines.
 
         Args:
-            iterative: The iterative field the repeat belongs to.
-            repeat: The repeat block.
+            defs: Definition nodes of the block.
+            block: The block node.
 
         Returns:
-            Plain field names and count keys active for the repeat.
+            Plain field names and count keys active for the block.
 
         Raises:
             None.
         """
         active: list[DefNode] = []
-        self._expand(iterative.children, repeat.children, active)
+        self._expand(defs, block.children, active)
         inner = StructureCursor(active)
         return frozenset(inner.plain) | frozenset(inner.counts)
 
     @staticmethod
-    def _is_shallow_member(
+    def _take_shallow(
         cursor: StructureCursor,
-        iterative: IterativeFieldDef,
-        repeat: Node,
-        node: Node,
+        block: Node,
+        nodes: Sequence[Node],
+        start: int,
         keys: frozenset[str],
-    ) -> bool:
-        """Whether a line after a repeat block is a member written one level too shallow.
+        members: list[Node],
+    ) -> int:
+        """Collect the shallow members that follow a block.
+
+        A line with a value at the block's own indentation, whose key the
+        block defines and the enclosing block does not, is a member written
+        one level too shallow. It and the deeper lines after it belong to
+        the block.
 
         Args:
-            cursor: Cursor for the block that holds the run.
-            iterative: The iterative field the repeat belongs to.
-            repeat: The repeat block.
-            node: The line right after the repeat.
-            keys: Keys the repeat block defines.
+            cursor: Cursor for the block that holds ``block``.
+            block: The block node.
+            nodes: The nodes of the block that holds ``block``.
+            start: Index in ``nodes`` of the node after ``block``.
+            keys: Keys the block defines.
+            members: Receives the shallow members and the deeper lines after
+                each of them.
 
         Returns:
-            True for a line with a value whose key the repeat block defines
-            and the enclosing block does not.
+            The index after the last collected node.
 
         Raises:
             None.
         """
-        key = node.key
-        return (
-            node.value is not None
-            and node.indent == repeat.indent
-            and key != iterative.name
-            and key in keys
-            and key not in cursor.plain
-            and key not in cursor.counts
-            and key not in cursor.repeats
-        )
+        end = start
+        while (
+            end < len(nodes)
+            and nodes[end].value is not None
+            and nodes[end].indent == block.indent
+            and nodes[end].key in keys
+            and nodes[end].key not in cursor.plain
+            and nodes[end].key not in cursor.counts
+            and nodes[end].key not in cursor.repeats
+        ):
+            members.append(nodes[end])
+            end += 1
+            while end < len(nodes) and nodes[end].indent > block.indent:
+                members.append(nodes[end])
+                end += 1
+        return end
 
     def _flat_run(
         self,
@@ -1480,24 +1518,38 @@ class _Walker:
                 continue
             if id(node) in later_repeats:
                 continue  # judged by the run-style check below
+            if id(prev) in self._shallow_more:
+                continue
+            if id(prev) in self._shallow:
+                self._report_under_indented(prev, node)
+                continue
             if not self._known_line(prev, order[index - 2] if index > 1 else None):
                 continue
             run = self._runs.get(id(prev))
             if run and run[0] is node and node.indent - prev.indent == 1:
                 continue
-            line = prev.key_span.line + 1
             if run and run[0] is node:
+                line = prev.key_span.line + 1
                 message = (
                     f"'{node.key}' is indented {node.indent - prev.indent} levels under count "
                     f"line '{prev.key}' (line {line}); repeats sit at the count line's level "
                     "or one level deeper"
                 )
+                self.emit(node.key_span, V080, message)
             else:
-                message = (
-                    f"'{node.key}' is indented under '{prev.key}' on line {line}, which has a "
-                    f"value; line {line} is probably under-indented"
+                self._report_under_indented(prev, node)
+        for index, node in enumerate(order):
+            header = self._shallow.get(id(node))
+            if header is not None and (
+                index + 1 == len(order) or order[index + 1].indent <= node.indent
+            ):
+                line = header.key_span.line + 1
+                self.emit(
+                    node.key_span,
+                    V080,
+                    f"'{node.key}' is at the indentation of '{header.key}' on line {line}, "
+                    f"but is a member of it; '{node.key}' is probably under-indented",
                 )
-            self.emit(node.key_span, V080, message)
         for count_id, run in self._runs.items():
             count_line = by_id.get(count_id)
             if not run or count_line is None or run[0].indent - count_line.indent not in (0, 1):
@@ -1511,6 +1563,27 @@ class _Walker:
                     f"'{odd.key}' is indented differently from the first '{first.key}' of its "
                     f"run (line {first.key_span.line + 1}); a run uses one indentation",
                 )
+
+    def _report_under_indented(self, prev: Node, node: Node) -> None:
+        """Report a line indented under a value line (``SOASE-V080``).
+
+        Args:
+            prev: The value line before ``node``.
+            node: The deeper line, which gets the Diagnostic.
+
+        Returns:
+            None.
+
+        Raises:
+            None.
+        """
+        line = prev.key_span.line + 1
+        self.emit(
+            node.key_span,
+            V080,
+            f"'{node.key}' is indented under '{prev.key}' on line {line}, which has a "
+            f"value; line {line} is probably under-indented",
+        )
 
     def _known_line(self, line: Node, before: Node | None) -> bool:
         """Whether a value line counts as known for the V080 check.

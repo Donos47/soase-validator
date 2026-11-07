@@ -1423,3 +1423,91 @@ def test_reference_root_galaxy_owner_findings_total(reference_root: Path) -> Non
         if diag.code == dg.V050 and path.endswith(".galaxy") and diag.message.startswith("owner:")
     ]
     assert len(owner_findings) == 58, owner_findings[:5]
+
+
+def _shallow_block_registry() -> Registry:
+    """Registry with a block that holds a count line, repeats and a trailing field."""
+    return _registry(
+        [{"node": "structure_reference", "name": "Game", "structure": "Game"}],
+        extra=[
+            {
+                "name": "Game",
+                "children": [
+                    {"node": "structure_reference", "name": "Damage", "structure": "Damage"},
+                    _f("regen", "Decimal"),
+                    {"node": "structure_reference", "name": "Research", "structure": "Research"},
+                ],
+            },
+            {
+                "name": "Damage",
+                "children": [
+                    _f("hull", "Decimal"),
+                    {
+                        "node": "iterative_field",
+                        "name": "EffectName",
+                        "count_key": "NumEffects",
+                        "validation": "Any",
+                    },
+                    _f("regen", "Decimal"),
+                ],
+            },
+            {"name": "Research", "children": [_f("r", "Integer")]},
+        ],
+    )
+
+
+_SHALLOW_COUNT = (
+    "Game\n\tDamage\n\t\thull 0.01\n"
+    '\tNumEffects 2\n\t\tEffectName "a"\n\t\tEffectName "b"\n'
+    "\t\tregen 0.5\n\tResearch\n\t\tr 1\n"
+)
+
+
+def test_shallow_count_line_of_a_block_gives_one_v080_and_nothing_else() -> None:
+    diags = _run(_shallow_block_registry(), _SHALLOW_COUNT)
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(5, 2)]
+    assert "'EffectName' is indented under 'NumEffects' on line 5" in diags[0].message
+    fixed = _SHALLOW_COUNT.replace("\tNumEffects", "\t\tNumEffects")
+    assert _run(_shallow_block_registry(), fixed) == []
+
+
+def test_shallow_count_line_still_checks_its_run() -> None:
+    body = _SHALLOW_COUNT.replace("NumEffects 2", "NumEffects 3")
+    codes = sorted(d.code for d in _run(_shallow_block_registry(), body))
+    assert codes == [dg.V030, dg.V080]
+
+
+def test_shallow_key_that_the_ended_block_does_not_define_stays_v020() -> None:
+    body = "Game\n\tDamage\n\t\thull 0.01\n\tzzz 1\n\t\tregen 0.5\n"
+    codes = [d.code for d in _run(_shallow_block_registry(), body)]
+    assert dg.V020 in codes and dg.V080 not in codes
+
+
+def test_shallow_key_that_the_enclosing_block_defines_is_untouched() -> None:
+    body = "Game\n\tDamage\n\t\thull 0.01\n\tregen 0.5\n\tResearch\n\t\tr 1\n"
+    assert _run(_shallow_block_registry(), body) == []
+
+
+def test_key_two_levels_shallower_than_the_block_lines_is_not_placed() -> None:
+    body = 'Game\n\tDamage\n\t\t\thull 0.01\n\tNumEffects 1\n\t\tEffectName "a"\n'
+    codes = [d.code for d in _run(_shallow_block_registry(), body)]
+    assert dg.V020 in codes and dg.V080 not in codes
+
+
+def test_shallow_member_without_deeper_lines_gives_v080_on_itself() -> None:
+    body = "Game\n\tDamage\n\t\thull 0.01\n\tNumEffects 0\n\tResearch\n\t\tr 1\n"
+    diags = _run(_shallow_block_registry(), body)
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(4, 1)]
+    assert "'NumEffects' is at the indentation of 'Damage' on line 3" in diags[0].message
+
+
+def test_later_shallow_members_of_the_same_block_add_no_further_v080() -> None:
+    body = (
+        'Game\n\tDamage\n\t\thull 0.01\n\tNumEffects 1\n\t\tEffectName "a"\n\tregen 0.5\n'
+        "\tResearch\n\t\tr 1\n"
+    )
+    diags = _run(_shallow_block_registry(), body)
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(5, 2)]
