@@ -151,7 +151,7 @@ from soase_validator.engine.primitives import (
     check_position,
     validate_constraint,
 )
-from soase_validator.engine.refindex import RefKind, is_absolute_reference
+from soase_validator.engine.refindex import RefKind, file_name_of, is_absolute_reference
 from soase_validator.engine.registry import (
     ConditionFieldDef,
     ConditionReferenceDef,
@@ -1726,9 +1726,13 @@ class _Walker:
         if kind not in REFERENCE_KINDS or not node.value.text:
             # An empty name means "none" and is never resolved.
             return
-        if kind == "Texture" and is_absolute_reference(node.value.text):
-            # Absolute paths name files on an author's machine and are not
-            # resolved.
+        if (
+            kind == "Texture"
+            and is_absolute_reference(node.value.text)
+            and file_name_of(node.value.text) == node.value.text
+        ):
+            # Relative paths are not resolved; drive-letter paths resolve by
+            # file name.
             return
         if self._declared_in_file(kind, node.value.text):
             return

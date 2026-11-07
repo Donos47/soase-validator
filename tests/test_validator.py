@@ -648,12 +648,21 @@ def test_found_texture_names_report_nothing(name: str) -> None:
 
 @pytest.mark.parametrize(
     "name",
-    [r"C:\Users\author\Textures\Flare.tga", "d:/Textures/Flare.dds", r"sub\Flare.tga"],
+    [r"sub\Flare.tga", "sub/Flare.tga"],
 )
-def test_absolute_texture_paths_are_skipped_silently(name: str) -> None:
+def test_relative_texture_paths_are_skipped_silently(name: str) -> None:
     lookup = _Lookup(NotFound())
     assert _run(_refs(), f't "{name}"\n', lookup=lookup) == []
     assert lookup.calls == []
+
+
+@pytest.mark.parametrize("name", [r"C:\Users\someone\Textures\Flare.tga", "d:/Textures/Flare.dds"])
+def test_absolute_texture_paths_are_looked_up_and_named_in_the_message(name: str) -> None:
+    lookup = _Lookup(NotFound())
+    diags = _run(_refs(), f't "{name}"\n', lookup=lookup)
+    assert [d.code for d in diags] == [dg.R010]
+    assert name in diags[0].message
+    assert lookup.calls == [("Texture", name)]
 
 
 def test_lookup_receives_the_referencing_file_extension() -> None:

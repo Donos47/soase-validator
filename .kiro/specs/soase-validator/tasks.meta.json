@@ -1179,6 +1179,30 @@
         "chatSessionId": "sess_794056e2-7cbb-4ed2-96bd-2d3e6f0b1f38",
         "timestamp": 1794076574890
       }
+    ],
+    "9.13 Exempt `FrontEnd.galaxy` from `galaxy.manifest`": [
+      {
+        "executionId": "f64be930-d2f5-47bc-8a75-6e15bf588ac2",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794077665780
+      },
+      {
+        "executionId": "f64be930-d2f5-47bc-8a75-6e15bf588ac2",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794077747928
+      }
+    ],
+    "8.12 Resolve absolute file references by file name": [
+      {
+        "executionId": "fc5db401-06a4-44b9-b02b-d2f0f40217b6",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794077786255
+      },
+      {
+        "executionId": "fc5db401-06a4-44b9-b02b-d2f0f40217b6",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794077941509
+      }
     ]
   }
 }

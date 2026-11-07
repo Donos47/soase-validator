@@ -301,6 +301,60 @@ def test_validator_reports_unresolved_reference_naming_type_and_value() -> None:
     assert "Mesh" in diagnostics[1].message and "Hull" in diagnostics[1].message
 
 
+def _validate_particle(index: ChainIndex, value: str):
+    structures = [
+        {
+            "name": "Root",
+            "extension": ".particle",
+            "children": [{"node": "field", "name": "MeshName", "validation": "Mesh"}],
+        }
+    ]
+    registry = load_registry_from_texts({"s.json": json.dumps({"structures": structures})})
+    path = Path("a.particle")
+    ctx = ValidationContext(registry, VERSION, path, lookup=index)
+    return validate(parse(f'TXT\nMeshName "{value}"\n', path), ctx)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        r"C:\Users\someone\Documents\Mod\Mesh\Imp_Onager.mesh",
+        "C:/Users/someone/Documents/Mod/Mesh/Imp_Onager.mesh",
+    ],
+)
+def test_absolute_mesh_path_resolves_by_file_name_in_the_project(value: str) -> None:
+    fs = InMemoryFileSystem()
+    _add(fs, HIGH, "Mesh/Imp_Onager.mesh")
+    index = _chain_index(fs)
+
+    assert _validate_particle(index, value) == []
+
+
+@pytest.mark.parametrize(
+    "value",
+    [r"C:\Users\someone\Mesh\Imp_Gone.mesh", "C:/Users/someone/Mesh/Imp_Gone.mesh"],
+)
+def test_unresolved_absolute_mesh_path_names_the_full_value(value: str) -> None:
+    fs = InMemoryFileSystem()
+    _add(fs, HIGH, "Mesh/Imp_Onager.mesh")
+    index = _chain_index(fs)
+
+    diagnostics = _validate_particle(index, value)
+    assert [d.code for d in diagnostics] == [dg.R010]
+    assert value in diagnostics[0].message
+
+
+def test_relative_mesh_path_keeps_the_whole_value() -> None:
+    fs = InMemoryFileSystem()
+    _add(fs, HIGH, "Mesh/Imp_Onager.mesh")
+    index = _chain_index(fs)
+
+    diagnostics = _validate_particle(index, "Mesh/Imp_Onager.mesh")
+    assert [d.code for d in diagnostics] == [dg.R010]
+    assert _validate_particle(index, "Imp_Onager.mesh") == []
+    assert _validate_particle(index, "Imp_Onager") == []
+
+
 def test_validator_reports_nothing_unresolved_on_an_incomplete_chain() -> None:
     index = _chain_index(InMemoryFileSystem(), complete=False)
 

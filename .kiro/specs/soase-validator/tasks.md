@@ -122,7 +122,7 @@ Conventions for every task:
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
-- [x] 5. Primitives and validator
+- [ ] 5. Primitives and validator
   - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
@@ -200,6 +200,14 @@ Conventions for every task:
     - Apply the "Comments and docstrings" rules in .kiro/steering/tech.md to every file in src/, 	ests/ and 	ools/: remove banner and divider comments, commented-out code and comments that restate the code; fix comment capitalization, periods and inline spacing; fix docstring summary lines
     - Tighten `pyproject.toml` ruff: add `ERA` and `W505` (`max-doc-length = 100`) to `select`; enable `D` for `tests/` (keep the `tools/` ignore only if it cannot be fixed cheaply, and say so); fix what they report
     - Comments only: no behaviour change; `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` still pass
+
+  - [ ] 5.14 Place shallow members of any block, with one `SOASE-V080` and no follow-on findings
+    - Survey first (read-only, temporary script, notes in `reference/`): over the Rebellion 1.98 Reference Root, tally per extension the lines that meet the Requirement 3.17 conditions, and confirm that the only Reference Root shapes are the planet `owner` ones from task 5.10; stop and report if any other Reference Root file would change
+    - Generalise the task 5.10 placement from counted repeats to any block: a value line exactly one level shallower than the block ending right before it, not defined by the block its indentation places it in, and a field or count key of the ended block, is validated with the deeper lines after it as members of the ended block; the shape gives exactly one `SOASE-V080` naming the shallow line; no `SOASE-V020`, `V030`, `V060` or `V070` from the misplacement
+    - Keep the planet `owner` results unchanged (132 `SOASE-V080` over the Reference Root, nothing else); do not change count lines deeper than their repeats or over-indented block headers
+    - Tests (synthetic, real-shaped): a `.constants` count line one tab short with its repeats and the fields after it gives one `SOASE-V080` and nothing else; a shallow key that is not a field of the ended block keeps `SOASE-V020`; a shallow key that is also defined where it sits is untouched; two levels shallower is not placed; the Reference Root test still passes
+    - Update `design.md` (Validator, shallow members) and the `validator.py` docstring
+    - _Requirements: 3.5, 3.6, 3.7, 3.14, 3.16, 3.17_
 - [x] 6. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
@@ -283,6 +291,11 @@ Conventions for every task:
     - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured (a complete Chain: unresolved references are reported against the Project and declared Layers, with no limited-checks notice)
     - _Requirements: 4.6, 14.9, 14.15_
 
+  - [x] 8.12 Resolve absolute file references by file name
+    - In file-reference resolution, look up a value that starts with a drive letter followed by `:\` or `:/` by the text after its last `\` or `/`, with the same folder, extension and Layer rules as a bare name; keep the original value in the `SOASE-R010` message
+    - Tests: a real-shaped particle `MeshName` absolute path resolves when the file name exists in the Project `Mesh` folder, and gives `SOASE-R010` naming the full value when it does not; forward-slash form; a bare name and a relative path keep their current behaviour
+    - _Requirements: 4.9, 4.9.1_
+
 - [x] 9. Manifest service
   - [x] 9.1 Implement manifest parsing and formatting in `engine/manifests.py`
     - Load `manifest_rules.json`, implement `ManifestData` parsing with per-type count and name keys, extension rules, case-insensitive matching, header style and line-ending detection, and a formatter
@@ -333,6 +346,12 @@ Conventions for every task:
   - [x] 9.12 Write manifest unit tests
     - Cover the `skybox.manifest` governed subset, an overlay without manifests, extension-less `galaxy.manifest` names, backup creation and failed-write safety
     - _Requirements: 14.19, 15.3.3, 15.8.3_
+
+  - [x] 9.13 Exempt `FrontEnd.galaxy` from `galaxy.manifest`
+    - Mark `Galaxy/FrontEnd.galaxy` in `manifest_rules.json` as not governed by `galaxy.manifest` (a fixed special file, separate from the derived base-game-unlisted list of task 16.5), so `manifest_check` gives no `SOASE-M010` for it in any Layer and `plan_sync` never adds it
+    - Tests: a Project with `FrontEnd.galaxy` absent from `galaxy.manifest` gives no `SOASE-M010`; sync plans no addition for it; another unlisted `.galaxy` still gives `SOASE-M010`; case-insensitive name match
+    - Update the `SOASE-M010` row in `design.md`
+    - _Requirements: 15.3.6, 15.8_
 
 - [ ] 10. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.

@@ -341,6 +341,21 @@ def is_absolute_reference(name: str) -> bool:
     return "/" in name or "\\" in name or (len(name) > 1 and name[1] == ":" and name[0].isalpha())
 
 
+def file_name_of(name: str) -> str:
+    r"""Reduce a drive-letter path to its file name.
+
+    Args:
+        name: The referenced name.
+
+    Returns:
+        The text after the last ``\`` or ``/`` when the name starts with a
+        drive letter followed by ``:\`` or ``:/``; otherwise the name.
+    """
+    if len(name) > 2 and name[0].isalpha() and name[1] == ":" and name[2] in "\\/":
+        return name.replace("\\", "/").rsplit("/", 1)[-1]
+    return name
+
+
 def _relpath_key(root: Path, path: Path) -> str | None:
     """Return the casefolded ``/``-separated path of a file below a root.
 
@@ -544,7 +559,7 @@ def file_reference_keys(
         prefixes = localized_prefixes(rule.directory, language)
     else:
         prefixes = (f"{rule.directory.casefold()}/",)
-    base = name.casefold()
+    base = file_name_of(name).casefold()
     may_carry = rule.extension_in is None or file_extension.casefold() in rule.extension_in
     if may_carry:
         suffix = PurePath(base).suffix
@@ -603,6 +618,7 @@ __all__ = [
     "build_layer_index",
     "compute_signature",
     "file_reference_keys",
+    "file_name_of",
     "find_file",
     "is_absolute_reference",
     "localized_prefixes",

@@ -162,6 +162,34 @@ def test_texture_resolves_either_extension_or_exact_name() -> None:
     assert find_file([index], "Texture", "Missing") is None
 
 
+@pytest.mark.parametrize(
+    "name",
+    [
+        r"C:\Users\someone\Documents\Mod\Mesh\Imp_Onager.mesh",
+        "c:/Users/someone/Mesh/imp_onager.mesh",
+        r"C:\Users\someone\Mesh\Imp_Onager",
+    ],
+)
+def test_drive_letter_paths_resolve_by_file_name(name: str) -> None:
+    index = build_layer_index(_layer(), _fs("Mesh/Imp_Onager.MESH"))
+    assert find_file([index], "Mesh", name, ".particle") == ROOT / "Mesh/Imp_Onager.MESH"
+    assert find_file([index], "Mesh", r"C:\x\Missing.mesh", ".particle") is None
+
+
+def test_drive_letter_paths_follow_the_extension_rules_of_the_kind() -> None:
+    index = build_layer_index(_layer(), _fs("Mesh/Ship.MESH", "Textures/Flare.TGA"))
+    assert find_file([index], "Mesh", r"C:\a\Ship.mesh", ".entity") is None
+    assert find_file([index], "Texture", r"C:\a\Flare.tga") == ROOT / "Textures/Flare.TGA"
+    assert find_file([index], "Texture", "D:/a/Flare") == ROOT / "Textures/Flare.TGA"
+
+
+def test_relative_paths_keep_the_whole_name() -> None:
+    index = build_layer_index(_layer(), _fs("Mesh/Ship.MESH"))
+    assert find_file([index], "Mesh", "Mesh/Ship", ".particle") is None
+    assert find_file([index], "Mesh", r"sub\Ship", ".particle") is None
+    assert find_file([index], "Mesh", "Ship", ".particle") == ROOT / "Mesh/Ship.MESH"
+
+
 def test_mesh_extension_is_accepted_only_for_particle_files() -> None:
     index = build_layer_index(_layer(), _fs("Mesh/Ship.MESH"))
     assert find_file([index], "Mesh", "Ship.mesh", ".particle") == ROOT / "Mesh/Ship.MESH"
