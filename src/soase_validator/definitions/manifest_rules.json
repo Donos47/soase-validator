@@ -19,7 +19,8 @@
     "nameKey": "fileName",
     "includesExtension": false,
     "example": "Name",
-    "governs": {"directory": "Galaxy", "extensions": [".galaxy"]}
+    "governs": {"directory": "Galaxy", "extensions": [".galaxy"]},
+    "neverGoverned": ["FrontEnd.galaxy"]
   },
   "playerPictures.manifest": {
     "countKey": "fileCount",

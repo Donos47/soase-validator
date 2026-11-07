@@ -316,3 +316,29 @@ def test_lower_layer_manifest_hygiene_is_not_reported(tmp_path):
     _write(overlay, "GameInfo/a.entity")
 
     assert manifest_check([_index(base, "mod"), _index(overlay)]) == []
+
+
+def test_front_end_galaxy_is_never_governed_by_galaxy_manifest(tmp_path):
+    from soase_validator.engine.manifests import plan_manifests
+
+    root = tmp_path / "mod"
+    _write(root, "galaxy.manifest", _manifest("fileCount", "fileName", ["Alpha"]))
+    _write(root, "Galaxy/Alpha.galaxy")
+    _write(root, "Galaxy/FrontEnd.galaxy")
+    _write(root, "Galaxy/FRONTEND.GALAXY")
+    _write(root, "Galaxy/Beta.galaxy")
+
+    found = manifest_check([_index(root)])
+    plan = plan_manifests([_index(root)])
+
+    assert [d.file.name for d in found] == ["Beta.galaxy"]
+    assert [edit.added for edit in plan.edits] == [("Beta",)]
+
+
+def test_front_end_galaxy_is_exempt_in_a_lower_layer_manifest_too(tmp_path):
+    base = tmp_path / "base"
+    overlay = tmp_path / "overlay"
+    _write(base, "galaxy.manifest", _manifest("fileCount", "fileName", []))
+    _write(overlay, "Galaxy/frontend.galaxy")
+
+    assert manifest_check([_index(base, "mod"), _index(overlay)]) == []

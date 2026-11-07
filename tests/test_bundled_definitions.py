@@ -300,8 +300,10 @@ def test_manifest_rules_content() -> None:
     assert rules["galaxy.manifest"]["governs"]["directory"] == "Galaxy"
     assert rules["entity.manifest"]["governs"]["directory"] == "GameInfo"
     assert rules["skybox.manifest"]["governs"]["identifiedBy"] == "skyboxbackdropdata.meshName"
+    assert rules["galaxy.manifest"]["neverGoverned"] == ["FrontEnd.galaxy"]
     for rule in rules.values():
         assert all(isinstance(n, str) for n in rule.get("unlistedByBaseGame", []))
+        assert all(isinstance(n, str) for n in rule.get("neverGoverned", []))
 
 
 def test_versions_file_present() -> None:

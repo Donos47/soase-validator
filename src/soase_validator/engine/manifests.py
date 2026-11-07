@@ -68,6 +68,8 @@ class ManifestRule:
         identified_by: How a governed subset is identified, when the rule
             governs only a subset of a file type.
         unlisted_by_base_game: Names the base game leaves unlisted.
+        never_governed: File names, with extension and without directories,
+            that the manifest does not govern in any Layer.
     """
 
     manifest: str
@@ -79,6 +81,7 @@ class ManifestRule:
     extensions: tuple[str, ...] = ()
     identified_by: str | None = None
     unlisted_by_base_game: tuple[str, ...] = ()
+    never_governed: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -430,6 +433,7 @@ def _build_rule(manifest: str, body: object) -> ManifestRule:
             extensions=tuple(str(ext) for ext in extensions),
             identified_by=governs.get("identifiedBy"),
             unlisted_by_base_game=tuple(str(n) for n in body.get("unlistedByBaseGame", [])),
+            never_governed=tuple(str(n) for n in body.get("neverGoverned", [])),
         )
     except (KeyError, AttributeError, TypeError) as exc:
         raise ValueError(f"manifest rule {manifest} is malformed: {exc}") from exc
@@ -670,8 +674,8 @@ def _unlisted(
 ) -> list[tuple[int, Path, str]]:
     """Find Project files that the governing manifest should list but does not.
 
-    Files the base game leaves unlisted and files matching an exemption
-    pattern are left out.
+    Files the manifest never governs, files the base game leaves unlisted
+    and files matching an exemption pattern are left out.
 
     Args:
         indexes: Layer indexes, lowest first.
@@ -684,11 +688,14 @@ def _unlisted(
     """
     rule = governing.rule
     base_game = {name.casefold() for name in rule.unlisted_by_base_game}
+    ungoverned = {name.casefold() for name in rule.never_governed}
     found: list[tuple[int, Path, str]] = []
     for position, index in enumerate(indexes):
         if index.layer.kind != "project":
             continue
         for path in governed_files(index, rule, skybox):
+            if path.name.casefold() in ungoverned:
+                continue
             name = listed_name(rule, path.name)
             if governing.data.lists(name) or name.casefold() in base_game:
                 continue
