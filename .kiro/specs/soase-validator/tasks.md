@@ -232,8 +232,8 @@ Conventions for every task:
     - **Property 17: Chain construction**
     - **Validates: Requirements 14.1, 14.2, 14.6**
 
-- [ ] 8. Reference index and layer cache
-  - [ ] 8.1 Implement `engine/refindex.py`
+- [x] 8. Reference index and layer cache
+  - [x] 8.1 Implement `engine/refindex.py`
     - Define a `FileSystem` protocol with real and in-memory implementations, `RefKind`, `Entry`, `LayerIndex` (casefolded names, manifests, files, signature) and the per-Layer builder that scans only standard game data directories and root files and skips hidden and VCS directories
     - Implement incremental update of a single changed file and signature computation from `(relpath, size, mtime_ns)`
     - Survey the Reference Root read-only for each file-reference kind (Texture, SoundFile, Mesh, Particle, Brush `fileName` textures): folder(s), extensions, whether names include the extension, case handling, subfolders, and how many referenced files are missing in the base game itself
@@ -242,20 +242,20 @@ Conventions for every task:
     - Switch `Texture` from shape-only (`UNRESOLVED_NAME_TYPES`) to a reference kind in `validator.py` and update its tests
     - _Requirements: 4.1, 4.2, 4.2.1, 4.7, 4.9, 14.4.1, 14.10_
 
-  - [ ] 8.2 Implement `engine/layercache.py`
+  - [x] 8.2 Implement `engine/layercache.py`
     - Add the in-memory cache keyed by `(resolved path, game version)` and the JSON on-disk cache in the platform cache directory with schema version, discarding corrupt or stale files and ignoring write failures
     - _Requirements: 14.10_
 
-  - [ ] 8.3 Implement merged lookup and wire references into validation
+  - [x] 8.3 Implement merged lookup and wire references into validation
     - Implement `ChainIndex.resolve` (highest Layer wins, casefolded, `Resolution` with `overrides`), manifest-governed name sets limited to the governing manifest, and `Unknown` results for incomplete chains
     - Plug it into the validator as the `ReferenceLookup`, emit unresolved-reference diagnostics (`SOASE-R010`) naming type and value, and emit the single suppressible informational `SOASE-C030` per file listing missing Layers
     - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.6.1, 4.6.2, 4.6.5, 14.4, 14.5, 14.12_
 
-  - [ ] 8.4 Implement dependency tracking
+  - [x] 8.4 Implement dependency tracking
     - Record per validated file the set of `(Layer, RefKind, name)` it resolved, and compute dependents to re-validate from added and removed index names on save or file-watcher events
     - _Requirements: 4.8, 14.11_
 
-  - [ ] 8.5 Write Hypothesis strategies for chains
+  - [x] 8.5 Write Hypothesis strategies for chains
     - Create `tests/strategies/chains.py` generating Layers on the in-memory `FileSystem` with overlapping names in varying case, hidden and VCS directories, and complete and incomplete chains
     - _Requirements: 4.3, 14.4.1, 14.5_
 
@@ -279,7 +279,7 @@ Conventions for every task:
     - **Property 14: Unresolved references are reported only on complete chains**
     - **Validates: Requirements 4.5, 4.6.1, 4.6.2**
 
-  - [ ] 8.11 Write unit tests for the reference index
+  - [x] 8.11 Write unit tests for the reference index
     - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured (a complete Chain: unresolved references are reported against the Project and declared Layers, with no limited-checks notice)
     - _Requirements: 4.6, 14.9, 14.15_
 
@@ -288,7 +288,7 @@ Conventions for every task:
     - Load `manifest_rules.json`, implement `ManifestData` parsing with per-type count and name keys, extension rules, case-insensitive matching, header style and line-ending detection, and a formatter
     - _Requirements: 15.1, 15.1.1_
 
-  - [ ] 9.2 Write property test for manifest round trip
+  - [ ]* 9.2 Write property test for manifest round trip
     - **Property 27: Manifest parse and format round trip**
     - **Validates: Requirements 15.1**
 
@@ -297,15 +297,15 @@ Conventions for every task:
     - Honour the shipped base-game-unlisted list and user exemption patterns, and include the lower-Layer wording in `SOASE-M010`
     - _Requirements: 14.4, 14.19, 15.2, 15.3, 15.3.1, 15.3.2, 15.3.3, 15.3.4, 15.3.5, 15.4, 15.4.1, 15.5, 15.6_
 
-  - [ ] 9.4 Write property test for governing manifest selection
+  - [ ]* 9.4 Write property test for governing manifest selection
     - **Property 19: Governing manifest selection**
     - **Validates: Requirements 14.4, 14.19**
 
-  - [ ] 9.5 Write property test for unlisted-file detection
+  - [ ]* 9.5 Write property test for unlisted-file detection
     - **Property 28: Unlisted file detection**
     - **Validates: Requirements 15.2, 15.3**
 
-  - [ ] 9.6 Write property test for manifest hygiene diagnostics
+  - [ ]* 9.6 Write property test for manifest hygiene diagnostics
     - **Property 29: Manifest hygiene diagnostics**
     - **Validates: Requirements 15.4, 15.5, 15.6**
 
@@ -314,19 +314,19 @@ Conventions for every task:
     - Implement the side-effecting apply with `.bak` backups (numeric suffix when present), temporary file plus atomic replace, and dry-run diff output
     - _Requirements: 15.8, 15.8.1, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
-  - [ ] 9.8 Write property test for sync preserving content
+  - [ ]* 9.8 Write property test for sync preserving content
     - **Property 30: Sync preserves existing content**
     - **Validates: Requirements 15.8.1**
 
-  - [ ] 9.9 Write property test for sync then check
+  - [ ]* 9.9 Write property test for sync then check
     - **Property 31: Sync then check is clean**
     - **Validates: Requirements 15.3, 15.5, 15.8**
 
-  - [ ] 9.10 Write property test for opt-in removal
+  - [ ]* 9.10 Write property test for opt-in removal
     - **Property 32: Removal is opt-in**
     - **Validates: Requirements 15.8.4**
 
-  - [ ] 9.11 Write property test for lower-Layer manifests
+  - [ ]* 9.11 Write property test for lower-Layer manifests
     - **Property 33: Lower-Layer manifests are never edited**
     - **Validates: Requirements 15.8.5, 15.3.1**
 

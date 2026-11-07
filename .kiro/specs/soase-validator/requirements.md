@@ -189,6 +189,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 14. THE LSP server SHALL accept settings supplied by the editor through initialization options and configuration-change notifications, which SHALL rank above the user-level file and below environment variables.
 15. THE MCP server SHALL expose a tool that reports the effective configuration, including the source of each setting and whether each Reference Root was found.
 16. THE MCP server SHALL expose a tool that sets a Reference Root for a project, and a tool that adds, removes, or reorders parent Layers, so an AI agent can configure a new project at the user's request.
+17. THE configuration SHALL include a `language` setting (`soase.json` key `language`, environment variable `SOASE_VALIDATOR_LANGUAGE`, default `en`) that names the active localization folder (`Localizations/<language>`), resolved with the same precedence as every other setting (criterion 1).
+18. WHEN a Sound or String name is not provided by the active localization, THE Engine SHALL look it up in the `en` localization before reporting it as unresolved.
+19. IF the `language` value is empty, contains a path separator, or starts with `.`, THEN THE package SHALL report an error naming the setting and SHALL continue with the default `en` (refines criterion 4).
 
 ### Requirement 9: MCP interface for AI agents
 

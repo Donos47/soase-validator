@@ -716,6 +716,120 @@
         "chatSessionId": "sess_100ea658-856f-4094-b4ca-8fb5905a7cf7",
         "timestamp": 1794061114723
       }
+    ],
+    "8.1 Implement `engine/refindex.py`": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794061584818
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062349495
+      }
+    ],
+    "8.2 Implement `engine/layercache.py`": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062354897
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062477766
+      }
+    ],
+    "8.5 Write Hypothesis strategies for chains": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062354975
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062477856
+      }
+    ],
+    "8.3 Implement merged lookup and wire references into validation": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794062477922
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794063775470
+      },
+      {
+        "executionId": "c52fa82b-aa1a-45f7-a82c-62b295ce8071",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794065028852
+      },
+      {
+        "executionId": "debd8e64-0982-4df6-a7a9-61fd9f5594f3",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794066180289
+      },
+      {
+        "executionId": "debd8e64-0982-4df6-a7a9-61fd9f5594f3",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794066940753
+      },
+      {
+        "executionId": "c89e5e25-5fd8-4127-93ba-b89417337a48",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794067091321
+      },
+      {
+        "executionId": "c89e5e25-5fd8-4127-93ba-b89417337a48",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794067517728
+      },
+      {
+        "executionId": "c89e5e25-5fd8-4127-93ba-b89417337a48",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794067624739
+      },
+      {
+        "executionId": "c89e5e25-5fd8-4127-93ba-b89417337a48",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794068020248
+      }
+    ],
+    "8.4 Implement dependency tracking": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794063775552
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794064074371
+      }
+    ],
+    "8.11 Write unit tests for the reference index": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794064074449
+      },
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794064221513
+      }
+    ],
+    "8. Reference index and layer cache": [
+      {
+        "executionId": "ab9e3643-9158-4c96-8d0e-0965628b43f2",
+        "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
+        "timestamp": 1794064221590
+      }
     ]
   }
 }

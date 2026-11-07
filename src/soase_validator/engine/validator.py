@@ -81,6 +81,10 @@ Walk rules
   plus every quoted value found at that path anywhere in the file, so a
   planet ``owner`` may name a player declared after the planets. Matching
   is case-sensitive. A file with no such values accepts only ``values``.
+* File-local names: a reference name that the validated file itself declares
+  at a key path listed in ``FILE_LOCAL_NAME_SOURCES`` for its kind and the
+  file's extension resolves without asking the lookup. Matching is
+  case-insensitive.
 * Shallow members: a line with a value that follows a block repeat at the
   repeat's own indentation and is unknown to the enclosing block, but is a
   field of that repeat block, belongs to that repeat, together with the
@@ -124,6 +128,7 @@ from soase_validator.engine.diagnostics import (
     V080,
 )
 from soase_validator.engine.model import Diagnostic, Severity, Span
+from soase_validator.engine.nameindex import FILE_LOCAL_NAME_SOURCES, scoped_token
 from soase_validator.engine.parser import (
     BoolValue,
     HexValue,
@@ -146,6 +151,7 @@ from soase_validator.engine.primitives import (
     check_position,
     validate_constraint,
 )
+from soase_validator.engine.refindex import RefKind, is_absolute_reference
 from soase_validator.engine.registry import (
     ConditionFieldDef,
     ConditionReferenceDef,
@@ -172,7 +178,7 @@ _LOG = logging.getLogger(__name__)
 #: Validation types whose values are names resolved through a ReferenceLookup.
 #: The kind passed to ``resolve`` is the validation type itself. These map
 #: one to one onto the Reference Index kinds in design.md (entities, brushes,
-#: string IDs, sounds, sound files, meshes, particles, explosions, galaxy
+#: string IDs, sounds, sound files, meshes, particles, textures, explosions, galaxy
 #: designs, galaxy templates, orbit body types).
 REFERENCE_KINDS = frozenset(
     {
@@ -183,6 +189,7 @@ REFERENCE_KINDS = frozenset(
         "SoundFile",
         "Mesh",
         "Particle",
+        "Texture",
         "Explosion",
         "GalaxyDesign",
         "GalaxyTemplate",
@@ -192,7 +199,7 @@ REFERENCE_KINDS = frozenset(
 
 #: Validation types holding a quoted name that has no Reference Index kind in
 #: design.md. They are checked for shape only and never resolved.
-UNRESOLVED_NAME_TYPES = frozenset({"Texture", "MeshPoint"})
+UNRESOLVED_NAME_TYPES = frozenset({"MeshPoint"})
 
 #: Enumeration listing the ``entityType`` values.
 ENTITY_TYPE_ENUM = "entityType"
@@ -232,12 +239,15 @@ ResolveResult = Found | NotFound | Unknown
 class ReferenceLookup(Protocol):
     """Resolves reference values to names in the Chain."""
 
-    def resolve(self, kind: str, name: str) -> ResolveResult:
+    def resolve(self, kind: str, name: str, file_extension: str = "") -> ResolveResult:
         """Resolve a reference.
 
         Args:
             kind: Reference kind, the validation type (for example ``Brush``).
             name: The referenced name; comparison is case-insensitive.
+            file_extension: Extension of the referencing file, for example
+                ``.particle``; decides whether a file name may carry its
+                extension.
 
         Returns:
             ``Found``, ``NotFound`` or ``Unknown``.
@@ -251,12 +261,13 @@ class ReferenceLookup(Protocol):
 class NullReferenceLookup:
     """Lookup used when no Chain is available: every reference is unknown."""
 
-    def resolve(self, kind: str, name: str) -> ResolveResult:
+    def resolve(self, kind: str, name: str, file_extension: str = "") -> ResolveResult:
         """Return ``Unknown`` for every reference.
 
         Args:
             kind: Reference kind (unused).
             name: Referenced name (unused).
+            file_extension: Referencing file extension (unused).
 
         Returns:
             Always ``Unknown``.
@@ -1637,6 +1648,65 @@ class _Walker:
                 f"{node.key}: {shown!r} is not a valid value for {self.version.value}",
             )
 
+    def _declared_in_file(self, kind: str, name: str) -> bool:
+        """Tell whether the validated file itself declares a name.
+
+        The key paths come from ``FILE_LOCAL_NAME_SOURCES`` for the kind and
+        the file's extension. Names compare case-insensitively.
+
+        Args:
+            kind: The validation type.
+            name: The referenced name.
+
+        Returns:
+            True when one of the file's own declarations equals the name.
+
+        Raises:
+            None.
+        """
+        by_extension = FILE_LOCAL_NAME_SOURCES.get(RefKind(kind), {})
+        wanted = name.casefold()
+        return any(
+            declared.casefold() == wanted
+            for path in by_extension.get(self.ctx.file.suffix.casefold(), ())
+            for declared in self._declared_values(path)
+        )
+
+    def _is_scoped_token(self, node: Node, kind: str) -> bool:
+        """Tell whether a name is a scoped token in the node's context.
+
+        Args:
+            node: The reference node; its value is a quoted string.
+            kind: The validation type.
+
+        Returns:
+            True when ``SCOPED_TOKENS`` lists the name for the file's
+            extension, the node's key path and a sibling value.
+
+        Raises:
+            None.
+        """
+        path: list[str] = []
+        scan: Node | None = node
+        while scan is not None:
+            path.append(scan.key)
+            scan = scan.parent
+        siblings = {
+            n.key: n.value.text
+            for n in (node.parent.children if node.parent is not None else self._roots)
+            if isinstance(n.value, StringValue)
+        }
+        return (
+            scoped_token(
+                RefKind(kind),
+                node.value.text if isinstance(node.value, StringValue) else "",
+                self.ctx.file.suffix.casefold(),
+                tuple(reversed(path)),
+                siblings,
+            )
+            is not None
+        )
+
     def _check_name(self, node: Node, kind: str) -> None:
         """Validate a quoted reference name and resolve it.
 
@@ -1656,7 +1726,15 @@ class _Walker:
         if kind not in REFERENCE_KINDS or not node.value.text:
             # An empty name means "none" and is never resolved.
             return
-        result = self.ctx.lookup.resolve(kind, node.value.text)
+        if kind == "Texture" and is_absolute_reference(node.value.text):
+            # Absolute paths name files on an author's machine and are not
+            # resolved.
+            return
+        if self._declared_in_file(kind, node.value.text):
+            return
+        result = self.ctx.lookup.resolve(kind, node.value.text, self.ctx.file.suffix.casefold())
+        if isinstance(result, NotFound) and self._is_scoped_token(node, kind):
+            return
         if isinstance(result, NotFound):
             self.emit(
                 _value_span(node),

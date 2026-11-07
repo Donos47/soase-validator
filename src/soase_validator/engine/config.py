@@ -14,6 +14,7 @@ expanded before a path is made absolute.
 
 Environment Variables:
     SOASE_VALIDATOR_GAME_VERSION: Game Version name.
+    SOASE_VALIDATOR_LANGUAGE: Localization folder name, for example ``en``.
     SOASE_REFERENCE_ROOT_<VERSION>: Reference Root for a Game Version, where
         ``<VERSION>`` is the enum member name, for example
         ``SOASE_REFERENCE_ROOT_REBELLION_198``.
@@ -44,6 +45,8 @@ PROJECT_FILE_NAME = "soase.json"
 USER_FILE_NAME = "config.json"
 APP_NAME = "soase-validator"
 ENV_GAME_VERSION = "SOASE_VALIDATOR_GAME_VERSION"
+ENV_LANGUAGE = "SOASE_VALIDATOR_LANGUAGE"
+DEFAULT_LANGUAGE = "en"
 ENV_REFERENCE_ROOT_PREFIX = "SOASE_REFERENCE_ROOT_"
 ALIAS_PREFIX = "@"
 
@@ -131,6 +134,7 @@ class ResolvedSettings:
         project_file: The nearest ``soase.json``, or None.
         sources: Provenance per setting, keyed by setting name.
         problems: Invalid settings found while resolving.
+        language: Name of the active localization folder.
     """
 
     game_version: GameVersion
@@ -146,6 +150,7 @@ class ResolvedSettings:
     project_file: Path | None
     sources: Mapping[str, SettingSource]
     problems: tuple[ConfigProblem, ...]
+    language: str = DEFAULT_LANGUAGE
 
 
 @dataclass(frozen=True, slots=True)
@@ -584,6 +589,7 @@ class _Resolver:
             _parse_bool,
             False,
         )
+        language = self._setting("language", ("language",), _parse_language, DEFAULT_LANGUAGE)
         return ResolvedSettings(
             game_version=game_version,
             reference_roots=roots,
@@ -598,6 +604,7 @@ class _Resolver:
             project_file=project_file,
             sources=dict(self._provenance),
             problems=tuple(self._problems),
+            language=language,
         )
 
     def _problem(self, setting: str, message: str, file: Path | None) -> None:
@@ -834,6 +841,25 @@ def _parse_bool(raw: Any, src: _Source) -> bool:
     return raw
 
 
+def _parse_language(raw: Any, src: _Source) -> str:
+    """Parse a localization folder name.
+
+    Args:
+        raw: Decoded value.
+        src: The source it came from.
+
+    Returns:
+        The name without surrounding whitespace.
+
+    Raises:
+        ValueError: If the value is not a plain folder name.
+    """
+    text = raw.strip() if isinstance(raw, str) else ""
+    if not text or "/" in text or "\\" in text or text.startswith("."):
+        raise ValueError("must be a localization folder name such as en")
+    return text
+
+
 def _parse_severity(raw: Any, src: _Source) -> Severity:
     """Parse a manifest severity.
 
@@ -978,6 +1004,8 @@ def _environment_source(env: Mapping[str, str], base: Path) -> _Source:
     data: dict[str, Any] = {}
     if env.get(ENV_GAME_VERSION):
         data["gameVersion"] = env[ENV_GAME_VERSION]
+    if env.get(ENV_LANGUAGE):
+        data["language"] = env[ENV_LANGUAGE]
     roots = {
         version.value: env[ENV_REFERENCE_ROOT_PREFIX + version.name]
         for version in GameVersion
@@ -997,7 +1025,10 @@ def _setting_values(settings: ResolvedSettings) -> list[tuple[str, Any]]:
     Returns:
         Pairs in a stable order.
     """
-    values: list[tuple[str, Any]] = [("gameVersion", settings.game_version.value)]
+    values: list[tuple[str, Any]] = [
+        ("gameVersion", settings.game_version.value),
+        ("language", settings.language),
+    ]
     values.extend(
         (f"referenceRoots.{v.value}", str(settings.reference_roots[v]))
         for v in GameVersion
@@ -1083,7 +1114,9 @@ def _write_json(file: Path, data: dict[str, Any]) -> None:
 
 __all__ = [
     "ALIAS_PREFIX",
+    "DEFAULT_LANGUAGE",
     "ENV_GAME_VERSION",
+    "ENV_LANGUAGE",
     "ENV_REFERENCE_ROOT_PREFIX",
     "PROJECT_FILE_NAME",
     "ConfigProblem",

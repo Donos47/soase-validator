@@ -32,19 +32,26 @@ from soase_validator.engine.diagnostics import C010, C020
 
 EXTENDS_KEY = "extends"
 
-#: Single definition of the directory names that mark a game data root.
-GAME_DATA_DIRECTORIES = (
-    "Font",
+_CURRENT_DIRECTORIES = (
+    "ConvertXSI",
     "Galaxy",
+    "Galaxy Forge",
     "GameInfo",
+    "Launcher",
+    "Localizations",
     "Mesh",
     "Particle",
+    "Particle Forge",
     "PipelineEffect",
-    "Sound",
-    "String",
     "TextureAnimations",
+    "Textures",
     "Window",
 )
+
+_LEGACY_DIRECTORIES = ("Font", "Sound", "String")
+
+#: Single definition of the top-level directory names of game data.
+GAME_DATA_DIRECTORIES = (*_CURRENT_DIRECTORIES, *_LEGACY_DIRECTORIES)
 
 LayerKind = Literal["game", "mod", "project"]
 LayerStatus = Literal["ok", "missing", "unusable"]

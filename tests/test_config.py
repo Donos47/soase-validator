@@ -276,3 +276,47 @@ def test_writers_reject_invalid_existing_file(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="not valid JSON"):
         add_layer(file, "x")
     assert file.read_text(encoding="utf-8") == "{oops"
+
+
+def test_language_defaults_to_en_and_follows_the_setting_precedence(
+    tmp_path: Path, user_file: Path
+) -> None:
+    default = resolve_settings(tmp_path, env={}, user_file=user_file)
+    _write(user_file, {"language": "ru"})
+    user_only = resolve_settings(tmp_path, env={}, user_file=user_file)
+    editor = resolve_settings(tmp_path, {"language": "fr"}, env={}, user_file=user_file)
+    env = {"SOASE_VALIDATOR_LANGUAGE": "de"}
+    with_env = resolve_settings(tmp_path, {"language": "fr"}, env=env, user_file=user_file)
+    _write(tmp_path / "soase.json", {"language": "zh-CN"})
+    with_project = resolve_settings(tmp_path, {"language": "fr"}, env=env, user_file=user_file)
+
+    assert (default.language, default.sources["language"].kind) == ("en", SourceKind.DEFAULT)
+    assert (user_only.language, user_only.sources["language"].kind) == ("ru", SourceKind.USER)
+    assert (editor.language, editor.sources["language"].kind) == ("fr", SourceKind.EDITOR)
+    assert (with_env.language, with_env.sources["language"].kind) == ("de", SourceKind.ENVIRONMENT)
+    assert (with_project.language, with_project.sources["language"].kind) == (
+        "zh-CN",
+        SourceKind.PROJECT,
+    )
+
+
+@pytest.mark.parametrize("bad", [3, "", "  ", "a/b", "a\\b", ".hidden", ["en"]])
+def test_invalid_language_is_reported_and_falls_back_to_the_default(
+    tmp_path: Path, user_file: Path, bad: object
+) -> None:
+    _write(tmp_path / "soase.json", {"language": bad})
+
+    settings = resolve_settings(tmp_path, env={}, user_file=user_file)
+
+    assert settings.language == "en"
+    assert [p.setting for p in settings.problems] == ["language"]
+
+
+def test_effective_config_lists_the_language(tmp_path: Path, user_file: Path) -> None:
+    _write(tmp_path / "soase.json", {"language": " de "})
+
+    report = effective_config(tmp_path, env={}, user_file=user_file)
+
+    by_name = {e.name: e for e in report.entries}
+    assert by_name["language"].value == "de"
+    assert by_name["language"].source.kind is SourceKind.PROJECT

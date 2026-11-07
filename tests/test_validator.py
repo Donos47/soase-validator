@@ -92,9 +92,11 @@ class _Lookup:
     def __init__(self, result: ResolveResult) -> None:
         self.result = result
         self.calls: list[tuple[str, str]] = []
+        self.file_extensions: list[str] = []
 
-    def resolve(self, kind: str, name: str) -> ResolveResult:
+    def resolve(self, kind: str, name: str, file_extension: str = "") -> ResolveResult:
         self.calls.append((kind, name))
+        self.file_extensions.append(file_extension)
         return self.result
 
 
@@ -625,10 +627,39 @@ def test_default_lookup_reports_nothing() -> None:
     assert _run(_refs(), 'b "X"\n') == []
 
 
-def test_empty_names_and_texture_names_are_not_resolved() -> None:
+def test_empty_names_are_not_resolved() -> None:
     lookup = _Lookup(NotFound())
-    assert _run(_refs(), 'b ""\nt "Anything"\n', lookup=lookup) == []
+    assert _run(_refs(), 'b ""\nt ""\n', lookup=lookup) == []
     assert lookup.calls == []
+
+
+def test_texture_names_are_resolved_and_reported() -> None:
+    lookup = _Lookup(NotFound())
+    diags = _run(_refs(), 't "Missing"\n', lookup=lookup)
+    assert _brief(diags) == [(dg.R010, 1, 2, len('t "Missing"'))]
+    assert "Texture" in diags[0].message
+    assert lookup.calls == [("Texture", "Missing")]
+
+
+@pytest.mark.parametrize("name", ["Flare", "Flare.tga", "Flare.dds"])
+def test_found_texture_names_report_nothing(name: str) -> None:
+    assert _run(_refs(), f't "{name}"\n', lookup=_Lookup(Found())) == []
+
+
+@pytest.mark.parametrize(
+    "name",
+    [r"C:\Users\author\Textures\Flare.tga", "d:/Textures/Flare.dds", r"sub\Flare.tga"],
+)
+def test_absolute_texture_paths_are_skipped_silently(name: str) -> None:
+    lookup = _Lookup(NotFound())
+    assert _run(_refs(), f't "{name}"\n', lookup=lookup) == []
+    assert lookup.calls == []
+
+
+def test_lookup_receives_the_referencing_file_extension() -> None:
+    lookup = _Lookup(Found())
+    _run(_refs(), 'b "X"\n', name="A.FOO", lookup=lookup)
+    assert lookup.file_extensions == [".foo"]
 
 
 def test_reference_value_must_be_a_quoted_name() -> None:

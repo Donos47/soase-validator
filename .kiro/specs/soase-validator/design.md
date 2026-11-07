@@ -374,7 +374,7 @@ class Chain:
 2. For each Layer directory that has its own `soase.json` with `extends`, splice the parent Chain beneath it, depth-first. A visited-set detects cycles and raises `ChainCycleError` naming the Layers, reported as `SOASE-C010` (Requirement 14.6.1).
 3. De-duplicate, keeping each Layer at its lowest position (Requirement 14.6.2).
 4. Append the Project Mod Root as the implicit top Layer unless listed (Requirement 14.2).
-5. Mark Layers `missing` if the path does not exist and `unusable` if a game Layer does not look like game data. A directory looks like game data when it contains at least one subdirectory named `Font`, `Galaxy`, `GameInfo`, `Mesh`, `Particle`, `PipelineEffect`, `Sound`, `String`, `TextureAnimations` or `Window`, compared case-insensitively; `GAME_DATA_DIRECTORIES` in `chain.py` is the single definition. One warning per such Layer: `SOASE-C020` (Requirement 4.6.3, 14.9).
+5. Mark Layers `missing` if the path does not exist and `unusable` if a game Layer does not look like game data. A directory looks like game data when it contains at least one subdirectory named in the top-level directory list below, compared case-insensitively; `GAME_DATA_DIRECTORIES` in `chain.py` is the single definition. A Layer need not hold every directory, so one directory is enough. One warning per such Layer: `SOASE-C020` (Requirement 4.6.3, 14.9).
 6. `complete` is true exactly when no declared (non-Project) Layer is `missing` or `unusable`. The game Layer is optional, so a Chain with no game Layer and every declared Layer `ok` is complete, and so is a Project with nothing configured (Requirement 4.6.1).
 
 The Chain uses the Project's single Game Version (Requirement 14.8). It is built only from configuration, never from `EnabledMods.txt` (Requirement 14.17).
@@ -392,8 +392,8 @@ class LayerIndex:
 ```
 
 - `RefKind` covers entities, brushes, string IDs, sounds, sound files, meshes, particles, textures, explosions, galaxy designs, galaxy templates, and orbit body types (Requirements 4.1, 4.9).
-- Only standard game data directories and files directly in the Layer root are scanned. Directories starting with `.` and VCS directories (`.git`, `.svn`, `.hg`) are skipped (Requirement 14.4.1).
-- Each Layer index is built independently, cached in memory keyed by `(resolved path, game version)` and persisted as a pickle-free JSON file in the platform cache directory. The cache is reused across Projects sharing a Layer and is invalidated when the signature changes (Requirement 14.10).
+- Only the top-level game data directories (see Top-level directories) and files directly in the Layer root are scanned. Directories starting with `.` and VCS directories (`.git`, `.svn`, `.hg`) are skipped (Requirement 14.4.1).
+- Each Layer index is built independently, cached in memory keyed by `(resolved path, game version, language)` and persisted as a pickle-free JSON file in the platform cache directory. The language is part of the key (and of the stored file, which is rejected when it names another language) because it decides which localized files define names. The cache is reused across Projects sharing a Layer and language and is invalidated when the signature changes (Requirement 14.10).
 - Incremental update: on save, only the changed file is re-parsed and its names replaced in the owning Layer's index (Requirement 4.7). Changing the Game Version rebuilds all indexes (Requirement 4.2.1).
 
 **Merged lookup** (`ChainIndex`): resolves `resolve(kind, name)` by casefolding the name and scanning Layers from highest to lowest, returning the first hit as `Resolution(layer, entry)` plus `overrides: Layer | None` for the next lower hit (Requirements 4.3, 4.4, 14.5, 14.12). Name sets for manifest-governed kinds are limited to names listed in the manifest selected by Requirement 14.4 (see below).
@@ -402,9 +402,75 @@ class LayerIndex:
 
 **File references** (Requirement 4.9): kinds that resolve to files (Texture, SoundFile, Mesh, Particle and any other file-reference kind) are answered from `LayerIndex.files` by existence only. The lookup scans Layers from highest to lowest and compares the relative path case-insensitively (Requirement 4.4). The referenced file's content is never read or validated. An incomplete Chain gives `Unknown`, so no diagnostic is emitted.
 
-The per-kind folder, extension and name-normalisation table (whether the value includes the extension, subfolder handling, case) is **TO BE FILLED** from a Reference Root survey in task 8.1. It has not been surveyed yet, so no folders or extensions are specified here and none may be assumed.
+Per-kind rules, from the Rebellion 1.98 Reference Root survey and, for Texture, a mod project that ships textures (names are compared casefolded; none of these folders has subfolders):
 
-The validator currently checks `Texture` values for shape only (`UNRESOLVED_NAME_TYPES` in `validator.py`). Task 8.1 moves `Texture` into the reference kinds once the index can answer it. `MeshPoint` is not a file and stays shape-only.
+| Kind | Folder | Extensions tried | Name in files | Base-game names with no file |
+| --- | --- | --- | --- | --- |
+| SoundFile | `Sound`, or `Localizations/<language>/Sound` (see Sound and String layouts) | `.ogg` | includes the extension (`.sounddata`); a name without it also resolves | 0 of 1579 |
+| Mesh | `Mesh` | `.mesh` (on disk `.MESH`) | no extension in `.entity`, `.asteroidDef`, `.skyboxbackdropdata`; with extension in `.particle` only | 1 (a `.particle` value) |
+| Particle | `Particle` | `.particle` | no extension | 1 of 627 in `.entity` (a malformed value) |
+| Texture | `Textures` (flat) | `.dds`, `.tga` | no extension in `.brushes`, `.entity` and most of `.skyboxbackdropdata`; `.tga` or `.dds` in `.particle`; absolute paths in `.particle` | not determinable: the Reference Root holds no image files |
+
+A name that already ends with one of the kind's extensions is not extended again. `FileReferenceRule` holds a tuple of extensions, the referencing file types whose names may carry an extension, and whether any extension names the exact file.
+
+**User decisions (task 8.1)**:
+
+1. Texture existence: the folder is `Textures` (flat). A name without an extension resolves when `Textures/<name>.dds` or `Textures/<name>.tga` exists, compared case-insensitively. A name with an extension matches that file exactly. `Textures` is one of the top-level directories below.
+2. Absolute Texture paths (a drive letter or a path separator, as seen in `.particle` `textureName`) are skipped silently: they are neither resolved nor reported. An empty name stays "none" and is not resolved.
+3. A Mesh value carries the `.mesh` extension only where the evidence shows it (`.particle`); in every other file type a Mesh name has no extension, so `Ship.mesh` does not resolve there. `ReferenceLookup.resolve` and `find_file` take an optional `file_extension` argument, the referencing file's extension, to select the form.
+4. The malformed Particle value in `.entity` (a tab followed by `effectName` and a trailing space) is not special-cased; the normal unresolved diagnostic applies.
+
+`MeshPoint` is not a file and stays shape-only.
+
+**Top-level directories** (user decision, task 8.3): the game data directories are `ConvertXSI`, `Galaxy`, `Galaxy Forge`, `GameInfo`, `Launcher`, `Localizations`, `Mesh`, `Particle`, `Particle Forge`, `PipelineEffect`, `TextureAnimations`, `Textures` and `Window`. Older game versions, and the Rebellion 1.98 Reference Root, also have `Sound` and `String` as independent top-level directories (and `Font`); in the Localizations layout `Sound` and `String` live inside `Localizations`. Both organisations are acceptable. A mod or base-game Layer need not contain every directory, because the game falls back to lower Layers for the missing ones. The Reference Index scans exactly these directories (each with its subdirectories) plus the files directly in the Layer root, and a game Layer is usable when it holds any one of them. `GAME_DATA_DIRECTORIES` in `chain.py` is the only definition of the list; `Font`, `Sound` and `String` are its legacy entries.
+
+**Name sources** (`NAME_SOURCES` in `nameindex.py`, task 8.3). A name of a named kind is defined by a block of a defining file (top-level unless the rule gives a container path); the Reference Root survey confirms each rule. Names are compared casefolded and the highest Layer wins.
+
+| Kind | Defining files | Block(s) | Name key |
+| --- | --- | --- | --- |
+| Entity | `.entity` directly in `GameInfo` | the file itself | the file stem |
+| Brush | `.brushes` anywhere in the scanned directories | `brush` | `name` |
+| StringInfo | any `.str` directly in `String` (legacy layout) or directly in `Localizations/<language>/String` for the configured language and for `en` | `StringInfo` | `ID` |
+| Sound | `.sounddata` directly in `GameInfo` | `effect`, `music` | `name` |
+| Explosion | `.explosiondata` directly in `GameInfo` | `explosionEffectGroup` | `groupName` |
+| GalaxyOrbitBodyType | `.galaxyScenarioDef` directly in `GameInfo` | `orbitBodyType` | `typeName` |
+| GalaxyDesign | `.galaxyScenarioDef` directly in `GameInfo` | `starType`, `planetType`, `planetItemType`, `playerType`, `player` | `designName` |
+| GalaxyDesign | `.constants` directly in `GameInfo` | `minorFactionPlayerDef` inside `GameplayConstants.minorFactionsData` | `name` |
+| GalaxyTemplate | `.galaxyScenarioDef` directly in `GameInfo` | `planetItemsTemplate` | `templateName` |
+
+**Galaxy design and template names** (user decision, task 8.3). The galaxy scenario definition file (GSD) is the only cross-file source of these names. `designName` is set by the GSD blocks that tie a design name to an entity file: stars, planets, planet items, player types and the set of players. `templateName` is set by its planet-items templates. A `.galaxy` file that declares its own `template` blocks (`templateName`) or `player` blocks (`designName`) creates names that only references inside that same file can use; they are never indexed. The validator resolves a reference whose name the validated file declares at a key path of `FILE_LOCAL_NAME_SOURCES` (`player.designName`, `template.templateName`, for `.galaxy` files) before it asks the lookup, so such a reference does not become a dependency on any Layer. Matching is case-insensitive like every other reference. The in-file `owner` values keep their `values_from` rule. No lenient fallback exists: a name that neither the GSD nor the file declares is reported unresolved.
+
+**Sound and String layouts** (user decision, task 8.3). Both the legacy layout (`Sound/<file>.ogg`, `String/<file>.str` at the top level) and the Localizations layout (inside `Localizations`) are acceptable, and `.sounddata` files stay in `GameInfo` in both. The Localizations layout keeps `Sound`, `String`, `Font` and `Movie` below one folder per language (`Localizations/<language>/...`).
+
+**User decisions (task 8.3, localization)**:
+
+1. The active localization comes from the game's in-game settings, so the Project configures it: the `language` setting (`soase.json` key `language`, environment variable `SOASE_VALIDATOR_LANGUAGE`, same precedence as every other setting, default `en`). The value is a folder name below `Localizations`, compared casefolded; an empty value, a value with a path separator or a leading `.` is a configuration problem and the default applies.
+2. The game falls back to `en` for any file the chosen localization lacks. A SoundFile or StringInfo name is therefore unresolved only when it exists in neither the configured language nor `en` (nor the legacy top-level folder). When the configured language is `en` the two coincide.
+3. Both layouts are accepted together. The highest Layer still wins. Within one Layer the lookup order is: the configured language, then `en`, then the legacy top-level folder (`Sound`, `String`). This order is a decision, not an observation: the surveyed installs hold either layout, never both in one Layer, so no evidence distinguishes the orders.
+4. SoundFile candidates are `Localizations/<language>/Sound/<name>.ogg`, the same under `en`, and `Sound/<name>.ogg`. StringInfo names are read from every `.str` file directly in `Localizations/<language>/String` and `Localizations/en/String`, and from the legacy `String`. The Localizations layout names the file `English.str` in every language folder (a Russian or Japanese folder holds an `English.str` too), so the file name is never interpreted.
+5. The Layer cache is keyed by the language and a change of language rebuilds the affected indexes (see Per-Layer index). Dependent tracking takes the language so that a changed localized `.ogg` re-validates the files that referenced it only when that language is in use.
+
+**Built-in tokens** (user decision, task 8.3). `BUILTIN_TOKENS` in `nameindex.py` lists GalaxyDesign values that need no defining file; they are compared casefolded and a design defined by a Layer with the same name takes precedence (provenance stays the Layer):
+
+| Token | Valid when |
+| --- | --- |
+| `NoOwner` | always |
+| `PlanetOwner` | always |
+| `RandomMilitia` | the Chain defines at least one GalaxyDesign name that is `Militia` followed by one or more ASCII digits (full match, casefolded) |
+
+`RandomMilitia` selects at random one of the `MilitiaN` players of the galaxy scenario definition. Every surveyed galaxy scenario definition defines players named `Militia0` to `Militia19` (the reference and the binary-format install) or `Militia0` only (the surveyed mod); no other player name contains `Militia`, so the pattern is unambiguous. If no such player is defined in a complete Chain the token is unresolved (`SOASE-R010`); in an incomplete Chain it is undecided like every other name. Dependent tracking revalidates a file that used `RandomMilitia` when a matching name is added or removed.
+
+**Minor faction names** (user decision, task 8.3). The `name` of each `minorFactionPlayerDef` block in `GameplayConstants.minorFactionsData` of `GameInfo/Gameplay.constants` is a GalaxyDesign name (17 blocks in the base game, more in mods). `NameSource.parents` holds the container path from the file root, so a `minorFactionPlayerDef` at any other level defines nothing.
+
+**Race tokens: Tech, Psi and Phase** (user decision, task 8.3). `Tech`, `Psi` and `Phase` are the base-game default races. They are GalaxyDesign values only as the `param` of a `PlanetOwnerIsRaceQuickStart` condition of a `.galaxy` file: the node's key path ends in `condition.param` and its sibling `type` holds `PlanetOwnerIsRaceQuickStart` (exact value, the enumeration member). `SCOPED_TOKENS` in `nameindex.py` holds one row per token (kind, name, file extension, trailing key path, sibling key, sibling value) and `scoped_token` matches a row; the validator evaluates it where the sibling values are available. Everywhere else (an `owner`, a `param` of `PlanetOwnerIsRaceNormalStart` or `PlanetOwnerIsMinorFactionWithFactionName`, planet types, items, other file types) the names stay unresolved (`SOASE-R010`).
+
+- Names compare casefolded, like every other reference. Every real use is exact case; the casefolded comparison keeps the rule consistent with the other tokens.
+- A design that a Layer defines wins: the validator asks the lookup first and applies a scoped token only to a `NotFound` result, so provenance stays the Layer.
+- Dependency tracking is unchanged. The lookup records the name as unprovided (no Layer), so a Layer that later defines the same name re-validates the file; a scoped token creates no other dependent and no stale one. In an incomplete Chain the result is `Unknown` and nothing is reported either way.
+
+**Names left unresolved** (user decision, task 8.3). `DeadAsteroidFair` (an `orbitBodyType` name used as a `.galaxy` `star.planet.type`) and `Other:Flag:Beacon` are reported as unresolved GalaxyDesign values; no rule is added for them.
+
+**Dependent semantics** (user decision, task 8.3): a changed name re-validates every tracked file whose recorded provider is the changed Layer or lies below it, so the highest Layer wins; this is unchanged.
 
 **Dependency tracking**: the Engine records for each validated file the set of `(Layer, RefKind, name)` it resolved. When `on_file_saved` or a file watcher reports a change, the names added or removed in the index are intersected with these sets to find dependents to re-validate (Requirements 4.8, 14.11).
 
@@ -491,7 +557,7 @@ The LSP code action for `SOASE-M010` is offered only when the governing manifest
 Settings are resolved per setting, highest precedence first (Requirement 8.1):
 
 1. project file `soase.json` (nearest at or above the validated file; omitted settings fall through to the next `soase.json` above, Requirement 14.18),
-2. environment variables (`SOASE_VALIDATOR_GAME_VERSION`, `SOASE_VALIDATOR_REFERENCE_ROOT_<VERSION>`, ...),
+2. environment variables (`SOASE_VALIDATOR_GAME_VERSION`, `SOASE_VALIDATOR_LANGUAGE`, `SOASE_VALIDATOR_REFERENCE_ROOT_<VERSION>`, ...),
 3. editor-supplied settings from LSP initialization options and `didChangeConfiguration` (Requirement 8.14),
 4. user-level file (`platformdirs.user_config_dir("soase-validator")/config.json`),
 5. built-in defaults: Game Version `rebellion-1.98`, Mod Root is the nearest directory containing a manifest (Requirement 8.3).
@@ -501,6 +567,7 @@ Settings are resolved per setting, highest precedence first (Requirement 8.1):
 ```json
 {
   "gameVersion": "rebellion-1.98",
+  "language": "en",
   "referenceRoots": {"rebellion-1.98": "~/path/to/sins-rebellion-reference"},
   "modRoots": ["."],
   "layers": ["@e4x", "@interregnum"],
@@ -629,6 +696,7 @@ class ResolvedSettings:
     suppress_limited_notice: bool
     sources: Mapping[str, SettingSource]    # per-setting provenance
     problems: tuple[ConfigProblem, ...]
+    language: str = "en"                    # localization folder name
 ```
 
 ### Positions and Values

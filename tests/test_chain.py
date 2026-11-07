@@ -6,7 +6,14 @@ import json
 from dataclasses import replace
 from pathlib import Path
 
-from soase_validator.engine.chain import Chain, looks_like_game_data, resolve_chain
+import pytest
+
+from soase_validator.engine.chain import (
+    GAME_DATA_DIRECTORIES,
+    Chain,
+    looks_like_game_data,
+    resolve_chain,
+)
 from soase_validator.engine.config import ManifestPrefs, ResolvedSettings
 from soase_validator.engine.diagnostics import C010, C020
 from soase_validator.engine.primitives import NumericPrefs
@@ -199,6 +206,17 @@ def test_game_data_marker_is_case_insensitive(tmp_path: Path) -> None:
     other = tmp_path / "other"
     (other / "Entity").mkdir(parents=True)
     assert not looks_like_game_data(other)
+
+
+@pytest.mark.parametrize("directory", GAME_DATA_DIRECTORIES)
+def test_any_single_listed_directory_makes_a_usable_game_layer(
+    tmp_path: Path, directory: str
+) -> None:
+    game = tmp_path / "game"
+    (game / directory).mkdir(parents=True)
+    chain = resolve_chain(_settings((), (), game))
+    assert chain.layers[0].status == "ok"
+    assert chain.complete
 
 
 def test_reference_root_of_other_version_is_ignored(tmp_path: Path) -> None:
