@@ -122,7 +122,7 @@ Conventions for every task:
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
-- [ ] 5. Primitives and validator
+- [x] 5. Primitives and validator
   - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
@@ -201,7 +201,7 @@ Conventions for every task:
     - Tighten `pyproject.toml` ruff: add `ERA` and `W505` (`max-doc-length = 100`) to `select`; enable `D` for `tests/` (keep the `tools/` ignore only if it cannot be fixed cheaply, and say so); fix what they report
     - Comments only: no behaviour change; `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` still pass
 
-  - [ ] 5.14 Place shallow members of any block, with one `SOASE-V080` and no follow-on findings
+  - [x] 5.14 Place shallow members of any block, with one `SOASE-V080` and no follow-on findings
     - Survey first (read-only, temporary script, notes in `reference/`): over the Rebellion 1.98 Reference Root, tally per extension the lines that meet the Requirement 3.17 conditions, and confirm that the only Reference Root shapes are the planet `owner` ones from task 5.10; stop and report if any other Reference Root file would change
     - Generalise the task 5.10 placement from counted repeats to any block: a value line exactly one level shallower than the block ending right before it, not defined by the block its indentation places it in, and a field or count key of the ended block, is validated with the deeper lines after it as members of the ended block; the shape gives exactly one `SOASE-V080` naming the shallow line; no `SOASE-V020`, `V030`, `V060` or `V070` from the misplacement
     - Keep the planet `owner` results unchanged (132 `SOASE-V080` over the Reference Root, nothing else); do not change count lines deeper than their repeats or over-indented block headers
@@ -389,6 +389,14 @@ Conventions for every task:
   - [x] 12.3 Write the opt-in performance check
     - Add a test marked `perf` (excluded from the default run) that checks a typical `.entity` validation completes within 500 ms on a warm index using a synthetic file, and skips when the reference root is absent
     - _Requirements: 5.6_
+
+  - [x] 12.4 Report files and directories outside every Mod Root (`SOASE-C050`)
+    - Add `SOASE-C050` (warning, family C) to the code catalogue in `engine/diagnostics.py`: "File is outside every Mod Root; it was not validated"; the message names the file and how to fix it (add a manifest to the mod folder, or set `modRoots` in `soase.json`)
+    - In the facade, `validate_file` returns this one Diagnostic instead of an empty list for a file outside every Mod Root; `validate_directory` returns one `SOASE-C050` for the directory when none of its supported files lies inside a Mod Root, and keeps skipping outside files silently when others are inside. CLI, MCP and LSP get it through the facade only; `disabledCodes` can hide it
+    - CLI `validate`: the warning alone keeps exit status 0 (Requirement 9.9); check the text and JSON output show it
+    - Tests: single file outside a Mod Root (facade, CLI text and JSON, MCP tool); directory with no Mod Root; directory mixing inside and outside files gives no `SOASE-C050`; a file inside a Mod Root is unchanged; `disabledCodes` hides it
+    - Add the code to the README diagnostic catalogue and describe the rule in design.md (Engine facade section)
+    - _Requirements: 8.3, 8.3.1, 9.1, 9.2, 9.9_
 
 - [x] 13. LSP server
   - [x] 13.1 Implement `lsp/server.py`

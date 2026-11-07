@@ -56,6 +56,7 @@ from soase_validator.engine.deptracker import (
 )
 from soase_validator.engine.diagnostics import (
     C040,
+    C050,
     CODE_CATALOGUE,
     M010,
     X001,
@@ -459,8 +460,8 @@ class Engine:
         """Validate one file.
 
         Only files inside the Project's Mod Roots are validated; any other
-        file gives no Diagnostics. A file whose extension has no Definition is
-        not parsed, but still receives the manifest and override reports that
+        file gives one ``SOASE-C050`` warning. A file whose extension has no
+        Definition is not parsed, but still receives the manifest and override reports that
         concern it.
 
         Args:
@@ -764,6 +765,7 @@ class Engine:
             OSError: If the file cannot be read.
         """
         if not _within(settings.mod_roots, path):
+            out.append(_outside_mod_roots(path, directory=False))
             return
         registry = self.registry
         state = self._state_for(settings)
@@ -800,6 +802,7 @@ class Engine:
         refreshed: set[Fingerprint] = set()
         seen: list[tuple[_ProjectState, ResolvedSettings]] = []
         registry = self.registry
+        outside = False
         for directory, subdirectories, names in os.walk(base):
             subdirectories[:] = sorted(d for d in subdirectories if not _skipped(d))
             folder = Path(directory)
@@ -815,6 +818,7 @@ class Engine:
                     memo[folder] = self.resolve_settings(folder)
                 settings = memo[folder]
                 if not _within(settings.mod_roots, file):
+                    outside = True
                     continue
                 fingerprint = _fingerprint(settings)
                 state = self._state_for(settings, refresh=fingerprint not in refreshed)
@@ -822,6 +826,11 @@ class Engine:
                     refreshed.add(fingerprint)
                     seen.append((state, settings))
                 results[file] = self.validate_file(file, None, settings)
+        if outside and not seen:
+            notice = [_outside_mod_roots(base, directory=True)]
+            disabled = self.resolve_settings(base).disabled_codes
+            results[base] = filter_disabled(notice, disabled)
+            return
         reported = {_key(file) for file in results}
         for state, settings in seen:
             extra = filter_disabled(self._manifest_diagnostics(state), settings.disabled_codes)
@@ -1105,6 +1114,29 @@ def _override_notes(indexes: tuple[LayerIndex, ...], file: Path) -> list[Diagnos
                 return [Diagnostic(file, Range(start, start), Severity.INFO, C040, message)]
         return []
     return []
+
+
+def _outside_mod_roots(path: Path, *, directory: bool) -> Diagnostic:
+    """Build the warning for a file or directory that no Mod Root contains.
+
+    Args:
+        path: The file, or the directory whose supported files all lie outside.
+        directory: Whether ``path`` is a directory.
+
+    Returns:
+        A ``SOASE-C050`` Diagnostic at the start of the file.
+    """
+    subject = (
+        f"No supported file of directory {path} is inside a Mod Root; none was validated. "
+        if directory
+        else f"File {path} is outside every Mod Root; it was not validated. "
+    )
+    message = (
+        subject + "Add a manifest (for example entity.manifest) to the mod folder, or set "
+        "modRoots in soase.json."
+    )
+    start = Position(0, 0)
+    return Diagnostic(path, Range(start, start), Severity.WARNING, C050, message)
 
 
 def _internal_error(file: Path, error: Exception) -> Diagnostic:

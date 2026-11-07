@@ -34,7 +34,7 @@ def test_catalogue_contains_required_codes() -> None:
         "SOASE-V010", "SOASE-V020", "SOASE-V030", "SOASE-V040",
         "SOASE-V050", "SOASE-V060", "SOASE-V070", "SOASE-V080",
         "SOASE-R010",
-        "SOASE-C010", "SOASE-C020", "SOASE-C030", "SOASE-C040",
+        "SOASE-C010", "SOASE-C020", "SOASE-C030", "SOASE-C040", "SOASE-C050",
         "SOASE-M010", "SOASE-M020", "SOASE-M030", "SOASE-M040",
         "SOASE-D001", "SOASE-X001",
     }  # fmt: skip

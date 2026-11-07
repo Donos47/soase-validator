@@ -50,6 +50,7 @@ C010 = "SOASE-C010"
 C020 = "SOASE-C020"
 C030 = "SOASE-C030"
 C040 = "SOASE-C040"
+C050 = "SOASE-C050"
 # Manifest codes.
 M010 = "SOASE-M010"
 M020 = "SOASE-M020"
@@ -98,6 +99,7 @@ CODE_CATALOGUE: dict[str, CodeInfo] = {
         _info(C020, Severity.WARNING, "Layer missing or unusable"),
         _info(C030, Severity.INFO, "Reference checks limited by missing Layers"),
         _info(C040, Severity.INFO, "Project file overrides a file of a lower Layer"),
+        _info(C050, Severity.WARNING, "File is outside every Mod Root; it was not validated"),
         _info(M010, Severity.ERROR, "File not listed in governing manifest"),
         _info(M020, Severity.INFO, "Manifest entry matches no file in any Layer"),
         _info(M030, Severity.ERROR, "Manifest count differs from the listed names"),

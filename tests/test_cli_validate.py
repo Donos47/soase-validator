@@ -224,3 +224,58 @@ def test_a_reference_to_a_base_game_name_is_unresolved_for_the_project_alone(
 
     assert code == 1
     assert "SOASE-R010" in capsys.readouterr().out
+
+
+def test_a_file_outside_every_mod_root_warns_and_exits_zero_in_json(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    file = _write(tmp_path / "loose", "GameInfo/Test.foo", BAD_FOO)
+
+    code = main(["validate", str(file), "--format", "json"], _engine(tmp_path))
+
+    items = _json_diagnostics(capsys)
+    assert [item["code"] for item in items] == ["SOASE-C050"]
+    assert items[0]["severity"] == "warning"
+    assert items[0]["file"] == str(file)
+    assert items[0]["line"] == 1 and items[0]["column"] == 1
+    assert code == 0
+
+
+def test_a_file_outside_every_mod_root_warns_in_text(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    file = _write(tmp_path / "loose", "GameInfo/Test.foo", BAD_FOO)
+
+    code = main(["validate", str(file)], _engine(tmp_path))
+
+    lines = capsys.readouterr().out.splitlines()
+    assert len(lines) == 1
+    assert lines[0].startswith(f"{file}:1:1: warning SOASE-C050 ")
+    assert code == 0
+
+
+def test_a_directory_outside_every_mod_root_warns_once(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    folder = tmp_path / "loose"
+    _write(folder, "GameInfo/Test.foo", BAD_FOO)
+    _write(folder, "GameInfo/Other.foo", BAD_FOO)
+
+    code = main(["validate", str(folder), "--format", "json"], _engine(tmp_path))
+
+    items = _json_diagnostics(capsys)
+    assert [item["code"] for item in items] == ["SOASE-C050"]
+    assert items[0]["file"] == str(folder)
+    assert code == 0
+
+
+def test_the_mcp_tools_report_the_outside_warning(tmp_path: Path) -> None:
+    folder = tmp_path / "loose"
+    file = _write(folder, "Test.foo", BAD_FOO)
+
+    single = _call(_engine(tmp_path), "validate_file", {"path": str(file)})["diagnostics"]
+    grouped = _call(_engine(tmp_path), "validate_directory", {"path": str(folder)})["files"]
+
+    assert [item["code"] for item in single] == ["SOASE-C050"]
+    assert list(grouped) == [str(folder)]
+    assert [item["code"] for item in grouped[str(folder)]] == ["SOASE-C050"]

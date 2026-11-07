@@ -165,6 +165,12 @@ class Engine:
     def manifest_apply(self, plan: SyncPlan) -> list[BackupRecord]: ...
 ```
 
+**Files outside every Mod Root** (Requirement 8.3.1). Only files inside a Mod Root are validated, so the facade reports the skip instead of returning an empty result:
+
+- `validate_file` returns one `SOASE-C050` warning at line 0, column 0 (file-level, like `SOASE-C030`) when the file lies outside every Mod Root. The message names the file, states that it was not validated, and gives the two fixes: add a manifest to the mod folder, or set `modRoots` in `soase.json`.
+- `validate_directory` walks supported files (a manifest or a file whose extension has a root Definition). When at least one such file lies outside every Mod Root and none lies inside, it returns a single `SOASE-C050` keyed by the directory path, so the CLI prints it with the directory as its file and the MCP `validate_directory` result groups it under the directory path. When some supported files lie inside, outside files are skipped silently. A directory with no supported file, or one inside a Mod Root that merely has none, gives an empty result.
+- `disabledCodes` removes the code in both cases. The CLI, MCP and LSP receive it through the facade only; the warning alone leaves the `validate` exit status at 0 (Requirement 9.9), and the LSP publishes it for an opened file and clears it on close like any other Diagnostic.
+
 ### Definition Loader and Registry (Requirements 1, 12)
 
 Definitions are bundled as JSON files in `definitions/`, one per structure family, plus `enums.json`. A converter script (`tools/convert_definitions.py`) transforms the original XML at development time; `definitions/PROVENANCE.json` records origin, author (zombiesrus5), source version, conversion date and the list of audit corrections (Requirement 12.1, 13.5).

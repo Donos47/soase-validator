@@ -123,14 +123,91 @@ def test_unsaved_text_is_validated_instead_of_the_file(
     assert engine.validate_file(file) == []
 
 
-def test_file_outside_the_mod_roots_is_not_validated(
+def test_file_outside_the_mod_roots_gets_one_warning(
     tmp_path: Path, tree: Callable[[], tuple[Path, Path]]
 ) -> None:
     tree()
     engine = _engine(tmp_path)
     outside = _write(tmp_path / "elsewhere", "a.foo", _foo("Gone"))
 
+    found = engine.validate_file(outside)
+
+    assert _codes(found) == [dg.C050]
+    assert found[0].severity is Severity.WARNING
+    assert found[0].file == outside
+    assert found[0].range.start == Position(0, 0)
+    assert str(outside) in found[0].message
+    assert "manifest" in found[0].message and "modRoots" in found[0].message
+
+
+def test_disabled_codes_hide_the_outside_warning(tmp_path: Path) -> None:
+    folder = tmp_path / "loose"
+    outside = _write(folder, "a.foo", _foo("Gone"))
+    _config(folder, disabledCodes=[dg.C050], modRoots=["other"])
+    engine = _engine(tmp_path)
+
     assert engine.validate_file(outside) == []
+
+
+def test_directory_without_any_mod_root_file_gets_one_warning(tmp_path: Path) -> None:
+    folder = tmp_path / "loose"
+    _write(folder, "a.foo", _foo("Gone"))
+    _write(folder, "sub/b.foo", _foo("Gone"))
+    _write(folder, "notes.txt", "x")
+    engine = _engine(tmp_path)
+
+    results = engine.validate_directory(folder)
+
+    assert list(results) == [folder]
+    assert _codes(results[folder]) == [dg.C050]
+    assert str(folder) in results[folder][0].message
+
+
+def test_directory_with_only_unsupported_files_or_none_gives_nothing(tmp_path: Path) -> None:
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    unsupported = tmp_path / "unsupported"
+    _write(unsupported, "notes.txt", "x")
+    engine = _engine(tmp_path)
+
+    assert engine.validate_directory(empty) == {}
+    assert engine.validate_directory(unsupported) == {}
+
+
+def test_directory_inside_a_mod_root_without_supported_files_gives_nothing(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    _config(project)
+    _write(project, "notes.txt", "x")
+    engine = _engine(tmp_path)
+
+    assert engine.validate_directory(project) == {}
+
+
+def test_directory_mixing_inside_and_outside_files_skips_outside_silently(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    inside = _write(repo, "mod/a.foo", _foo("Gone"))
+    _config(repo / "mod")
+    outside = _write(repo, "loose/b.foo", _foo("Gone"))
+    engine = _engine(tmp_path)
+
+    results = engine.validate_directory(repo)
+
+    assert set(results) == {inside}
+    assert outside not in results
+    assert dg.C050 not in _codes([d for found in results.values() for d in found])
+
+
+def test_directory_warning_is_hidden_by_disabled_codes(tmp_path: Path) -> None:
+    folder = tmp_path / "loose"
+    _write(folder, "a.foo", _foo("Gone"))
+    engine = _engine(tmp_path)
+    engine.set_editor_settings({"disabledCodes": [dg.C050]})
+
+    assert engine.validate_directory(folder) == {folder: []}
 
 
 def test_parent_layer_files_are_not_validated(
@@ -141,7 +218,7 @@ def test_parent_layer_files_are_not_validated(
     file = _write(parent, "Window/read-only.foo", _foo("Gone"))
     settings = engine.resolve_settings(project)
 
-    assert engine.validate_file(file, None, settings) == []
+    assert _codes(engine.validate_file(file, None, settings)) == [dg.C050]
 
 
 def test_disabled_codes_are_removed_in_one_place(tmp_path: Path) -> None:

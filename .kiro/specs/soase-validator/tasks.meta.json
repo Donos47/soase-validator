@@ -614,6 +614,11 @@
         "executionId": "350cd6b1-be77-4597-8ddf-18a03da583e0",
         "chatSessionId": "sess_345e8344-4ed3-44f6-90fa-cde57acf0e4a",
         "timestamp": 1794003599880
+      },
+      {
+        "executionId": "0cd6115a-851f-4100-9ade-6982a2412fdc",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794092461467
       }
     ],
     "5.13 Remove survey counts and findings history from code comments": [
@@ -968,6 +973,11 @@
         "executionId": "45386895-16c8-4580-a760-1b561b4ecca3",
         "chatSessionId": "sess_8bb3e7db-4d69-4007-9712-2044483f6561",
         "timestamp": 1794072819923
+      },
+      {
+        "executionId": "8598d27c-ad7d-4d68-9b6c-32fb4b12724b",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794092970719
       }
     ],
     "13.1 Implement `lsp/server.py`": [
@@ -1202,6 +1212,30 @@
         "executionId": "fc5db401-06a4-44b9-b02b-d2f0f40217b6",
         "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
         "timestamp": 1794077941509
+      }
+    ],
+    "5.14 Place shallow members of any block, with one `SOASE-V080` and no follow-on findings": [
+      {
+        "executionId": "0cd6115a-851f-4100-9ade-6982a2412fdc",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794091783733
+      },
+      {
+        "executionId": "0cd6115a-851f-4100-9ade-6982a2412fdc",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794092461375
+      }
+    ],
+    "12.4 Report files and directories outside every Mod Root (`SOASE-C050`)": [
+      {
+        "executionId": "8598d27c-ad7d-4d68-9b6c-32fb4b12724b",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794092665027
+      },
+      {
+        "executionId": "8598d27c-ad7d-4d68-9b6c-32fb4b12724b",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794092970654
       }
     ]
   }

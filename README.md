@@ -301,6 +301,7 @@ Codes are stable. Hide a code with `disabledCodes`.
 | `SOASE-C020` | warning | Layer missing or unusable |
 | `SOASE-C030` | info | Reference checks limited by missing Layers |
 | `SOASE-C040` | info | Project file overrides a file of a lower Layer |
+| `SOASE-C050` | warning | File is outside every Mod Root; it was not validated |
 | `SOASE-M010` | error | File not listed in governing manifest |
 | `SOASE-M020` | info | Manifest entry matches no file in any Layer |
 | `SOASE-M030` | error | Manifest count differs from the listed names |
