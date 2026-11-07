@@ -337,8 +337,8 @@ Conventions for every task:
 - [ ] 10. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [~] 11. Completion, hover and go-to-definition
-  - [ ] 11.1 Implement `engine/completion.py`
+- [x] 11. Completion, hover and go-to-definition
+  - [x] 11.1 Implement `engine/completion.py`
     - Locate the cursor context in a tolerant `ParsedFile`; return key completions (enclosing structure or selected branch, excluding present keys), value completions (version-gated enum members, `entityType` values, reference names from the `ChainIndex` shown once with the originating Layer in `detail`), case-insensitive prefix filtering and Definition help as documentation
     - Implement hover for keys, enum values and reference values (providing and overridden Layer) returning nothing for undefined keys, and go-to-definition returning the highest Layer's file
     - Limit reference completions to usable Layers on incomplete chains
@@ -352,7 +352,7 @@ Conventions for every task:
     - **Property 25: Reference completions are unique and layer-attributed**
     - **Validates: Requirements 4.6.4, 6.3, 14.14**
 
-  - [ ] 11.4 Write completion and hover unit tests
+  - [x] 11.4 Write completion and hover unit tests
     - Cover `entityType` completion, hover with no Definition, hover on overridden references and go-to-definition across Layers
     - _Requirements: 6.7, 7.3, 14.12, 14.13_
 
@@ -396,7 +396,7 @@ Conventions for every task:
     - Add `get_config` (effective config with sources, Reference Root found status and the resolved Chain in order with path, kind and found status), `set_reference_root` and `edit_layers` (add, remove, reorder)
     - _Requirements: 8.15, 8.16, 14.16_
 
-  - [ ] 14.3 Write property test for diagnostic conversion
+  - [ ]* 14.3 Write property test for diagnostic conversion
     - **Property 26: Diagnostic conversion is lossless**
     - **Validates: Requirements 5.2, 9.6, 9.7**
 
@@ -431,7 +431,7 @@ Conventions for every task:
     - Wire `audit --reference-root PATH` into `cli/main.py` with a threshold option and output directory
     - _Requirements: 13.1, 13.6_
 
-  - [ ] 16.3 Write property test for audit classification
+  - [ ]* 16.3 Write property test for audit classification
     - **Property 34: Audit classification and coverage sets**
     - **Validates: Requirements 13.2, 13.3, 13.4**
 

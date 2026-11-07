@@ -122,6 +122,43 @@ class ChainIndex:
         lower = next(hits, None)
         return Resolution(winner[0], winner[1], lower[0] if lower is not None else None)
 
+    def names(self, kind: str) -> list[Resolution]:
+        """List every name of a named kind once, as its highest Layer defines it.
+
+        Only the usable Layers of the Chain contribute. Kinds that name files
+        have no name list and give an empty result.
+
+        Args:
+            kind: Reference kind, the validation type.
+
+        Returns:
+            One :class:`Resolution` per casefolded name, sorted by name.
+
+        Raises:
+            None.
+        """
+        try:
+            ref_kind = RefKind(kind)
+        except ValueError:
+            return []
+        if ref_kind not in NAMED_KINDS:
+            return []
+        governor = self.governors.get(ref_kind)
+        winners: dict[str, tuple[Layer, Entry]] = {}
+        overridden: dict[str, Layer] = {}
+        for index in reversed(self.indexes):
+            for key, entry in index.names.get(ref_kind, {}).items():
+                if governor is not None and not governor(entry):
+                    continue
+                if key not in winners:
+                    winners[key] = (index.layer, entry)
+                elif key not in overridden:
+                    overridden[key] = index.layer
+        return [
+            Resolution(layer, entry, overridden.get(key))
+            for key, (layer, entry) in sorted(winners.items())
+        ]
+
     def resolve(self, kind: str, name: str, file_extension: str = "") -> ResolveResult:
         """Resolve a reference for the validator.
 

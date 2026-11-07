@@ -900,6 +900,32 @@
         "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
         "timestamp": 1794070831062
       }
+    ],
+    "11.1 Implement `engine/completion.py`": [
+      {
+        "executionId": "a0c676ab-3d67-4793-b363-6105174210bf",
+        "chatSessionId": "sess_8a2a628c-4252-4e2d-af16-3a8685b84952",
+        "timestamp": 1794071623694
+      },
+      {
+        "executionId": "a0c676ab-3d67-4793-b363-6105174210bf",
+        "chatSessionId": "sess_8a2a628c-4252-4e2d-af16-3a8685b84952",
+        "timestamp": 1794071972085
+      }
+    ],
+    "11.4 Write completion and hover unit tests": [
+      {
+        "executionId": "a0c676ab-3d67-4793-b363-6105174210bf",
+        "chatSessionId": "sess_8a2a628c-4252-4e2d-af16-3a8685b84952",
+        "timestamp": 1794071974410
+      }
+    ],
+    "11. Completion, hover and go-to-definition": [
+      {
+        "executionId": "a0c676ab-3d67-4793-b363-6105174210bf",
+        "chatSessionId": "sess_8a2a628c-4252-4e2d-af16-3a8685b84952",
+        "timestamp": 1794071974458
+      }
     ]
   }
 }
