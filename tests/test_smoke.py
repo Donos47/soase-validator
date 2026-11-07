@@ -19,7 +19,6 @@ def test_package_imports() -> None:
     [
         "soase_validator.engine",
         "soase_validator.definitions",
-        "soase_validator.audit.audit",
         "soase_validator.lsp.server",
         "soase_validator.mcp_server.app",
     ],

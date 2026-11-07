@@ -33,7 +33,13 @@ from typing import Any
 
 from soase_validator.engine import completion, config
 from soase_validator.engine import manifest_apply as manifest_writer
-from soase_validator.engine.chain import Chain, Layer, resolve_chain
+from soase_validator.engine.chain import (
+    Chain,
+    ChainProblem,
+    Layer,
+    reference_root_problem,
+    resolve_chain,
+)
 from soase_validator.engine.chainindex import (
     ChainIndex,
     Governor,
@@ -81,9 +87,19 @@ from soase_validator.engine.model import (
 )
 from soase_validator.engine.parser import parse, read_text_file
 from soase_validator.engine.refindex import Entry, LayerIndex, RealFileSystem, RefKind, update_file
-from soase_validator.engine.registry import LoadWarning, Registry, load_registry
+from soase_validator.engine.registry import (
+    LoadWarning,
+    Registry,
+    load_registry,
+    structure_to_json,
+)
 from soase_validator.engine.validator import ValidationContext, definition_warnings, validate
-from soase_validator.engine.versions import GameVersion
+from soase_validator.engine.versions import (
+    DEFAULT_REBELLION,
+    GameVersion,
+    VersionListing,
+    version_listing,
+)
 
 _LOG = logging.getLogger(__name__)
 
@@ -124,7 +140,7 @@ class _ProjectState:
 
 
 class Engine:
-    """Single entry point used by the LSP, MCP, CLI and audit front ends."""
+    """Single entry point used by the LSP, MCP and CLI front ends."""
 
     def __init__(
         self,
@@ -233,6 +249,190 @@ class Engine:
         """
         editor = self._editor_settings if overrides is None else overrides
         return config.effective_config(path, editor, env=self._env, user_file=self._user_file)
+
+    def set_reference_root(
+        self, path: Path, version: GameVersion, root: str, *, user: bool = False
+    ) -> Path:
+        """Store a Reference Root in the project file or the user-level file.
+
+        The project file is the nearest ``soase.json`` above ``path``, or a
+        new one in the directory of ``path`` when none exists. Cached
+        Projects are rebuilt on the next call.
+
+        Args:
+            path: A file or directory that selects the Project.
+            version: The Game Version the root belongs to.
+            root: The path text to store.
+            user: Write ``defaultReferenceRoots`` in the user-level file.
+
+        Returns:
+            The file written.
+
+        Raises:
+            ValueError: If ``root`` is empty or the target file is not a JSON
+                object.
+            OSError: If the file cannot be written.
+        """
+        target = self.user_config_file if user else config.project_file_for(path)
+        config.set_reference_root(target, version, root, user=user)
+        self.reload_configuration()
+        return target
+
+    def edit_layers(
+        self,
+        path: Path,
+        action: str,
+        layers: list[str],
+        index: int | None = None,
+    ) -> tuple[Path, list[str]]:
+        """Add, remove, move or reorder the parent Layers of a Project.
+
+        The target is the nearest ``soase.json`` above ``path``, or a new one
+        in the directory of ``path`` when none exists. Entries are stored as
+        given, so a relative path stays relative to the file.
+
+        Args:
+            path: A file or directory that selects the Project.
+            action: ``add`` (insert each entry at ``index``, or append),
+                ``remove``, ``move`` (place one existing entry at ``index``)
+                or ``reorder`` (``layers`` is the complete new order).
+            layers: Path or ``@alias`` entries.
+            index: Zero-based position, lowest Layer first.
+
+        Returns:
+            The file edited and its ``layers`` list afterwards.
+
+        Raises:
+            ValueError: If the action is unknown, an entry is empty or
+                missing, ``move`` does not get exactly one entry and an index,
+                or the target file is not a JSON object.
+            OSError: If the file cannot be written.
+        """
+        target = config.project_file_for(path)
+        current = config.read_layers(target)
+        if action == "add":
+            for offset, layer in enumerate(layers):
+                config.add_layer(target, layer, None if index is None else index + offset)
+        elif action == "remove":
+            missing = [layer for layer in layers if layer not in current]
+            if missing:
+                raise ValueError(f"layers not configured: {', '.join(missing)}")
+            for layer in layers:
+                config.remove_layer(target, layer)
+        elif action == "move":
+            if len(layers) != 1 or index is None:
+                raise ValueError("move needs exactly one layer and an index")
+            if layers[0] not in current:
+                raise ValueError(f"layer not configured: {layers[0]}")
+            config.add_layer(target, layers[0], index)
+        elif action == "reorder":
+            config.reorder_layers(target, layers)
+        else:
+            raise ValueError(f"unknown action '{action}'; use add, remove, move or reorder")
+        self.reload_configuration()
+        return target, config.read_layers(target)
+
+    def configure_project(
+        self,
+        path: Path,
+        *,
+        game_version: GameVersion | None = None,
+        reference_root: str | None = None,
+        layers: list[str] | None = None,
+        mod_roots: list[str] | None = None,
+        language: str | None = None,
+        overwrite: bool = False,
+    ) -> config.ConfigureResult:
+        """Initialize the settings of a project in its own ``soase.json``.
+
+        The file is the one in the directory of ``path``, never a parent
+        project file, and the user-level file is not touched. Existing keys
+        are preserved; a key holding a different value is skipped unless
+        ``overwrite`` is set. Nothing is written when a value is invalid.
+        A Reference Root belongs to ``game_version``, or to Rebellion 1.98
+        when none is given. When no Reference Root is supplied, nothing is
+        written for it and the result names the user-level default in effect
+        for the Project's Game Version, if any.
+
+        Args:
+            path: An existing project directory, or a file inside it.
+            game_version: Value for ``gameVersion``.
+            reference_root: Path text for the Reference Root.
+            layers: Ordered Layer entries (paths or ``@alias``), lowest
+                first.
+            mod_roots: Mod Root paths for ``modRoots``.
+            language: Localization folder name.
+            overwrite: Replace values that differ from the supplied ones.
+
+        Returns:
+            The file, whether it was created, the keys set, skipped and
+            unchanged, and the user-level default Reference Root in effect.
+
+        Raises:
+            ValueError: If a value is invalid, ``path`` does not exist, or
+                the existing file is not a JSON object.
+            OSError: If the file cannot be written.
+        """
+        target = config.local_project_file(path)
+        root_version = None
+        if reference_root is not None:
+            root_version = game_version or DEFAULT_REBELLION
+        result = config.configure_project(
+            target,
+            game_version=game_version,
+            reference_root=reference_root,
+            root_version=root_version,
+            layers=layers,
+            mod_roots=mod_roots,
+            language=language,
+            overwrite=overwrite,
+        )
+        self.reload_configuration()
+        if reference_root is not None:
+            return result
+        return replace(result, default_reference_root=self._user_default_root(target.parent))
+
+    def _user_default_root(self, directory: Path) -> Path | None:
+        """Find the user-level default Reference Root in effect for a directory.
+
+        Args:
+            directory: The Project directory.
+
+        Returns:
+            The root of the Project's Game Version when the user-level file
+            supplies it, otherwise None.
+        """
+        effective = self.effective_config(directory)
+        name = f"referenceRoots.{effective.settings.game_version.value}"
+        for entry in effective.entries:
+            if entry.name == name:
+                is_user = entry.source.kind is config.SourceKind.USER
+                return Path(entry.value) if is_user else None
+        return None
+
+    def reference_root_problem(self, config_file: Path, root: str) -> ChainProblem | None:
+        """Check a Reference Root as written in a configuration file.
+
+        The path is expanded the way the loader does, relative to the
+        directory of the file that holds it.
+
+        Args:
+            config_file: The configuration file that holds the path text.
+            root: The path text.
+
+        Returns:
+            A ``SOASE-C020`` problem naming the path when it does not exist or
+            does not look like a game data directory, otherwise None.
+        """
+        return reference_root_problem(config.expand_path(root, config_file.parent, self._env))
+
+    def version_listing(self) -> VersionListing:
+        """List the Game Versions with their audit status and unverified tokens.
+
+        Returns:
+            The listing read from the bundled version data.
+        """
+        return version_listing()
 
     def chain_layers(self, path: Path) -> tuple[Layer, ...]:
         """List the Layers of the Chain that governs a file or directory.
@@ -375,6 +575,19 @@ class Engine:
             The help, or None when the structure or the field is undefined.
         """
         return completion.field_help(self.registry, structure, field_name, version)
+
+    def structure_definition(self, structure: str) -> dict[str, Any] | None:
+        """Describe a structure Definition as JSON-compatible data.
+
+        Args:
+            structure: Structure name.
+
+        Returns:
+            The Definition in the bundled JSON form, or None when the
+            structure is undefined.
+        """
+        found = self.registry.structure(structure)
+        return None if found is None else structure_to_json(found)
 
     def entity_types(self, version: GameVersion) -> list[str]:
         """List the ``entityType`` values valid for a Game Version.

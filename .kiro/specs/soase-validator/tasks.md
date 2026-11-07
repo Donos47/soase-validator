@@ -2,7 +2,7 @@
 
 ## Overview
 
-The plan builds the shared Engine bottom-up (model, versions, definitions, parser, validator, configuration, reference index, manifests, completion), then the Engine facade, then the three front ends (LSP, MCP, CLI), then the audit tool and the Rebellion 1.98 audit, and finally documentation and distribution checks. The implementation language is Python 3.14, as the design specifies. Each step builds on the previous ones and ends wired into the facade or a front end.
+The plan builds the shared Engine bottom-up (model, versions, definitions, parser, validator, configuration, reference index, manifests, completion), then the Engine facade, then the three front ends (LSP, MCP, CLI), then the developer-only audit script and the Rebellion 1.98 audit, and finally documentation and distribution checks. The implementation language is Python 3.14, as the design specifies. Each step builds on the previous ones and ends wired into the facade or a front end.
 
 Conventions for every task:
 
@@ -386,25 +386,25 @@ Conventions for every task:
     - Cover publish on open and save, clearing on close and after a fix, completion, hover, definition, the code action and configuration reload
     - _Requirements: 5.1, 5.3, 5.4, 5.5, 8.13, 15.9_
 
-- [~] 14. MCP server
-  - [ ] 14.1 Implement `mcp_server/app.py` core tools
+- [x] 14. MCP server
+  - [x] 14.1 Implement `mcp_server/app.py` core tools
     - Using `MCPServer` from `mcp.server`, register `validate_file`, `validate_directory`, `complete`, `field_help`, `list_entity_types`, `manifest_check` and `manifest_sync` (dry run by default) and the `soase://definitions/{structure}` resource, returning diagnostics as structured data with one-based `file`, `line`, `column`, `severity`, `code`, `message`
     - Keep all SDK-specific code in this module, keep stdout clean for the stdio transport, and wire the `soase-validator-mcp` entry point
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 15.10_
 
-  - [ ] 14.2 Add configuration tools
-    - Add `get_config` (effective config with sources, Reference Root found status and the resolved Chain in order with path, kind and found status), `set_reference_root` and `edit_layers` (add, remove, reorder)
-    - _Requirements: 8.15, 8.16, 14.16_
+  - [x] 14.2 Add configuration tools
+    - Add `get_config` (effective config with sources, Reference Root found status and the resolved Chain in order with path, kind and found status), `set_reference_root`, `edit_layers` (add, remove, reorder) and `configure` (first-time project setup through `Engine.configure_project`, taking Game Version, Reference Root stored for Rebellion 1.98 when no Game Version is given, Mod Roots, Layers and `language`, and returning the user-level default Reference Root in use when none is supplied), have `set_reference_root` and `configure` return a `warnings` entry (`SOASE-C020`) when a supplied Reference Root does not exist or does not look like a game data directory while still saving it, and add the `versions` tool (Game Versions with audit status and unverified gate tokens through `Engine.version_listing`, the same data the CLI `versions` command in 15.3 prints)
+    - _Requirements: 4.6.3, 8.11, 8.15, 8.16, 8.16.1, 8.16.2, 8.16.3, 8.16.4, 8.16.5, 9.8, 13.7, 14.16_
 
   - [ ]* 14.3 Write property test for diagnostic conversion
     - **Property 26: Diagnostic conversion is lossless**
     - **Validates: Requirements 5.2, 9.6, 9.7**
 
-  - [ ] 14.4 Write MCP tests
-    - Invoke each tool function directly and through the SDK in-memory client, covering validation, completion, help, entity types, config tools, manifest tools, resources, and identical diagnostics to the Engine
-    - _Requirements: 8.15, 8.16, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 15.10_
+  - [x] 14.4 Write MCP tests
+    - Invoke each tool function directly and through the SDK in-memory client, covering validation, completion, help, entity types, config tools (including the Reference Root warnings), manifest tools (including the lower-Layer advisories of `manifest_sync`), `versions`, resources, and identical diagnostics to the Engine
+    - _Requirements: 4.6.3, 8.11, 8.15, 8.16, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.8, 13.7, 15.8.5, 15.10_
 
-- [ ] 15. Command-line interface
+- [~] 15. Command-line interface
   - [ ] 15.1 Implement `cli/main.py` with `init` and `config`
     - Add the argparse entry point, `init` (options and TTY prompts, using the user-level default Reference Root and printing which path was used, succeeding without a root and printing how to add one), `config set-reference-root` (warn when the path is missing or not game data but still save) and `config show`
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 8.15_
@@ -414,21 +414,22 @@ Conventions for every task:
     - _Requirements: 15.7, 15.8, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
   - [ ] 15.3 Add the `versions` command
-    - List Game Versions with audit status (Rebellion 1.98 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`
+    - List Game Versions with audit status (Rebellion 1.98 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`, by printing the listing from `Engine.version_listing` (the data the MCP `versions` tool returns)
     - _Requirements: 13.7, 13.8_
 
   - [ ] 15.4 Write CLI tests
     - Cover `init` with and without a root and with a user default, `set-reference-root` warnings, dry-run default for `manifest sync`, `--write` backup creation, `--remove-stale` listing and `versions` output
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 13.7, 15.7, 15.8_
 
-- [ ] 16. Audit tool and Rebellion 1.98 audit
-  - [ ] 16.1 Implement `audit/audit.py`
+- [ ] 16. Developer audit script and Rebellion 1.98 audit
+  - [ ] 16.1 Implement `tools/audit.py`
     - Validate every file in a Reference Root with no Chain beyond that root, classify diagnostics as likely Definition gap (key or value in at least `N` distinct files, default 3) or likely file problem, list keys and enum values seen in files but absent from Definitions, list Definition fields and enum values never seen, and write `audit-report.json` and a human summary to a git-ignored output directory
+    - Make it a developer-only script run with `uv run python tools/audit.py --reference-root PATH` (it may import the Engine); it adds no CLI command, MCP tool or `[project.scripts]` entry and is not part of the installed package
     - Exit non-zero with a clear message when no Reference Root is supplied or configured
     - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.6_
 
-  - [ ] 16.2 Add the `audit` CLI command
-    - Wire `audit --reference-root PATH` into `cli/main.py` with a threshold option and output directory
+  - [ ] 16.2 Add the audit script entry point and options
+    - Add the `argparse` main of `tools/audit.py` with `--reference-root PATH` (falling back to a configured root or `SOASE_REFERENCE_ROOT_<VERSION>`), a threshold option and an output directory; do not touch `cli/main.py`, `mcp_server/app.py` or `[project.scripts]`
     - _Requirements: 13.1, 13.6_
 
   - [ ]* 16.3 Write property test for audit classification
@@ -447,7 +448,7 @@ Conventions for every task:
     - _Requirements: 13.7, 13.8, 15.3.4_
 
   - [ ] 16.6 Write the golden-file test
-    - Create `tests/test_golden.py` running the audit routine over each available Reference Root (configuration or `SOASE_REFERENCE_ROOT_<VERSION>`), asserting zero errors, and skipping with an explanatory message when none is available
+    - Create `tests/test_golden.py` running the audit routine of `tools/audit.py` (loaded by file path) over each available Reference Root (configuration or `SOASE_REFERENCE_ROOT_<VERSION>`), asserting zero errors, and skipping with an explanatory message when none is available
     - _Requirements: 11.2, 11.2.1_
 
 - [ ] 17. Documentation, attribution and distribution checks

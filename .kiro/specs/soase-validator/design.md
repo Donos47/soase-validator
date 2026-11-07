@@ -6,7 +6,9 @@
 
 - an **LSP server** (diagnostics on open/save, completion, hover, go-to-definition, code actions),
 - an **MCP server** (validate, complete, help, configuration, manifest tools for AI agents),
-- a **CLI** (`init`, `config`, `manifest check`, `manifest sync`, `audit`, `versions`).
+- a **CLI** (`init`, `config`, `manifest check`, `manifest sync`, `versions`).
+
+A developer-only audit script (`tools/audit.py`) calls the same Engine. It is not a front end: it is not an entry point, a CLI command or an MCP tool, and `uvx --from git+... soase-validator` users do not get it.
 
 The package targets Python 3.14+, runs offline on Windows, macOS, and Linux, and is installed and run with `uvx --from git+https://github.com/<owner>/soase-validator <entry-point>`. No PyPI publication is needed.
 
@@ -19,7 +21,7 @@ The package targets Python 3.14+, runs offline on Windows, macOS, and Linux, and
 | Hand-written tolerant parser | Requirement 2.8 requires Diagnostics for the parsed portion of a broken file. Parser generators handle error recovery poorly for this line-oriented, indentation-structured format. |
 | Pure functions at the core | Parser, value checks, version gating, manifest parsing and sync planning are pure and deterministic, which makes them suited to property-based tests. |
 | Per-Layer index cache keyed by file signature | Requirement 14.10: reuse a Layer's index across Projects sharing that Layer. |
-| Unknown keys are errors | Matches the original plugin (Decisions 1). Definition gaps are therefore found through the Rebellion 1.98 audit tool (Requirement 13). |
+| Unknown keys are errors | Matches the original plugin (Decisions 1). Definition gaps are therefore found through the developer-only Rebellion 1.98 audit script (Requirement 13). |
 | Dependencies kept small | `pygls>=2.1,<3` and `lsprotocol>=2025.0.0` for LSP, `mcp>=2.3,<3` (the official SDK) for MCP, `platformdirs` for the user config path, `hypothesis` and `pytest` for tests, `ruff` for lint. The latter four are resolved at project creation using ranges that include the current release. |
 
 ### Research Findings
@@ -49,12 +51,12 @@ flowchart TD
         FACADE[Engine facade]
     end
 
-    AUD[Audit tool]
+    AUD[tools/audit.py - developer script, not shipped]
 
     LSP --> FACADE
     MCP --> FACADE
     CLI --> FACADE
-    AUD --> FACADE
+    AUD -.-> FACADE
     FACADE --> CFG
     FACADE --> REG
     FACADE --> PARSE
@@ -96,9 +98,9 @@ soase-validator/
     definitions/         # bundled JSON Definitions + manifest_rules.json + PROVENANCE.json
     lsp/server.py        # pygls handlers
     mcp_server/app.py    # MCP tools and resources
-    cli/main.py          # init, config, manifest, audit, versions
-    audit/audit.py       # audit tool
+    cli/main.py          # init, config, manifest, versions
   tools/convert_definitions.py   # one-off XML -> JSON converter (not shipped at runtime)
+  tools/audit.py                 # developer-only Reference Root audit (not shipped, no entry point)
   tests/
 ```
 
@@ -134,7 +136,7 @@ The LSP server runs on asyncio. CPU-bound Engine calls (index builds, validation
 
 ```python
 class Engine:
-    """Single entry point used by the LSP, MCP, CLI and audit front ends."""
+    """Single entry point used by the LSP, MCP and CLI front ends and by the developer audit script."""
 
     def __init__(self, *, user_config_path: Path | None = None, env: Mapping[str, str] | None = None) -> None: ...
 
@@ -638,8 +640,16 @@ Tools (each a thin wrapper over the Engine; the SDK-specific code is isolated in
 | `get_config` | Effective config with sources, Reference Root status, resolved Chain | 8.15, 14.16 |
 | `set_reference_root` | Set a Reference Root in project or user file | 8.16 |
 | `edit_layers` | Add, remove, reorder parent Layers | 8.16 |
+| `configure` | First-time project setup: create or extend the project's own `soase.json`, then report effective config and Chain | 8.16.1 to 8.16.5 |
 | `manifest_check` | As CLI | 15.10 |
-| `manifest_sync` | As CLI; dry run default | 15.10 |
+| `manifest_sync` | As CLI; dry run default; the result carries the lower-Layer advisories (`advisories`: manifest, Layer name, names) next to `edits` and `diff` | 15.8.5, 15.10 |
+| `versions` | As CLI `versions`: every Game Version with `id`, `name`, `audit_status` and `label`, plus `unverified_tokens` | 13.7, 13.8 |
+
+`versions` calls `Engine.version_listing`, which wraps the pure `versions.version_listing()` (a `VersionListing` of `VersionStatus` entries in `VERSION_ORDER` and the unverified tokens from `versions.json`). The label is `audited` for Rebellion 1.98 and `unaudited, best-effort` for every other version. The CLI `versions` command (task 15.3) prints the same listing.
+
+`set_reference_root` and `configure` check a supplied Reference Root through `Engine.reference_root_problem`, which wraps `chain.reference_root_problem`: it expands the path as the loader does, relative to the file that holds it, and returns a `SOASE-C020` problem when the directory does not exist or holds no game data directory (Requirement 4.6.3, 8.11). The root is saved either way. Both tools return the problem as an entry of `warnings` (`code`, `message`, `path`), an empty list otherwise. The CLI `config set-reference-root` and `init` use the same method.
+
+`configure` calls `Engine.configure_project`, which wraps `config.configure_project`, the config writer for first-time setup. It validates every supplied value before writing (the loader's language rule through `validate_language`, known Game Version, non-empty Layer and Mod Root entries), writes only the `soase.json` in the given directory, merges into an existing file, skips keys that hold a different value unless `overwrite` is set, and returns a `ConfigureResult` (file, created, set, skipped and unchanged keys, and `default_reference_root`). `modRoots` is written as the supplied path text, with the loader's list-of-non-empty-strings rule. A Reference Root belongs to the supplied Game Version, or to Rebellion 1.98 (`DEFAULT_REBELLION`) when none is given, whatever version the existing file holds. When no Reference Root is supplied, nothing is written for it; `default_reference_root` holds the path from the user-level `defaultReferenceRoots` when that file supplies the Project's Game Version root and no higher-precedence source does (Requirement 8.8, 8.16.4). The CLI `init` command reuses `Engine.configure_project`, prints `default_reference_root` as the path used, and adds only its prompts.
 
 Resources: `soase://definitions/{structure}` returns the Definition as JSON (Requirement 9.5). Diagnostics are returned as structured objects with `file`, `line`, `column`, `severity`, `code`, `message`.
 
@@ -654,17 +664,20 @@ Resources: `soase://definitions/{structure}` returns the Definition as JSON (Req
 | `config show` | Prints effective config (same as MCP `get_config`). |
 | `manifest check` | Runs all manifest checks (Requirement 15.7). |
 | `manifest sync [--write] [--remove-stale]` | See Manifest Service. |
-| `audit --reference-root PATH` | See below. |
-| `versions` | Lists Game Versions with audit status (Rebellion 1.98 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). |
+| `versions` | Lists Game Versions with audit status (Rebellion 1.98 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). Same data as the MCP `versions` tool. |
+
+There is no `audit` command, and no audit entry point in `[project.scripts]`.
 
 ### Audit Tool (Requirement 13)
 
-`audit` validates every file in a Reference Root with the matching Definitions, with no Chain beyond that root, and writes `audit-report.json` and a human summary.
+The audit is a developer-only script, `tools/audit.py`, run with `uv run python tools/audit.py --reference-root PATH` from a checkout. It lives outside `src/`, so it is not part of the installed package, and it adds no CLI command, MCP tool or console script. It may import the Engine and uses it as a library. Tests that need the audit routine (the golden-file test, the Property 34 test) load `tools/audit.py` by file path.
+
+The script validates every file in a Reference Root with the matching Definitions, with no Chain beyond that root, and writes `audit-report.json` and a human summary to a git-ignored output directory.
 
 - Each Diagnostic is classified **likely Definition gap** when the same key or value appears in at least `N` distinct files (default 3), otherwise **likely file problem** (Requirement 13.2).
 - Unknown keys and enum values seen in game files but not in Definitions are listed (Requirement 13.3).
 - Definition fields and enum values never seen in any file are listed as review candidates (Requirement 13.4).
-- Without `--reference-root` and no configured one, the command exits non-zero with a clear message (Requirement 13.1).
+- Without `--reference-root` and no configured or `SOASE_REFERENCE_ROOT_<VERSION>` root, the script exits non-zero with a clear message (Requirement 13.1).
 - The golden-file test calls the same audit routine and asserts zero errors (Requirement 11.2).
 
 ## Data Models
@@ -1022,15 +1035,15 @@ Filesystem properties build small trees under a temporary directory with fewer e
 - Registry loads all bundled Definitions with zero warnings (Requirement 1.1, 1.4).
 - Each Definition node type and each primitive type has at least one example test (Requirement 11.3).
 - LSP tests with the pygls test client: publish on open and save, clear on close, completion, hover, definition, code action, config reload (Requirements 5, 6, 7, 8.13, 15.9).
-- MCP tests invoke each tool function directly and via the SDK's in-memory client: validate file and directory, completion, help, entity types, config tools, manifest tools, resources (Requirements 8.15, 8.16, 9, 15.10).
-- CLI tests: `init` with and without a Reference Root and with a user default, `config set-reference-root` warnings, `manifest sync` dry-run default, `--write` backup creation, `--remove-stale` listing, `audit` without a root exits with a message, `versions` shows audit status (Requirements 8.7 to 8.11, 13.1, 15.7, 15.8).
+- MCP tests invoke each tool function directly and via the SDK's in-memory client: validate file and directory, completion, help, entity types, config tools (including the Reference Root warnings), manifest tools (including the lower-Layer advisories), `versions`, resources (Requirements 4.6.3, 8.11, 8.15, 8.16, 9, 13.7, 15.8.5, 15.10).
+- CLI tests: `init` with and without a Reference Root and with a user default, `config set-reference-root` warnings, `manifest sync` dry-run default, `--write` backup creation, `--remove-stale` listing, `versions` shows audit status (Requirements 8.7 to 8.11, 13.7, 15.7, 15.8). The audit script's missing-root exit is tested by running `tools/audit.py` directly (Requirement 13.1).
 - Specific examples: `skybox.manifest` governed subset, incomplete Chain messages, overlay without manifests, override informational reports, internal error recovery (Requirements 4.6, 11.5, 14.15, 14.19, 15.3.3).
 - Smoke: `uvx --from <path>` entry points start and answer an initialize request; `python -c "import soase_validator"` under 3.14 (Requirement 10).
 - Performance check (not part of the default suite): validating a typical `.entity` file with a warm index finishes under 500 ms (Requirement 5.6).
 
 ### Golden-File Test
 
-`tests/test_golden.py` runs the audit routine over each Reference Root available through configuration or the `SOASE_REFERENCE_ROOT_<VERSION>` environment variable, and asserts zero errors for the matching Game Version. It is skipped with an explanatory message when no Reference Root is available, so CI runners without game files pass (Requirement 11.2). Only Rebellion 1.98 is audited, and other versions are tested only if a root is supplied.
+`tests/test_golden.py` runs the audit routine of `tools/audit.py` (loaded by file path) over each Reference Root available through configuration or the `SOASE_REFERENCE_ROOT_<VERSION>` environment variable, and asserts zero errors for the matching Game Version. It is skipped with an explanatory message when no Reference Root is available, so CI runners without game files pass (Requirement 11.2). Only Rebellion 1.98 is audited, and other versions are tested only if a root is supplied.
 
 ### Why Some Areas Skip PBT
 

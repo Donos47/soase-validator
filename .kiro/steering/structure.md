@@ -27,9 +27,9 @@ soase-validator/
                                  # versions.json, PROVENANCE.json
     lsp/server.py                # placeholder
     mcp_server/app.py            # placeholder
-    cli/main.py                  # placeholder (init, config, manifest, audit, versions planned)
-    audit/audit.py               # placeholder
+    cli/main.py                  # placeholder (init, config, manifest, versions planned)
   tools/convert_definitions.py   # one-off XML -> JSON converter, not shipped at runtime
+  tools/audit.py                 # (planned, developer-only) Definition audit, not shipped
   tests/
     conftest.py
     properties/                  # test_pNN_<name>.py (P1-P6, P10, P23, P35-P37 so far)
@@ -50,7 +50,7 @@ soase-validator/
 
 ## Conventions
 
-- Engine code must not import from `lsp/`, `mcp_server/`, `cli/` or `audit/`.
+- Engine code must not import from `lsp/`, `mcp_server/`, or `cli/`.
 - Definition corrections go only in the bundled JSON, with an entry in `PROVENANCE.json` `audit_corrections` (game version, evidence and a `verify` list that a test checks). Never make one by re-running the converter: it refuses to write into the bundled directory while corrections are recorded, unless `--overwrite-corrections` is given.
 - Per-field shape parameters (for example a Position item count) use the Definition `constraint` attribute, for example `count=4`.
 - Survey and analysis output goes to `reference/` (git-ignored), never into the repo. Temporary scripts live in the system temp folder and are deleted afterwards.

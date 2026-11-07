@@ -475,6 +475,54 @@ def set_layers(config_file: Path, layers: list[str]) -> None:
     _write_json(config_file, data)
 
 
+def reorder_layers(config_file: Path, layers: list[str]) -> None:
+    """Reorder the ``layers`` list of a file without adding or dropping entries.
+
+    Args:
+        config_file: The ``soase.json`` to edit.
+        layers: The existing entries in their new order, lowest Layer first.
+
+    Raises:
+        ValueError: If ``layers`` is not a permutation of the entries in the
+            file, or the existing file is not a JSON object.
+        OSError: If the file cannot be written.
+    """
+    data = _read_for_update(config_file)
+    if sorted(layers) != sorted(_layer_list(data)):
+        raise ValueError("layers must list exactly the entries already configured")
+    data["layers"] = list(layers)
+    _write_json(config_file, data)
+
+
+def read_layers(config_file: Path) -> list[str]:
+    """Read the ordered ``layers`` list of a file.
+
+    Args:
+        config_file: The ``soase.json`` to read.
+
+    Returns:
+        The entries as written; empty when the file or the key is absent.
+
+    Raises:
+        ValueError: If the existing file is not a JSON object.
+    """
+    return _layer_list(_read_for_update(config_file))
+
+
+def project_file_for(path: Path) -> Path:
+    """Choose the project file that configuration edits for a location write to.
+
+    Args:
+        path: A file or directory.
+
+    Returns:
+        The nearest existing ``soase.json``; else the ``soase.json`` that
+        would sit in the location's directory.
+    """
+    found = find_project_files(path)
+    return found[0] if found else _start_directory(path) / PROJECT_FILE_NAME
+
+
 def set_alias(user_file: Path, name: str, layer_path: str) -> None:
     """Write a Layer alias into the user-level file.
 
@@ -498,6 +546,182 @@ def set_alias(user_file: Path, name: str, layer_path: str) -> None:
     aliases[key] = layer_path
     data["aliases"] = aliases
     _write_json(user_file, data)
+
+
+@dataclass(frozen=True, slots=True)
+class ConfigureResult:
+    """Outcome of initializing a project file.
+
+    Attributes:
+        file: The ``soase.json`` that was written.
+        created: Whether the file did not exist before.
+        set_keys: Settings written, such as ``gameVersion`` or
+            ``referenceRoots.rebellion-1.98``.
+        skipped_keys: Settings left alone because the file already holds a
+            different value.
+        unchanged_keys: Settings already holding the supplied value.
+        default_reference_root: The user-level default Reference Root in
+            effect for the Project's Game Version when no Reference Root
+            was supplied and the project file defines none, otherwise None.
+    """
+
+    file: Path
+    created: bool
+    set_keys: tuple[str, ...]
+    skipped_keys: tuple[str, ...]
+    unchanged_keys: tuple[str, ...]
+    default_reference_root: Path | None = None
+
+
+def local_project_file(path: Path) -> Path:
+    """Return the ``soase.json`` that belongs to a directory, ignoring parents.
+
+    Args:
+        path: An existing directory, or a file whose directory is used.
+
+    Returns:
+        The ``soase.json`` path in that directory; it may not exist.
+
+    Raises:
+        ValueError: If ``path`` does not exist.
+    """
+    absolute = Path(os.path.abspath(path))
+    if not absolute.exists():
+        raise ValueError(f"path does not exist: {absolute}")
+    directory = absolute if absolute.is_dir() else absolute.parent
+    return directory / PROJECT_FILE_NAME
+
+
+def validate_language(raw: Any) -> str:
+    """Check a localization folder name with the rules the loader applies.
+
+    Args:
+        raw: The candidate value.
+
+    Returns:
+        The name without surrounding whitespace.
+
+    Raises:
+        ValueError: If the value is not a plain folder name.
+    """
+    text = raw.strip() if isinstance(raw, str) else ""
+    if not text or "/" in text or "\\" in text or text.startswith("."):
+        raise ValueError("must be a localization folder name such as en")
+    return text
+
+
+def configure_project(
+    config_file: Path,
+    *,
+    game_version: GameVersion | None = None,
+    reference_root: str | None = None,
+    root_version: GameVersion | None = None,
+    layers: list[str] | None = None,
+    mod_roots: list[str] | None = None,
+    language: str | None = None,
+    overwrite: bool = False,
+) -> ConfigureResult:
+    """Create or extend a project file with first-time settings.
+
+    Every supplied value is validated before anything is written. Keys that
+    already hold a different value are left alone unless ``overwrite`` is
+    set. Other keys in an existing file are preserved.
+
+    Args:
+        config_file: The ``soase.json`` to create or extend.
+        game_version: Value for ``gameVersion``.
+        reference_root: Path text stored under ``referenceRoots``.
+        root_version: Game Version the root belongs to; required with
+            ``reference_root``.
+        layers: Ordered Layer entries, lowest first.
+        mod_roots: Value for ``modRoots``, as path text.
+        language: Value for ``language``.
+        overwrite: Replace values that differ from the supplied ones.
+
+    Returns:
+        Which keys were set, skipped or already equal.
+
+    Raises:
+        ValueError: If a value is invalid, ``reference_root`` has no
+            ``root_version``, or the existing file is not a JSON object.
+        OSError: If the file cannot be written.
+    """
+    wanted: dict[str, Any] = {}
+    if game_version is not None:
+        wanted["gameVersion"] = game_version.value
+    if language is not None:
+        try:
+            wanted["language"] = validate_language(language)
+        except ValueError as error:
+            raise ValueError(f"language {error}") from error
+    if layers is not None:
+        try:
+            wanted["layers"] = list(_string_list(layers))
+        except ValueError as error:
+            raise ValueError(f"layers {error}") from error
+    if mod_roots is not None:
+        try:
+            wanted["modRoots"] = list(_string_list(mod_roots))
+        except ValueError as error:
+            raise ValueError(f"modRoots {error}") from error
+    if reference_root is not None:
+        if not reference_root.strip():
+            raise ValueError("reference root is empty")
+        if root_version is None:
+            raise ValueError("a reference root needs a game version")
+
+    created = not config_file.exists()
+    data = _read_for_update(config_file)
+    set_keys: list[str] = []
+    skipped: list[str] = []
+    unchanged: list[str] = []
+
+    def apply(name: str, current: Any, new: Any, store: Callable[[], None]) -> None:
+        if current is _MISSING:
+            store()
+            set_keys.append(name)
+        elif current == new:
+            unchanged.append(name)
+        elif overwrite:
+            store()
+            set_keys.append(name)
+        else:
+            skipped.append(name)
+
+    for key, value in wanted.items():
+        current = data.get(key, _MISSING)
+        if key == "gameVersion" and isinstance(current, str):
+            existing = parse_game_version(current)
+            current = value if existing is not None and existing.value == value else current
+        apply(key, current, value, lambda key=key, value=value: data.__setitem__(key, value))
+
+    if reference_root is not None and root_version is not None:
+        roots = data.get("referenceRoots")
+        if not isinstance(roots, dict):
+            roots = {}
+        current = _MISSING
+        for name in list(roots):
+            if parse_game_version(str(name)) is root_version:
+                current = roots[name]
+                break
+
+        def store_root() -> None:
+            for name in [n for n in roots if parse_game_version(str(n)) is root_version]:
+                del roots[name]
+            roots[root_version.value] = reference_root
+            data["referenceRoots"] = roots
+
+        apply(f"referenceRoots.{root_version.value}", current, reference_root, store_root)
+
+    if created or set_keys:
+        _write_json(config_file, data)
+    return ConfigureResult(
+        file=config_file,
+        created=created,
+        set_keys=tuple(set_keys),
+        skipped_keys=tuple(skipped),
+        unchanged_keys=tuple(unchanged),
+    )
 
 
 class _Resolver:
@@ -854,10 +1078,7 @@ def _parse_language(raw: Any, src: _Source) -> str:
     Raises:
         ValueError: If the value is not a plain folder name.
     """
-    text = raw.strip() if isinstance(raw, str) else ""
-    if not text or "/" in text or "\\" in text or text.startswith("."):
-        raise ValueError("must be a localization folder name such as en")
-    return text
+    return validate_language(raw)
 
 
 def _parse_severity(raw: Any, src: _Source) -> Severity:
@@ -1120,6 +1341,7 @@ __all__ = [
     "ENV_REFERENCE_ROOT_PREFIX",
     "PROJECT_FILE_NAME",
     "ConfigProblem",
+    "ConfigureResult",
     "EffectiveConfig",
     "EffectiveSetting",
     "ManifestPrefs",
@@ -1128,10 +1350,12 @@ __all__ = [
     "SettingSource",
     "SourceKind",
     "add_layer",
+    "configure_project",
     "effective_config",
     "expand_path",
     "find_manifest_directory",
     "find_project_files",
+    "local_project_file",
     "remove_layer",
     "remove_reference_root",
     "resolve_settings",
@@ -1139,4 +1363,5 @@ __all__ = [
     "set_layers",
     "set_reference_root",
     "user_config_path",
+    "validate_language",
 ]

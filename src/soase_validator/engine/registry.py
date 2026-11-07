@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from importlib import resources
 from pathlib import Path
 from typing import Any
@@ -752,6 +752,60 @@ class Registry:
     def enum_names(self) -> tuple[str, ...]:
         """Names of all loaded enumerations, sorted."""
         return tuple(sorted(self._enums))
+
+
+_NODE_KINDS: dict[type, str] = {
+    FieldDef: "field",
+    IterativeFieldDef: "iterative_field",
+    ConditionFieldDef: "condition_field",
+    StructureReferenceDef: "structure_reference",
+    ConditionReferenceDef: "condition_reference",
+}
+
+
+def _node_to_json(node: Node) -> dict[str, Any]:
+    """Convert a Definition node to its bundled JSON form.
+
+    Args:
+        node: The node.
+
+    Returns:
+        A JSON-compatible mapping; unset and false attributes are omitted.
+    """
+    result: dict[str, Any] = {"node": _NODE_KINDS[type(node)]}
+    for item in fields(node):
+        value = getattr(node, item.name)
+        if value is None or value is False or value == ():
+            continue
+        if item.name == "children":
+            value = [_node_to_json(child) for child in value]
+        elif item.name == "branches":
+            value = {key: [_node_to_json(child) for child in items] for key, items in value.items()}
+        elif item.name == "cases":
+            value = dict(value)
+        elif isinstance(value, tuple):
+            value = list(value)
+        result[item.name] = value
+    return result
+
+
+def structure_to_json(structure: StructureDef) -> dict[str, Any]:
+    """Convert a structure to its bundled JSON form.
+
+    Args:
+        structure: The structure.
+
+    Returns:
+        A JSON-compatible mapping with the structure's attributes and
+        children; unset attributes are omitted.
+    """
+    result: dict[str, Any] = {"name": structure.name}
+    for key in ("extension", "version", "help"):
+        value = getattr(structure, key)
+        if value is not None:
+            result[key] = value
+    result["children"] = [_node_to_json(child) for child in structure.children]
+    return result
 
 
 def _walk(nodes: Iterable[Node]) -> Iterable[Node]:

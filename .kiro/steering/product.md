@@ -12,11 +12,14 @@ inclusion: always
 - Completion, hover help and go-to-definition for keys, enum values and cross-file references.
 - Resolve references across a Chain of Layers (base game, parent mods, the project).
 - Check and sync `*.manifest` files (`manifest check`, `manifest sync`).
-- Audit Definitions against a base game Reference Root.
 
 ## Front ends
 
 One shared Engine, three thin front ends: LSP server, MCP server (for AI agents) and CLI. Identical input must produce identical Diagnostics in all of them.
+
+The MCP server also exposes configuration (`configure`, `get_config`, `set_reference_root`, `edit_layers`) and `versions`, and is intended to cover everything the CLI does.
+
+Definitions are audited against a base game Reference Root by a developer-only script (`tools/audit.py`), which is not shipped.
 
 ## Targets
 

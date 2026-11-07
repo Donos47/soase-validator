@@ -1,1 +1,1 @@
-"""Engine: all validation logic shared by the LSP, MCP, CLI and audit front ends."""
+"""Engine: all validation logic shared by the LSP, MCP and CLI front ends."""

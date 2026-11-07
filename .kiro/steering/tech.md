@@ -22,7 +22,7 @@ inclusion: always
 
 ## Architecture rules
 
-- All logic lives in the Engine (`engine/`). Front ends (`lsp/`, `mcp_server/`, `cli/`, `audit/`) only translate types and call `engine/facade.py`.
+- All logic lives in the Engine (`engine/`). Front ends (`lsp/`, `mcp_server/`, `cli/`) only translate types and call `engine/facade.py`.
 - Core modules (parser, primitives, versions, manifest parsing and `plan_sync`) are pure functions; side effects live in `manifest_apply`, the layer cache and config writers.
 - The parser is hand-written and tolerant: always return Diagnostics for the parsed portion of a broken file. Its values are `StringValue`, `NumberValue`, `BoolValue`, `ListValue` and `HexValue`; a keyless row has an empty key.
 - Primitive checkers have the signature `check_<type>(raw, prefs, constraint=None)`; `check_orientation` takes the header `Node`. A malformed `constraint` raises `ValueError`; the validator reports it once at load as `SOASE-D001`.
@@ -73,7 +73,7 @@ uv run ruff format --check
 uv run pytest
 uv run pytest -m perf
 uv run pip-audit
-uv run soase-validator audit --reference-root <path>   # planned
+uv run python tools/audit.py --reference-root <path>   # planned, developer-only
 uv run python tools/convert_definitions.py <xml-dir> --output <dir>
 ```
 

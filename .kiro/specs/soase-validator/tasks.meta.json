@@ -1012,6 +1012,89 @@
         "chatSessionId": "sess_c75c48b3-ba2e-400b-9576-f024f8b2bb83",
         "timestamp": 1794073437349
       }
+    ],
+    "14.1 Implement `mcp_server/app.py` core tools": [
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073499111
+      },
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073676830
+      }
+    ],
+    "14.2 Add configuration tools": [
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073684035
+      },
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073812437
+      },
+      {
+        "executionId": "97521b06-8499-47eb-879c-b9172543a0c4",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794074092534
+      },
+      {
+        "executionId": "97521b06-8499-47eb-879c-b9172543a0c4",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794074241198
+      },
+      {
+        "executionId": "afe21512-884e-4330-b833-af03f23179a6",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794074330227
+      },
+      {
+        "executionId": "afe21512-884e-4330-b833-af03f23179a6",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794074600495
+      },
+      {
+        "executionId": "a725685a-ad30-4711-87a8-12e69b30b1d7",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794074697610
+      },
+      {
+        "executionId": "a725685a-ad30-4711-87a8-12e69b30b1d7",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794075041677
+      },
+      {
+        "executionId": "6c569f6a-2bd2-4c3c-8ca1-9ac74776b78c",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794075114634
+      },
+      {
+        "executionId": "6c569f6a-2bd2-4c3c-8ca1-9ac74776b78c",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794075208313
+      }
+    ],
+    "14.4 Write MCP tests": [
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073812750
+      },
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073940679
+      }
+    ],
+    "14. MCP server": [
+      {
+        "executionId": "a0631130-3db2-49e8-b170-fb3e45906c04",
+        "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
+        "timestamp": 1794073940763
+      }
     ]
   }
 }

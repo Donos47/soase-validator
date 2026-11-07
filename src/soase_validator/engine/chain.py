@@ -152,6 +152,25 @@ def looks_like_game_data(path: Path) -> bool:
         return False
 
 
+def reference_root_problem(path: Path) -> ChainProblem | None:
+    """Check a game Reference Root with the rules the Chain applies.
+
+    Args:
+        path: The absolute Reference Root directory.
+
+    Returns:
+        A ``SOASE-C020`` problem naming the path when the directory does not
+        exist or holds no game data directory, otherwise None.
+    """
+    if not path.is_dir():
+        return ChainProblem(C020, f"Reference Root does not exist: {path}", path)
+    if not looks_like_game_data(path):
+        return ChainProblem(
+            C020, f"Reference Root does not look like a game data directory: {path}", path
+        )
+    return None
+
+
 class _Builder:
     """Build one Chain from settings."""
 

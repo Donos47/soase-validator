@@ -183,12 +183,17 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 8. WHEN `init` is run without a Reference Root and a default exists in the user-level configuration, THE `init` command SHALL use the default and SHALL tell the user which path it used.
 9. THE `init` command SHALL succeed when no Reference Root is supplied, and SHALL print how to add one later.
 10. THE package SHALL provide a command to set or change a Reference Root in the project file or the user-level file without editing JSON by hand.
-11. WHEN a Reference Root is supplied, THE package SHALL check that the path exists and contains the expected game data layout, and SHALL warn if it does not, while still saving the setting.
+11. WHEN a Reference Root is supplied, THE package SHALL check that the path exists and contains the expected game data layout, and SHALL warn if it does not, while still saving the setting. THE MCP `set_reference_root` and `configure` tools SHALL return that warning (a `SOASE-C020` entry naming the path) in their result, and SHALL still save the setting.
 12. THE package SHALL resolve relative paths in a configuration file relative to that file, and SHALL expand a leading `~` and environment variables.
 13. WHEN `soase.json` or the user-level file changes while the LSP server is running, THE LSP server SHALL apply the new settings and re-validate open files without a restart.
 14. THE LSP server SHALL accept settings supplied by the editor through initialization options and configuration-change notifications, which SHALL rank above the user-level file and below environment variables.
 15. THE MCP server SHALL expose a tool that reports the effective configuration, including the source of each setting and whether each Reference Root was found.
 16. THE MCP server SHALL expose a tool that sets a Reference Root for a project, and a tool that adds, removes, or reorders parent Layers, so an AI agent can configure a new project at the user's request.
+    1. THE MCP server SHALL expose a `configure` tool that initializes a project's settings. It SHALL accept an optional project directory, Game Version, Reference Root, Mod Roots, ordered parent Layers and `language`, and an `overwrite` flag that defaults to false. A Reference Root supplied without a Game Version SHALL be stored for Rebellion 1.98.
+    2. THE `configure` tool SHALL create `soase.json` in the project directory when none exists there. WHEN the file exists, THE tool SHALL preserve its other keys, SHALL set only the supplied values, and SHALL leave a key holding a different value unchanged and report it as skipped unless `overwrite` is true. THE tool SHALL NOT change the user-level file or a `soase.json` in a parent directory.
+    3. THE `configure` tool SHALL validate the supplied values with the rules the loader applies (criteria 2, 17 and 19, and non-empty Layer and Mod Root entries), SHALL reject invalid input with an error naming the setting, and SHALL write nothing in that case.
+    4. WHEN no Reference Root is supplied and the user-level file supplies a default for the Project's Game Version that no higher-precedence source overrides, THE `configure` tool SHALL write nothing for the Reference Root and SHALL return that default path as the one in use (criterion 8, applied to the tool).
+    5. THE `configure` tool SHALL return the file written, whether it was created, the keys set and skipped, the default Reference Root in use, the effective configuration, and the resolved Chain with the found status of each Reference Root and Layer.
 17. THE configuration SHALL include a `language` setting (`soase.json` key `language`, environment variable `SOASE_VALIDATOR_LANGUAGE`, default `en`) that names the active localization folder (`Localizations/<language>`), resolved with the same precedence as every other setting (criterion 1).
 18. WHEN a Sound or String name is not provided by the active localization, THE Engine SHALL look it up in the `en` localization before reporting it as unresolved.
 19. IF the `language` value is empty, contains a path separator, or starts with `.`, THEN THE package SHALL report an error naming the setting and SHALL continue with the default `en` (refines criterion 4).
@@ -206,6 +211,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 5. THE MCP server SHALL expose structure Definitions as readable resources.
 6. THE MCP server and the LSP server SHALL use the same Engine, so that identical input produces identical Diagnostics.
 7. THE MCP server SHALL return Diagnostics as structured data containing file, line, column, severity, code, and message.
+8. THE MCP server SHALL expose a `versions` tool equivalent to the CLI `versions` command (Requirement 13.7), returning each Game Version with its audit status and the gate tokens whose interpretation is unverified.
 
 ### Requirement 10: Distribution and runtime
 
@@ -255,12 +261,13 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 #### Acceptance Criteria
 
 1. THE project SHALL include an audit tool that validates every file in a Reference Root against the Definitions for the matching Game Version and reports each Diagnostic, and SHALL exit with a clear message when no Reference Root is supplied.
+   1. THE audit tool SHALL be a developer-only script in the repository (`tools/audit.py`, run with `uv run python tools/audit.py --reference-root <path>`) that uses the Engine as a library. THE package SHALL NOT expose it as a CLI command, an MCP tool or a console-script entry point, and users who install with `uvx --from git+...` SHALL NOT receive it as a command.
 2. THE audit tool SHALL classify each Diagnostic as a likely Definition gap or a likely real file problem, based on whether the same key or value occurs across multiple base game files.
 3. THE audit tool SHALL report keys and enumeration values that occur in base game files but are absent from the Definitions.
 4. THE audit tool SHALL report Definition fields and enumeration values that never occur in any base game file, as candidates for review.
 5. WHEN the audit finds a Definition gap, THE project SHALL record the correction in the Definitions with a note identifying the Game Version and the evidence.
 6. THE audit tool SHALL produce a report in a machine-readable format and a human-readable summary.
-7. THE project SHALL complete the audit for Rebellion 1.98 before the first release. THE project SHALL NOT audit any other Game Version, and SHALL mark every other Game Version as unaudited and best-effort in the README and in the tool's version listing.
+7. THE project SHALL complete the audit for Rebellion 1.98 before the first release. THE project SHALL NOT audit any other Game Version, and SHALL mark every other Game Version as unaudited and best-effort in the README and in the `versions` CLI command and MCP tool.
 8. THE project SHALL document its interpretation of each version-gate token (`Vanilla`, `Entrenchment`, `EntrenchmentOnly`, `Diplomacy`, `DiplomacyOnly`, `Rebellion`, `NotRebellion`, `NotDiplomacyOrRebellion`, `Rebellion185`, `Rebellion193`, `Rebellion194`), SHALL verify that interpretation against the base game files for Rebellion 1.98, and SHALL determine whether Rebellion 1.98 needs rules beyond gate level 194. Support for earlier Game Versions SHALL follow the original plugin's definitions on a best-effort basis, and tokens whose interpretation cannot be verified against available data SHALL be marked as unverified.
 
 ### Requirement 14: Layered mod chains
@@ -323,7 +330,7 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
    5. THE command SHALL edit only manifests within the Project; WHERE the governing manifest belongs to a lower Layer, THE command SHALL print the entries that Layer's manifest needs instead of editing it.
    6. THE command SHALL cover all manifest types, not only entities.
 9. WHERE the governing manifest is within the Project, THE LSP server SHALL offer a code action on the Diagnostic in 3 that adds the file to the manifest.
-10. THE MCP server SHALL expose tools equivalent to `manifest check` and `manifest sync`, with `manifest sync` defaulting to a dry run.
+10. THE MCP server SHALL expose tools equivalent to `manifest check` and `manifest sync`, with `manifest sync` defaulting to a dry run. THE MCP `manifest sync` result SHALL include the advisories of criterion 8.5 for manifests of lower Layers.
 
 ### Requirement 16: README and licensing
 

@@ -336,6 +336,54 @@ def audit_status(version: GameVersion, data: VersionData | None = None) -> str:
     return data.audit_status.get(version.value, "unaudited")
 
 
+@dataclass(frozen=True, slots=True)
+class VersionStatus:
+    """The audit status of one Game Version.
+
+    Attributes:
+        version: The Game Version.
+        name: Human-readable name.
+        audit_status: ``"audited"`` or ``"unaudited"``.
+        label: ``"audited"`` or ``"unaudited, best-effort"``.
+    """
+
+    version: GameVersion
+    name: str
+    audit_status: str
+    label: str
+
+
+@dataclass(frozen=True, slots=True)
+class VersionListing:
+    """Every Game Version with its audit status, and the unverified gate tokens.
+
+    Attributes:
+        versions: One entry per Game Version, in ``VERSION_ORDER``.
+        unverified_tokens: Gate tokens whose interpretation is unverified.
+    """
+
+    versions: tuple[VersionStatus, ...]
+    unverified_tokens: tuple[str, ...]
+
+
+def version_listing(data: VersionData | None = None) -> VersionListing:
+    """List the Game Versions with their audit status and the unverified tokens.
+
+    Args:
+        data: Version data to read; defaults to the bundled file.
+
+    Returns:
+        The listing.
+    """
+    data = load_version_data() if data is None else data
+    entries = []
+    for version in VERSION_ORDER:
+        status = audit_status(version, data)
+        label = "audited" if status == "audited" else "unaudited, best-effort"
+        entries.append(VersionStatus(version, display_name(version), status, label))
+    return VersionListing(tuple(entries), unverified_tokens(data))
+
+
 def unverified_tokens(data: VersionData | None = None) -> tuple[str, ...]:
     """Return gate tokens flagged as unverified.
 
