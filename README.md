@@ -67,13 +67,13 @@ The checks cover:
 ## Install and run
 
 The tool needs Python 3.14 or later and [uv](https://docs.astral.sh/uv/). It is
-distributed from GitHub and is not published on PyPI. Replace `<owner>` with the
-GitHub account that hosts the repository.
+distributed from [GitHub](https://github.com/Donos47/soase-validator) and is not
+published on PyPI.
 
 ```
-uvx --from git+https://github.com/<owner>/soase-validator soase-validator --help
-uvx --from git+https://github.com/<owner>/soase-validator soase-validator-lsp
-uvx --from git+https://github.com/<owner>/soase-validator soase-validator-mcp
+uvx --from git+https://github.com/Donos47/soase-validator soase-validator --help
+uvx --from git+https://github.com/Donos47/soase-validator soase-validator-lsp
+uvx --from git+https://github.com/Donos47/soase-validator soase-validator-mcp
 ```
 
 The tool runs on Windows, macOS and Linux.
@@ -196,7 +196,7 @@ the user-level settings file:
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/<owner>/soase-validator",
+        "git+https://github.com/Donos47/soase-validator",
         "soase-validator-mcp"
       ]
     }
@@ -212,7 +212,7 @@ To start a new mod project, ask the agent to run the `configure` tool, or run
 
 The language server speaks stdio. Any generic LSP client extension can run it
 with the command `uvx` and the arguments
-`--from git+https://github.com/<owner>/soase-validator soase-validator-lsp`,
+`--from git+https://github.com/Donos47/soase-validator soase-validator-lsp`,
 for the file types listed above. This repository does not ship a VS Code
 extension. Editor settings are passed as initialization options or through
 `workspace/didChangeConfiguration`, using the `soase.json` key names, either
@@ -230,7 +230,7 @@ For VS Code's built-in MCP support, add the server to `.vscode/mcp.json`:
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/<owner>/soase-validator",
+        "git+https://github.com/Donos47/soase-validator",
         "soase-validator-mcp"
       ]
     }
@@ -298,6 +298,14 @@ Codes are stable. Hide a code with `disabledCodes`.
 Families: `P` parser, `V` validator, `R` reference, `C` chain and
 configuration, `M` manifest, `D` Definition load, `X` internal.
 `SOASE-M020` severity is configurable through `manifest.unreferencedSeverity`.
+
+## Future improvements
+
+Planned, not yet available:
+
+- A VS Code extension that starts the language server, registers the
+  supported file types and exposes the `soase.json` settings in the editor.
+- Syntax coloring for the supported file types in code editors.
 
 ## Game files
 

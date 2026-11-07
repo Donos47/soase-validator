@@ -10,7 +10,7 @@
 
 A developer-only audit script (`tools/audit.py`) calls the same Engine. It is not a front end: it is not an entry point, a CLI command or an MCP tool, and `uvx --from git+... soase-validator` users do not get it.
 
-The package targets Python 3.14+, runs offline on Windows, macOS, and Linux, and is installed and run with `uvx --from git+https://github.com/<owner>/soase-validator <entry-point>`. No PyPI publication is needed.
+The package targets Python 3.14+, runs offline on Windows, macOS, and Linux, and is installed and run with `uvx --from git+https://github.com/Donos47/soase-validator <entry-point>`. No PyPI publication is needed.
 
 ### Key Design Decisions
 
@@ -662,6 +662,7 @@ Resources: `soase://definitions/{structure}` returns the Definition as JSON (Req
 | `init` | Writes `soase.json` in the current directory from options; prompts if run interactively on a TTY; uses the user-level default Reference Root and says which path it used; succeeds without a Reference Root and prints how to add one (Requirement 8.7 to 8.9). |
 | `config set-reference-root` | Sets a root in the project or user file, warns when the path does not exist or does not look like game data, but still saves (Requirement 8.10, 8.11). |
 | `config show` | Prints effective config (same as MCP `get_config`). |
+| `validate PATH...` | Validates each file or directory through `Engine.validate_file` and `Engine.validate_directory`, the calls the MCP `validate_file` and `validate_directory` tools make, so identical input gives identical Diagnostics. Prints `file:line:column: severity code message` with one-based line and column, or the MCP structured objects with `--format json`. `--game-version` and `--path` follow the other commands. Exits 1 when any Diagnostic is an error, 0 otherwise (Requirement 9.9). |
 | `manifest check` | Runs all manifest checks (Requirement 15.7). |
 | `manifest sync [--write] [--remove-stale]` | See Manifest Service. |
 | `versions` | Lists Game Versions with audit status (Rebellion 1.98 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). Same data as the MCP `versions` tool. |
@@ -1036,7 +1037,7 @@ Filesystem properties build small trees under a temporary directory with fewer e
 - Each Definition node type and each primitive type has at least one example test (Requirement 11.3).
 - LSP tests with the pygls test client: publish on open and save, clear on close, completion, hover, definition, code action, config reload (Requirements 5, 6, 7, 8.13, 15.9).
 - MCP tests invoke each tool function directly and via the SDK's in-memory client: validate file and directory, completion, help, entity types, config tools (including the Reference Root warnings), manifest tools (including the lower-Layer advisories), `versions`, resources (Requirements 4.6.3, 8.11, 8.15, 8.16, 9, 13.7, 15.8.5, 15.10).
-- CLI tests: `init` with and without a Reference Root and with a user default, `config set-reference-root` warnings, `manifest sync` dry-run default, `--write` backup creation, `--remove-stale` listing, `versions` shows audit status (Requirements 8.7 to 8.11, 13.7, 15.7, 15.8). The audit script's missing-root exit is tested by running `tools/audit.py` directly (Requirement 13.1).
+- CLI tests: `validate` on a file and a directory matches the MCP tool output, text and JSON formats, exit status for errors and for clean input; `init` with and without a Reference Root and with a user default, `config set-reference-root` warnings, `manifest sync` dry-run default, `--write` backup creation, `--remove-stale` listing, `versions` shows audit status (Requirements 8.7 to 8.11, 13.7, 15.7, 15.8). The audit script's missing-root exit is tested by running `tools/audit.py` directly (Requirement 13.1).
 - Specific examples: `skybox.manifest` governed subset, incomplete Chain messages, overlay without manifests, override informational reports, internal error recovery (Requirements 4.6, 11.5, 14.15, 14.19, 15.3.3).
 - Smoke: `uvx --from <path>` entry points start and answer an initialize request; `python -c "import soase_validator"` under 3.14 (Requirement 10).
 - Performance check (not part of the default suite): validating a typical `.entity` file with a warm index finishes under 500 ms (Requirement 5.6).

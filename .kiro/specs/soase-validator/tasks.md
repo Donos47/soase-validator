@@ -404,22 +404,28 @@ Conventions for every task:
     - Invoke each tool function directly and through the SDK in-memory client, covering validation, completion, help, entity types, config tools (including the Reference Root warnings), manifest tools (including the lower-Layer advisories of `manifest_sync`), `versions`, resources, and identical diagnostics to the Engine
     - _Requirements: 4.6.3, 8.11, 8.15, 8.16, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.8, 13.7, 15.8.5, 15.10_
 
-- [~] 15. Command-line interface
-  - [ ] 15.1 Implement `cli/main.py` with `init` and `config`
+- [ ] 15. Command-line interface
+  - [x] 15.1 Implement `cli/main.py` with `init` and `config`
     - Add the argparse entry point, `init` (options and TTY prompts, using the user-level default Reference Root and printing which path was used, succeeding without a root and printing how to add one), `config set-reference-root` (warn when the path is missing or not game data but still save) and `config show`
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 8.15_
 
-  - [ ] 15.2 Add `manifest check` and `manifest sync`
+  - [x] 15.2 Add `manifest check` and `manifest sync`
     - Implement `manifest check`, and `manifest sync [--write] [--remove-stale]` printing a unified diff by default, writing with backups only with `--write`, listing entries before removal, and printing advisories for lower-Layer manifests
     - _Requirements: 15.7, 15.8, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
-  - [ ] 15.3 Add the `versions` command
+  - [x] 15.3 Add the `versions` command
     - List Game Versions with audit status (Rebellion 1.98 audited, others "unaudited, best-effort") and unverified gate tokens from `versions.json`, by printing the listing from `Engine.version_listing` (the data the MCP `versions` tool returns)
     - _Requirements: 13.7, 13.8_
 
-  - [ ] 15.4 Write CLI tests
+  - [x] 15.4 Write CLI tests
     - Cover `init` with and without a root and with a user default, `set-reference-root` warnings, dry-run default for `manifest sync`, `--write` backup creation, `--remove-stale` listing and `versions` output
     - _Requirements: 8.7, 8.8, 8.9, 8.10, 8.11, 13.7, 15.7, 15.8_
+
+  - [ ] 15.5 Add the `validate` command and its tests
+    - Add `soase-validator validate PATH...` taking files and directories, calling `Engine.validate_file` and `Engine.validate_directory` (no validation logic in the CLI), with `--game-version`, `--path`, and `--format text|json` (text is `file:line:column: severity code message` with one-based positions; json uses the MCP structured fields `file`, `line`, `column`, `severity`, `code`, `message`); exit 1 when any Diagnostic is an error, otherwise 0
+    - Tests: a file and a directory give the same Diagnostics as the MCP tools for the same input; text and JSON output; exit status for errors, warnings only and clean input; a missing path gives a clear message and a non-zero exit; no Reference Root configured reports unresolved references against the Project and declared Layers
+    - Update the CLI section of `README.md` and remove its statement that the CLI has no validation command
+    - _Requirements: 9.6, 9.7, 9.9_
 
 - [ ] 16. Developer audit script and Rebellion 1.98 audit
   - [ ] 16.1 Implement `tools/audit.py`
@@ -452,8 +458,8 @@ Conventions for every task:
     - _Requirements: 11.2, 11.2.1_
 
 - [ ] 17. Documentation, attribution and distribution checks
-  - [ ] 17.1 Write `README.md`
-    - Describe the tool, supported Game Versions with audit status, what is validated, `uvx --from git+https://github.com/<owner>/soase-validator` installation, configuration (`init`, `soase.json`, user file, Reference Roots, parent Layers, Game Version), use from Kiro, VS Code and MCP clients with and without a Reference Root, the diagnostic code catalogue, and the unofficial-tool and no-game-assets statements
+  - [x] 17.1 Write `README.md`
+    - Describe the tool, supported Game Versions with audit status, what is validated, `uvx --from git+https://github.com/Donos47/soase-validator` installation, configuration (`init`, `soase.json`, user file, Reference Roots, parent Layers, Game Version), use from Kiro, VS Code and MCP clients with and without a Reference Root, the diagnostic code catalogue, and the unofficial-tool and no-game-assets statements
     - Add the Credits section naming zombiesrus5, GoaFan77, and Stardock Entertainment and Ironclad Games with what each contributed and where it is used, and the scope of the MIT license versus third-party works
     - _Requirements: 10.5, 12.3, 12.4, 12.5, 12.6, 13.7, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.8_
 
@@ -461,7 +467,7 @@ Conventions for every task:
     - Add the MIT `LICENSE`, a `NOTICE` file listing the third-party attribution, and make sure `PROVENANCE.json` records origin, author, version and audit corrections
     - _Requirements: 12.1, 12.3, 12.4, 16.7, 16.8_
 
-  - [ ] 17.3 Write the credits test
+  - [ ]* 17.3 Write the credits test
     - Fail if the README lacks any credited party named in the requirements (zombiesrus5, GoaFan77, Stardock Entertainment, Ironclad Games) or the unofficial-tool statement
     - _Requirements: 16.4, 16.5, 16.9_
 

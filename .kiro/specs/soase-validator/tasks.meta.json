@@ -1095,6 +1095,73 @@
         "chatSessionId": "sess_3e918e19-1409-4189-ae4c-ac560aca517e",
         "timestamp": 1794073940763
       }
+    ],
+    "15.1 Implement `cli/main.py` with `init` and `config`": [
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075328954
+      },
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075454404
+      }
+    ],
+    "15.2 Add `manifest check` and `manifest sync`": [
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075463235
+      },
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075546708
+      }
+    ],
+    "15.3 Add the `versions` command": [
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075547099
+      },
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075605786
+      }
+    ],
+    "15.4 Write CLI tests": [
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075606075
+      },
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075712052
+      }
+    ],
+    "15. Command-line interface": [
+      {
+        "executionId": "b0c77f7c-3651-4cf1-90c8-558bb4fd45ff",
+        "chatSessionId": "sess_d9636aa2-d911-47f9-8c59-d525da37ad1d",
+        "timestamp": 1794075712132
+      }
+    ],
+    "17.1 Write `README.md`": [
+      {
+        "executionId": "f657fd75-a0c2-4718-bc11-8d6142a71cb9",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794075736916
+      },
+      {
+        "executionId": "f657fd75-a0c2-4718-bc11-8d6142a71cb9",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794075880888
+      }
     ]
   }
 }

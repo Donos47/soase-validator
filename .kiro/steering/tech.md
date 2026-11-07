@@ -8,7 +8,7 @@ inclusion: always
 
 - Python 3.14+ (`requires-python = ">=3.14"`), `src/` layout, package `soase_validator`.
 - `uv` manages the environment. Never install packages globally.
-- Distributed from GitHub and run via `uvx --from git+https://github.com/<owner>/soase-validator <entry-point>`. No PyPI publication.
+- Distributed from GitHub and run via `uvx --from git+https://github.com/Donos47/soase-validator <entry-point>`. No PyPI publication.
 - Entry points: `soase-validator` (CLI), `soase-validator-lsp`, `soase-validator-mcp`.
 
 ## Libraries

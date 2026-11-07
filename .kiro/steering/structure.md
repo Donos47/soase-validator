@@ -27,7 +27,7 @@ soase-validator/
                                  # versions.json, PROVENANCE.json
     lsp/server.py                # placeholder
     mcp_server/app.py            # placeholder
-    cli/main.py                  # placeholder (init, config, manifest, versions planned)
+    cli/main.py                  # init, config, manifest, versions; validate (planned, task 15.5)
   tools/convert_definitions.py   # one-off XML -> JSON converter, not shipped at runtime
   tools/audit.py                 # (planned, developer-only) Definition audit, not shipped
   tests/

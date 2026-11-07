@@ -8,7 +8,7 @@ inclusion: always
 
 ## Capabilities
 
-- Validate mod files (`.entity`, `.galaxy`, `.brushes`, `.sounddata`, `.str`, `.constants`, `.galaxyScenarioDef`, `.particle`, `.explosiondata`, and others) against declarative Definitions.
+- Validate mod files from the CLI, the MCP server and the LSP server (`.entity`, `.galaxy`, `.brushes`, `.sounddata`, `.str`, `.constants`, `.galaxyScenarioDef`, `.particle`, `.explosiondata`, and others) against declarative Definitions.
 - Completion, hover help and go-to-definition for keys, enum values and cross-file references.
 - Resolve references across a Chain of Layers (base game, parent mods, the project).
 - Check and sync `*.manifest` files (`manifest check`, `manifest sync`).
@@ -30,7 +30,7 @@ Definitions are audited against a base game Reference Root by a developer-only s
 ## Key rules
 
 - Runs fully offline and never transmits mod content.
-- Reference Roots and parent Layers are optional. Without them, everything not dependent on other Layers still works, and unresolved-reference errors are suppressed.
+- Reference Roots and parent Layers are optional. Without them, everything not dependent on other Layers still works. Unresolved references are still reported against the Layers that are configured, including the Project alone, so a reference to a base game name reports as unresolved until a Reference Root provides it. Reference checks are limited (no unresolved-reference errors, one `SOASE-C030` notice per file) only when a declared Layer is missing or unusable.
 - Never include or copy game assets or base game files into the repo, tests or docs. Read them in place only.
 - Never put machine-specific absolute paths in source, tests, fixtures or docs. Use placeholders like `~/path/to/sins-rebellion-reference`.
 - Unofficial community tool. Credit zombiesrus5 (original plugin and Definitions), GoaFan77 (manifest updater script) and Stardock Entertainment / Ironclad Games (the game).
