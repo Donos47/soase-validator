@@ -318,7 +318,7 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
 8. THE package SHALL provide a `manifest sync` command that adds missing names for Project files to the Project's manifests.
    1. THE command SHALL preserve the existing entries, their order, the header style, and the line endings, SHALL append new names, and SHALL update the count line.
    2. THE command SHALL print the changes it would make by default, and SHALL write them only when an explicit option is given.
-   3. WHEN it writes a manifest, THE command SHALL first save a backup copy beside it and report the backup's path.
+   3. WHEN it writes a manifest, THE command SHALL first save a backup copy beside it and report the backup's path. The backup SHALL be named `<manifest name>.old` (for example `entity.manifest.old`); WHEN that file exists, THE command SHALL replace it, so that one backup per manifest remains, holding the manifest content from just before the latest write.
    4. THE command SHALL NOT remove entries unless an explicit option is given, and SHALL list the entries it would remove before doing so.
    5. THE command SHALL edit only manifests within the Project; WHERE the governing manifest belongs to a lower Layer, THE command SHALL print the entries that Layer's manifest needs instead of editing it.
    6. THE command SHALL cover all manifest types, not only entities.

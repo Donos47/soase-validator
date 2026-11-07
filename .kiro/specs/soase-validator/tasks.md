@@ -283,8 +283,8 @@ Conventions for every task:
     - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured (a complete Chain: unresolved references are reported against the Project and declared Layers, with no limited-checks notice)
     - _Requirements: 4.6, 14.9, 14.15_
 
-- [ ] 9. Manifest service
-  - [ ] 9.1 Implement manifest parsing and formatting in `engine/manifests.py`
+- [x] 9. Manifest service
+  - [x] 9.1 Implement manifest parsing and formatting in `engine/manifests.py`
     - Load `manifest_rules.json`, implement `ManifestData` parsing with per-type count and name keys, extension rules, case-insensitive matching, header style and line-ending detection, and a formatter
     - _Requirements: 15.1, 15.1.1_
 
@@ -292,7 +292,7 @@ Conventions for every task:
     - **Property 27: Manifest parse and format round trip**
     - **Validates: Requirements 15.1**
 
-  - [ ] 9.3 Implement governing-manifest selection and `manifest_check`
+  - [x] 9.3 Implement governing-manifest selection and `manifest_check`
     - Select the governing manifest from the highest Layer providing each type, compute governed file sets by extension and directory (skybox subset from `.skyboxbackdropdata` `meshName` values), and emit `SOASE-M010`, `SOASE-M020` (configurable severity), `SOASE-M030` and `SOASE-M040`
     - Honour the shipped base-game-unlisted list and user exemption patterns, and include the lower-Layer wording in `SOASE-M010`
     - _Requirements: 14.4, 14.19, 15.2, 15.3, 15.3.1, 15.3.2, 15.3.3, 15.3.4, 15.3.5, 15.4, 15.4.1, 15.5, 15.6_
@@ -309,9 +309,9 @@ Conventions for every task:
     - **Property 29: Manifest hygiene diagnostics**
     - **Validates: Requirements 15.4, 15.5, 15.6**
 
-  - [ ] 9.7 Implement `plan_sync`, `SyncPlan` and `manifest_apply`
+  - [x] 9.7 Implement `plan_sync`, `SyncPlan` and `manifest_apply`
     - Implement the pure planner that preserves entries, order, header and line endings, appends only unlisted names, rewrites the count line, supports opt-in removal, and returns advisories instead of edits for lower-Layer manifests
-    - Implement the side-effecting apply with `.bak` backups (numeric suffix when present), temporary file plus atomic replace, and dry-run diff output
+    - Implement the side-effecting apply with a single `.old` backup per manifest (an existing one is replaced), temporary file plus atomic replace, and dry-run diff output
     - _Requirements: 15.8, 15.8.1, 15.8.2, 15.8.3, 15.8.4, 15.8.5, 15.8.6_
 
   - [ ]* 9.8 Write property test for sync preserving content
@@ -330,25 +330,25 @@ Conventions for every task:
     - **Property 33: Lower-Layer manifests are never edited**
     - **Validates: Requirements 15.8.5, 15.3.1**
 
-  - [ ] 9.12 Write manifest unit tests
+  - [x] 9.12 Write manifest unit tests
     - Cover the `skybox.manifest` governed subset, an overlay without manifests, extension-less `galaxy.manifest` names, backup creation and failed-write safety
     - _Requirements: 14.19, 15.3.3, 15.8.3_
 
 - [ ] 10. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 11. Completion, hover and go-to-definition
+- [~] 11. Completion, hover and go-to-definition
   - [ ] 11.1 Implement `engine/completion.py`
     - Locate the cursor context in a tolerant `ParsedFile`; return key completions (enclosing structure or selected branch, excluding present keys), value completions (version-gated enum members, `entityType` values, reference names from the `ChainIndex` shown once with the originating Layer in `detail`), case-insensitive prefix filtering and Definition help as documentation
     - Implement hover for keys, enum values and reference values (providing and overridden Layer) returning nothing for undefined keys, and go-to-definition returning the highest Layer's file
     - Limit reference completions to usable Layers on incomplete chains
     - _Requirements: 4.6.4, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 7.1, 7.2, 7.3, 14.12, 14.13, 14.14_
 
-  - [ ] 11.2 Write property test for completion correctness
+  - [ ]* 11.2 Write property test for completion correctness
     - **Property 24: Completion correctness**
     - **Validates: Requirements 6.2, 6.4, 6.5, 6.6**
 
-  - [ ] 11.3 Write property test for reference completions
+  - [ ]* 11.3 Write property test for reference completions
     - **Property 25: Reference completions are unique and layer-attributed**
     - **Validates: Requirements 4.6.4, 6.3, 14.14**
 

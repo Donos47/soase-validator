@@ -12,7 +12,7 @@
     "nameKey": "brushFile",
     "includesExtension": true,
     "example": "X.brushes",
-    "governs": {"extensions": [".brushes"]}
+    "governs": {"directory": "Window", "extensions": [".brushes"]}
   },
   "galaxy.manifest": {
     "countKey": "fileCount",
@@ -26,14 +26,14 @@
     "nameKey": "fileName",
     "includesExtension": true,
     "example": "X.playerPictures",
-    "governs": {"extensions": [".playerPictures"]}
+    "governs": {"directory": "Window", "extensions": [".playerPictures"]}
   },
   "playerThemes.manifest": {
     "countKey": "fileCount",
     "nameKey": "fileName",
     "includesExtension": true,
     "example": "X.playerThemes",
-    "governs": {"extensions": [".playerThemes"]}
+    "governs": {"directory": "Window", "extensions": [".playerThemes"]}
   },
   "skybox.manifest": {
     "countKey": "meshFileCount",

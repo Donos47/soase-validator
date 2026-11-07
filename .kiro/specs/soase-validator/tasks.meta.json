@@ -830,6 +830,76 @@
         "chatSessionId": "sess_34113840-39ce-4f9b-bd8a-e28e125e45ba",
         "timestamp": 1794064221590
       }
+    ],
+    "9.1 Implement manifest parsing and formatting in `engine/manifests.py`": [
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070184458
+      },
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070368871
+      }
+    ],
+    "9.3 Implement governing-manifest selection and `manifest_check`": [
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070370585
+      },
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070611320
+      }
+    ],
+    "9.7 Implement `plan_sync`, `SyncPlan` and `manifest_apply`": [
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070613790
+      },
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070827828
+      },
+      {
+        "executionId": "397dddea-d0ac-47b4-b6c6-f03f8c6b002b",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794071292265
+      },
+      {
+        "executionId": "397dddea-d0ac-47b4-b6c6-f03f8c6b002b",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794071464837
+      },
+      {
+        "executionId": "79fd6fec-c728-434e-a660-c113970861f3",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794071502265
+      },
+      {
+        "executionId": "79fd6fec-c728-434e-a660-c113970861f3",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794071589686
+      }
+    ],
+    "9.12 Write manifest unit tests": [
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070831015
+      }
+    ],
+    "9. Manifest service": [
+      {
+        "executionId": "0bc70e59-4914-42a4-a0bf-8d7549a68088",
+        "chatSessionId": "sess_6e7c5ec7-0c4a-4d6c-9bfa-deaf8437eedd",
+        "timestamp": 1794070831062
+      }
     ]
   }
 }

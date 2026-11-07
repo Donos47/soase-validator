@@ -489,7 +489,7 @@ Per-type rules are data in `definitions/manifest_rules.json`. All manifests use 
   "brush.manifest": {
     "countKey": "brushFileCount", "nameKey": "brushFile",
     "includesExtension": true, "example": "X.brushes",
-    "governs": {"extensions": [".brushes"]}
+    "governs": {"directory": "Window", "extensions": [".brushes"]}
   },
   "galaxy.manifest": {
     "countKey": "fileCount", "nameKey": "fileName",
@@ -499,12 +499,12 @@ Per-type rules are data in `definitions/manifest_rules.json`. All manifests use 
   "playerPictures.manifest": {
     "countKey": "fileCount", "nameKey": "fileName",
     "includesExtension": true, "example": "X.playerPictures",
-    "governs": {"extensions": [".playerPictures"]}
+    "governs": {"directory": "Window", "extensions": [".playerPictures"]}
   },
   "playerThemes.manifest": {
     "countKey": "fileCount", "nameKey": "fileName",
     "includesExtension": true, "example": "X.playerThemes",
-    "governs": {"extensions": [".playerThemes"]}
+    "governs": {"directory": "Window", "extensions": [".playerThemes"]}
   },
   "skybox.manifest": {
     "countKey": "meshFileCount", "nameKey": "meshFileName",
@@ -548,7 +548,7 @@ class SyncPlan:
 def plan_sync(manifest_text: str, rule: ManifestRule, missing: Sequence[str], remove: Sequence[str] = ()) -> str: ...
 ```
 
-`plan_sync` preserves existing entries, their order, the header style (`TXT`/`TXT2`) and the original line endings, appends new names, and rewrites only the count line (Requirement 15.8.1). `manifest_apply` is the only side-effecting function: for each edit it writes `<manifest>.bak` beside the file (adding a numeric suffix if the backup exists), then writes the new text, and returns the backup paths (Requirement 15.8.3). The default CLI/MCP mode is dry run, printing a unified diff; writing needs `--write` (Requirement 15.8.2). Removal needs `--remove-stale` and lists the entries first (Requirement 15.8.4). Manifests in a lower Layer are never edited; their needed entries are returned as advisories (Requirement 15.8.5). All manifest types are covered (Requirement 15.8.6).
+`plan_sync` preserves existing entries, their order, the header style (`TXT`/`TXT2`) and the original line endings, appends new names, and rewrites only the count line (Requirement 15.8.1). `manifest_apply` is the only side-effecting function: for each edit it writes `<manifest>.old` beside the file (replacing an existing `.old`, so one backup per manifest remains), then writes the new text, and returns the backup paths (Requirement 15.8.3). The default CLI/MCP mode is dry run, printing a unified diff; writing needs `--write` (Requirement 15.8.2). Removal needs `--remove-stale` and lists the entries first (Requirement 15.8.4). Manifests in a lower Layer are never edited; their needed entries are returned as advisories (Requirement 15.8.5). All manifest types are covered (Requirement 15.8.6).
 
 The LSP code action for `SOASE-M010` is offered only when the governing manifest lies within the Project, and produces a `WorkspaceEdit` computed with `plan_sync` (Requirement 15.9).
 
