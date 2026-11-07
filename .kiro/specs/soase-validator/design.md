@@ -644,7 +644,7 @@ Tools (each a thin wrapper over the Engine; the SDK-specific code is isolated in
 | Tool | Purpose | Requirement |
 | --- | --- | --- |
 | `validate_file` | Diagnostics for one file | 9.1 |
-| `validate_directory` | Diagnostics grouped by file | 9.2 |
+| `validate_directory` | Diagnostics grouped by file; with `output_path`, writes the report and returns a summary (see below) | 9.2, 9.10 |
 | `complete` | Completions for a file and field | 9.3 |
 | `field_help`, `list_entity_types` | Help and entity types | 9.4 |
 | `get_config` | Effective config with sources, Reference Root status, resolved Chain | 8.15, 14.16 |
@@ -672,12 +672,16 @@ Resources: `soase://definitions/{structure}` returns the Definition as JSON (Req
 | `init` | Writes `soase.json` in the current directory from options; prompts if run interactively on a TTY; uses the user-level default Reference Root and says which path it used; succeeds without a Reference Root and prints how to add one (Requirement 8.7 to 8.9). |
 | `config set-reference-root` | Sets a root in the project or user file, warns when the path does not exist or does not look like game data, but still saves (Requirement 8.10, 8.11). |
 | `config show` | Prints effective config (same as MCP `get_config`). |
-| `validate PATH...` | Validates each file or directory through `Engine.validate_file` and `Engine.validate_directory`, the calls the MCP `validate_file` and `validate_directory` tools make, so identical input gives identical Diagnostics. Prints `file:line:column: severity code message` with one-based line and column, or the MCP structured objects with `--format json`. `--game-version` and `--path` follow the other commands. Exits 1 when any Diagnostic is an error, 0 otherwise (Requirement 9.9). |
+| `validate PATH...` | Validates each file or directory through `Engine.validate_file` and `Engine.validate_directory`, the calls the MCP `validate_file` and `validate_directory` tools make, so identical input gives identical Diagnostics. Prints `file:line:column: severity code message` with one-based line and column, or the MCP structured objects with `--format json`. `--game-version` and `--path` follow the other commands. Exits 1 when any Diagnostic is an error, 0 otherwise (Requirement 9.9). With `--output FILE` the report goes to the file and stdout gets one summary line (Requirement 9.9.1); see Validation reports. |
 | `manifest check` | Runs all manifest checks (Requirement 15.7). |
 | `manifest sync [--write] [--remove-stale]` | See Manifest Service. |
 | `versions` | Lists Game Versions with audit status (Rebellion 1.98 audited; others "unaudited, best-effort") and unverified gate tokens (Requirement 13.7, 13.8). Same data as the MCP `versions` tool. |
 
 There is no `audit` command, and no audit entry point in `[project.scripts]`.
+
+### Validation reports (Requirements 9.9.1, 9.10, 9.11)
+
+One Engine-independent helper in the front-end layer (shared by the CLI and the MCP server, no SDK code) builds a report from the `validate_directory` / `validate_file` results and writes it. The report lists only files with findings and carries `files_validated`. JSON form: `{"files_validated": N, "files_with_findings": M, "counts": {"error": .., "warning": .., "info": ..}, "by_code": {"SOASE-..": n}, "files": {path: [diagnostic, ...]}}` with the MCP structured diagnostic fields (one-based positions). Text form: one `file:line:column: severity code message` line per Diagnostic, then the summary line. The MCP summary is the JSON form without `files`, plus `report` (the path) and `top_files` (up to 10 `{file, count}` entries, most findings first, ties by path). Writing goes to a temporary file in the target's directory, then an atomic replace; an existing file is overwritten silently; a missing parent directory is an error (CLI: message on stderr and exit status 2; MCP: tool error). The helper is `soase_validator/reports.py`; it also holds the structured Diagnostic conversion that the MCP server re-exports. A result entry counts in `files_validated` unless it carries a `SOASE-C050` Diagnostic (a file or directory outside every Mod Root): that Diagnostic is a finding, but nothing was validated. The CLI merges several PATHs into one report, keyed by path. The CLI also exits with status 2 when a report cannot be written for another reason. A report inside a Mod Root is allowed; its extension is not a game file type, so it is neither validated nor governed by a manifest.
 
 ### Audit Tool (Requirement 13)
 

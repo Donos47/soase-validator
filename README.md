@@ -102,7 +102,7 @@ soase-validator versions
   identical.
 
 ```
-soase-validator validate PATH... [--path DIR] [--game-version VERSION] [--format text|json]
+soase-validator validate PATH... [--path DIR] [--game-version VERSION] [--format text|json] [--output FILE]
 ```
 
   Text output has one line per Diagnostic, `file:line:column: severity code
@@ -112,7 +112,19 @@ soase-validator validate PATH... [--path DIR] [--game-version VERSION] [--format
   the directory given by `--path` (default: current) is validated.
   `--game-version` applies when no `soase.json` or environment variable sets
   one. The exit status is 1 when any Diagnostic is an error, 2 for a missing
-  path or an unknown Game Version, and 0 otherwise. Errors go to stderr.
+  path, an unknown Game Version or a report that cannot be written, and 0
+  otherwise. Errors go to stderr.
+
+  `--output FILE` writes a report to `FILE` in the chosen format and prints one
+  summary line (files validated, error, warning and info counts, the report
+  path). The exit status is the same as without `--output`. The report lists
+  only files with findings. The JSON report holds `files_validated`,
+  `files_with_findings`, `counts` (by severity), `by_code` and `files`; the text
+  report has the Diagnostic lines followed by the counts line. A file outside
+  every Mod Root (`SOASE-C050`) is reported but not counted as validated. An
+  existing `FILE` is replaced without a prompt, and its directory must exist.
+  A report inside a Mod Root is not validated on later runs, because its
+  extension is not a game file type.
 
 ## Configuration
 
@@ -262,7 +274,7 @@ Tools:
 | Tool | Purpose |
 | --- | --- |
 | `validate_file` | Validate one file, optionally from unsaved text |
-| `validate_directory` | Validate every supported file below a directory |
+| `validate_directory` | Validate every supported file below a directory; with `output_path`, write the JSON report there and return a summary |
 | `complete` | Completion candidates at a one-based line and column |
 | `field_help` | Help for a field of a structure Definition |
 | `list_entity_types` | `entityType` values valid for a Game Version |
@@ -277,6 +289,13 @@ Tools:
 The server also serves each structure Definition as a resource at
 `soase://definitions/{structure}`. MCP diagnostics use one-based line and
 column numbers.
+
+`validate_directory` with `output_path` writes the same JSON report as
+`soase-validator validate --format json --output`, replacing an existing file
+(its directory must exist, otherwise the call fails). The result holds `report`
+(the path), `files_validated`, `files_with_findings`, `counts`, `by_code` and
+`top_files` (up to 10 `{file, count}` entries, most findings first, ties by
+path). Without `output_path` the result is unchanged.
 
 ## Diagnostic codes
 

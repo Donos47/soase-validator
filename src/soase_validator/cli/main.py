@@ -20,6 +20,14 @@ from soase_validator.engine.versions import (
     GameVersion,
     parse_game_version,
 )
+from soase_validator.reports import (
+    build_report,
+    diagnostic_to_dict,
+    format_json,
+    format_text,
+    summary_line,
+    write_report,
+)
 
 _DEFAULT_VERSION = DEFAULT_REBELLION.value
 
@@ -234,7 +242,9 @@ def _format_diagnostic(diagnostic: Diagnostic) -> str:
     )
 
 
-def _collect_diagnostics(paths: Sequence[Path], engine: Engine) -> list[Diagnostic]:
+def _collect_diagnostics(
+    paths: Sequence[Path], engine: Engine
+) -> list[tuple[Path, list[Diagnostic]]]:
     """Validate files and directories through the Engine.
 
     Args:
@@ -242,17 +252,42 @@ def _collect_diagnostics(paths: Sequence[Path], engine: Engine) -> list[Diagnost
         engine: The Engine.
 
     Returns:
-        The Diagnostics in argument order; files of a directory follow the
-        Engine's order.
+        The Diagnostics per file in argument order, including files with
+        none; files of a directory follow the Engine's order.
     """
-    found: list[Diagnostic] = []
+    found: list[tuple[Path, list[Diagnostic]]] = []
     for path in paths:
         if path.is_dir():
-            for diagnostics in engine.validate_directory(path).values():
-                found.extend(diagnostics)
+            found.extend(engine.validate_directory(path).items())
         else:
-            found.extend(engine.validate_file(path))
+            found.append((path, engine.validate_file(path)))
     return found
+
+
+def _write_validation_report(
+    results: Sequence[tuple[Path, list[Diagnostic]]], args: argparse.Namespace
+) -> int | None:
+    """Write the report of ``validate --output`` and print its summary line.
+
+    A file that appears under several PATHs is reported once.
+
+    Args:
+        results: The per-file Diagnostics.
+        args: The parsed arguments.
+
+    Returns:
+        None on success, otherwise the exit code of the failure.
+    """
+    report = build_report(dict(results))
+    target = Path(args.output)
+    text = format_json(report) if args.format == "json" else format_text(report)
+    try:
+        write_report(target, text)
+    except OSError as error:
+        _print_error(f"cannot write report: {error}")
+        return 2
+    print(f"{summary_line(report)}; report: {target}")
+    return None
 
 
 def _run_validate(args: argparse.Namespace, engine: Engine) -> int:
@@ -263,8 +298,8 @@ def _run_validate(args: argparse.Namespace, engine: Engine) -> int:
         engine: The Engine.
 
     Returns:
-        1 when any Diagnostic is an error, 2 when a path does not exist or
-        the Game Version is unknown, otherwise 0.
+        1 when any Diagnostic is an error, 2 when a path does not exist, the
+        Game Version is unknown or the report cannot be written, otherwise 0.
     """
     paths = [Path(item) for item in (args.paths or [args.path])]
     missing = [path for path in paths if not path.exists()]
@@ -279,11 +314,14 @@ def _run_validate(args: argparse.Namespace, engine: Engine) -> int:
             _print_error(str(error))
             return 2
         engine.set_editor_settings({"gameVersion": version.value})
-    diagnostics = _collect_diagnostics(paths, engine)
-    if args.format == "json":
-        # The MCP module imports the SDK, so only the JSON format loads it.
-        from soase_validator.mcp_server.app import diagnostic_to_dict
-
+    results = _collect_diagnostics(paths, engine)
+    diagnostics = [item for _, found in results for item in found]
+    errors = sum(1 for item in diagnostics if item.severity is Severity.ERROR)
+    if args.output is not None:
+        failure = _write_validation_report(results, args)
+        if failure is not None:
+            return failure
+    elif args.format == "json":
         print(json.dumps({"diagnostics": [diagnostic_to_dict(item) for item in diagnostics]}))
     else:
         for diagnostic in diagnostics:
@@ -292,8 +330,7 @@ def _run_validate(args: argparse.Namespace, engine: Engine) -> int:
                 f"{diagnostic.file}:{start.line + 1}:{start.col + 1}: "
                 f"{diagnostic.severity.value} {diagnostic.code} {diagnostic.message}"
             )
-    errors = sum(1 for item in diagnostics if item.severity is Severity.ERROR)
-    if args.format == "text":
+    if args.format == "text" and args.output is None:
         print(f"{len(diagnostics)} diagnostics, {errors} errors", file=sys.stderr)
     return 1 if errors else 0
 
@@ -441,6 +478,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     validate.add_argument(
         "--format", choices=("text", "json"), default="text", help="output format (default: text)"
+    )
+    validate.add_argument(
+        "--output",
+        metavar="FILE",
+        help="write the report (files with findings only) to FILE in the chosen format "
+        "and print one summary line",
     )
     validate.set_defaults(handler=_run_validate)
 

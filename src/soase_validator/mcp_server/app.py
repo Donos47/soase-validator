@@ -33,33 +33,18 @@ from soase_validator.engine.model import (
 )
 from soase_validator.engine.parser import read_text_file
 from soase_validator.engine.versions import GameVersion, VersionListing, parse_game_version
+from soase_validator.reports import (
+    build_report,
+    diagnostic_to_dict,
+    format_json,
+    summary_to_dict,
+    write_report,
+)
 
 SERVER_NAME = "soase-validator"
 SERVER_VERSION = "0.1.0"
 
 _LOG = logging.getLogger(__name__)
-
-
-def diagnostic_to_dict(diagnostic: Diagnostic) -> dict[str, Any]:
-    """Convert an Engine Diagnostic to its MCP form.
-
-    Args:
-        diagnostic: The Engine Diagnostic with zero-based positions.
-
-    Returns:
-        A mapping with ``file``, one-based ``line`` and ``column``, the
-        one-based end position, ``severity``, ``code`` and ``message``.
-    """
-    return {
-        "file": str(diagnostic.file),
-        "line": diagnostic.range.start.line + 1,
-        "column": diagnostic.range.start.col + 1,
-        "end_line": diagnostic.range.end.line + 1,
-        "end_column": diagnostic.range.end.col + 1,
-        "severity": diagnostic.severity.value,
-        "code": diagnostic.code,
-        "message": diagnostic.message,
-    }
 
 
 def _diagnostics_to_dicts(diagnostics: Iterable[Diagnostic]) -> list[dict[str, Any]]:
@@ -285,13 +270,23 @@ def create_server(engine: Engine | None = None) -> MCPServer:
         return {"diagnostics": _diagnostics_to_dicts(backend.validate_file(Path(path), text))}
 
     @server.tool()
-    def validate_directory(path: str) -> dict[str, Any]:
+    def validate_directory(path: str, output_path: str | None = None) -> dict[str, Any]:
         """Validate every supported file below a directory.
+
+        With ``output_path`` the full JSON report is written to that file,
+        replacing any existing file, and the result is a summary instead of
+        the per-file Diagnostics.
 
         Args:
             path: Path of the directory.
+            output_path: Report file; its directory must exist.
         """
         results = backend.validate_directory(Path(path))
+        if output_path is not None:
+            report = build_report(results)
+            target = Path(output_path)
+            write_report(target, format_json(report))
+            return summary_to_dict(report, target)
         return {
             "files": {str(file): _diagnostics_to_dicts(found) for file, found in results.items()}
         }

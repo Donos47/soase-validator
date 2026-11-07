@@ -454,6 +454,14 @@ Conventions for every task:
     - Update the CLI section of `README.md` and remove its statement that the CLI has no validation command
     - _Requirements: 9.6, 9.7, 9.9_
 
+  - [x] 15.6 Write validation reports to a file from the CLI and MCP
+    - Add a shared report helper outside `engine/` (no SDK code; used by `cli/main.py` and `mcp_server/app.py`) that builds the report described in design.md "Validation reports": only files with findings, `files_validated`, counts by severity and by code, and writes it through a temporary file in the target directory plus an atomic replace, overwriting silently
+    - CLI: `validate --output FILE` writes the report in the `--format` chosen and prints one summary line (files validated, error/warning/info counts, report path); exit status as without `--output`; missing parent directory gives a stderr message and exit status 2
+    - MCP: `validate_directory(path, output_path=None)`; with `output_path`, write the JSON report and return the summary (report path, files validated, files with findings, counts by severity and by code, up to 10 top files); a missing parent directory is a tool error; without it, the result is unchanged
+    - Tests: CLI text and JSON reports, summary line, exit status with and without errors, overwrite of an existing file, missing parent directory, report inside a Mod Root is not validated on the next run; MCP summary fields, top-file order and cap, report contents equal the CLI JSON report for the same tree, unchanged result without `output_path`; a failed write leaves an existing report intact
+    - Update the README CLI and MCP sections
+    - _Requirements: 9.2, 9.9, 9.9.1, 9.10, 9.11_
+
 - [ ] 16. Developer audit script and Rebellion 1.98 audit
   - [ ] 16.1 Implement `tools/audit.py`
     - Validate every file in a Reference Root with no Chain beyond that root, classify diagnostics as likely Definition gap (key or value in at least `N` distinct files, default 3) or likely file problem, list keys and enum values seen in files but absent from Definitions, list Definition fields and enum values never seen, and write `audit-report.json` and a human summary to a git-ignored output directory
