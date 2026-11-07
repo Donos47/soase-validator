@@ -203,32 +203,32 @@ Conventions for every task:
 - [x] 6. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Configuration and chain resolution
-  - [ ] 7.1 Implement `engine/config.py`
+- [x] 7. Configuration and chain resolution
+  - [x] 7.1 Implement `engine/config.py`
     - Implement `ResolvedSettings`, `NumericPrefs`, `ManifestPrefs`, `ConfigProblem` and per-setting `SettingSource`
     - Resolve per setting in the order project `soase.json` (nearest, falling through to the next one above), environment variables, editor settings, user file via `platformdirs`, defaults (Rebellion 1.98, nearest manifest directory as Mod Root)
     - Resolve relative paths against the containing file, expand `~` and `%VAR%`/`$VAR`, report invalid settings by name and fall back to defaults, support `disabledCodes`, `defaultReferenceRoots` and `aliases`, and implement `effective_config`
     - Implement helpers that write `soase.json`/user-file values for Reference Roots and Layers (used by `init`, `config` and the MCP tools)
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.12, 8.14, 8.15, 14.7, 14.18_
 
-  - [ ] 7.2 Write property test for settings precedence
+  - [ ]* 7.2 Write property test for settings precedence
     - **Property 20: Settings precedence**
     - **Validates: Requirements 8.1, 8.14, 14.18**
 
-  - [ ] 7.3 Write property test for invalid settings
+  - [ ]* 7.3 Write property test for invalid settings
     - **Property 21: Invalid settings degrade locally**
     - **Validates: Requirements 8.4**
 
-  - [ ] 7.4 Write property test for path resolution
+  - [ ]* 7.4 Write property test for path resolution
     - **Property 22: Path resolution**
     - **Validates: Requirements 8.12**
 
-  - [ ] 7.5 Implement `engine/chain.py`
+  - [x] 7.5 Implement `engine/chain.py`
     - Implement `Layer`, `Chain`, `ChainProblem` and chain resolution: configured `layers` with alias expansion, depth-first `extends` splicing, cycle detection (`SOASE-C010`), lowest-position de-duplication, implicit Project top Layer, `missing`/`unusable` marking (`SOASE-C020`), and the `complete` flag
     - Use the Project's single Game Version and never read `EnabledMods.txt`
     - _Requirements: 4.6.1, 4.6.3, 14.1, 14.2, 14.3, 14.6, 14.7, 14.8, 14.9, 14.17_
 
-  - [ ] 7.6 Write property test for chain construction
+  - [ ]* 7.6 Write property test for chain construction
     - **Property 17: Chain construction**
     - **Validates: Requirements 14.1, 14.2, 14.6**
 
@@ -259,28 +259,28 @@ Conventions for every task:
     - Create `tests/strategies/chains.py` generating Layers on the in-memory `FileSystem` with overlapping names in varying case, hidden and VCS directories, and complete and incomplete chains
     - _Requirements: 4.3, 14.4.1, 14.5_
 
-  - [ ] 8.6 Write property test for highest Layer wins
+  - [ ]* 8.6 Write property test for highest Layer wins
     - **Property 13: Highest Layer wins, case-insensitively**
     - **Validates: Requirements 4.3, 4.4, 14.5, 14.12**
 
-  - [ ] 8.7 Write property test for directory scanning
+  - [ ]* 8.7 Write property test for directory scanning
     - **Property 18: Directory scanning excludes non-game data**
     - **Validates: Requirements 14.4.1**
 
-  - [ ] 8.8 Write property test for incremental index
+  - [ ]* 8.8 Write property test for incremental index
     - **Property 15: Incremental index equals full rebuild**
     - **Validates: Requirements 4.7**
 
-  - [ ] 8.9 Write property test for layer cache validity
+  - [ ]* 8.9 Write property test for layer cache validity
     - **Property 16: Layer cache validity**
     - **Validates: Requirements 14.10**
 
-  - [ ] 8.10 Write property test for unresolved references on complete chains only
+  - [ ]* 8.10 Write property test for unresolved references on complete chains only
     - **Property 14: Unresolved references are reported only on complete chains**
     - **Validates: Requirements 4.5, 4.6.1, 4.6.2**
 
   - [ ] 8.11 Write unit tests for the reference index
-    - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured
+    - Cover incomplete-chain messages, the missing-Layer warning, override reporting, corrupt cache recovery, and validation with no Reference Root configured (a complete Chain: unresolved references are reported against the Project and declared Layers, with no limited-checks notice)
     - _Requirements: 4.6, 14.9, 14.15_
 
 - [ ] 9. Manifest service

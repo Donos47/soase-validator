@@ -374,8 +374,8 @@ class Chain:
 2. For each Layer directory that has its own `soase.json` with `extends`, splice the parent Chain beneath it, depth-first. A visited-set detects cycles and raises `ChainCycleError` naming the Layers, reported as `SOASE-C010` (Requirement 14.6.1).
 3. De-duplicate, keeping each Layer at its lowest position (Requirement 14.6.2).
 4. Append the Project Mod Root as the implicit top Layer unless listed (Requirement 14.2).
-5. Mark Layers `missing` if the path does not exist and `unusable` if a game Layer does not look like game data (contains none of the expected directories such as `Entity`, `String`, `GameInfo`). One warning per such Layer: `SOASE-C020` (Requirement 4.6.3, 14.9).
-6. `complete` is true only when at least one usable game Layer exists and no declared Layer is unusable (Requirement 4.6.1).
+5. Mark Layers `missing` if the path does not exist and `unusable` if a game Layer does not look like game data. A directory looks like game data when it contains at least one subdirectory named `Font`, `Galaxy`, `GameInfo`, `Mesh`, `Particle`, `PipelineEffect`, `Sound`, `String`, `TextureAnimations` or `Window`, compared case-insensitively; `GAME_DATA_DIRECTORIES` in `chain.py` is the single definition. One warning per such Layer: `SOASE-C020` (Requirement 4.6.3, 14.9).
+6. `complete` is true exactly when no declared (non-Project) Layer is `missing` or `unusable`. The game Layer is optional, so a Chain with no game Layer and every declared Layer `ok` is complete, and so is a Project with nothing configured (Requirement 4.6.1).
 
 The Chain uses the Project's single Game Version (Requirement 14.8). It is built only from configuration, never from `EnabledMods.txt` (Requirement 14.17).
 
@@ -398,7 +398,7 @@ class LayerIndex:
 
 **Merged lookup** (`ChainIndex`): resolves `resolve(kind, name)` by casefolding the name and scanning Layers from highest to lowest, returning the first hit as `Resolution(layer, entry)` plus `overrides: Layer | None` for the next lower hit (Requirements 4.3, 4.4, 14.5, 14.12). Name sets for manifest-governed kinds are limited to names listed in the manifest selected by Requirement 14.4 (see below).
 
-**Incomplete chains**: when `Chain.complete` is false, `ReferenceLookup.resolve` returns `Unknown` rather than `NotFound`, so the validator emits no unresolved-reference diagnostic. The Engine then adds one informational `SOASE-C030` per validated file, naming the missing Layers and how to configure them; this is suppressible with `suppress_limited_reference_notice` (Requirement 4.6.2, 4.6.5). Reference completions use only names from usable Layers (Requirement 4.6.4).
+**Incomplete chains**: when `Chain.complete` is false, `ReferenceLookup.resolve` returns `Unknown` rather than `NotFound`, so the validator emits no unresolved-reference diagnostic. The Engine then adds one informational `SOASE-C030` per validated file, naming the missing or unusable declared Layers and how to configure them; it is not emitted for a complete Chain, including one with no game Layer. It is suppressible with `suppress_limited_reference_notice` (Requirement 4.6.2, 4.6.5). Reference completions use only names from usable Layers (Requirement 4.6.4).
 
 **File references** (Requirement 4.9): kinds that resolve to files (Texture, SoundFile, Mesh, Particle and any other file-reference kind) are answered from `LayerIndex.files` by existence only. The lookup scans Layers from highest to lowest and compares the relative path case-insensitively (Requirement 4.4). The referenced file's content is never read or validated. An incomplete Chain gives `Unknown`, so no diagnostic is emitted.
 
@@ -768,7 +768,7 @@ For any Chain, reference kind and name present in several Layers, resolving the 
 
 ### Property 14: Unresolved references are reported only on complete chains
 
-For any file and complete Chain, each reference value not present in any Layer yields a Diagnostic naming the reference type and value. For the same file against an incomplete Chain, no unresolved-reference Diagnostic is produced and exactly one informational limited-checks Diagnostic is produced, naming every missing Layer.
+For any file and complete Chain, each reference value not present in any Layer yields a Diagnostic naming the reference type and value. A Chain with no game Layer and every declared Layer usable is complete. For the same file against an incomplete Chain (a declared Layer is missing or unusable), no unresolved-reference Diagnostic is produced and exactly one informational limited-checks Diagnostic is produced, naming every missing or unusable Layer.
 
 **Validates: Requirements 4.5, 4.6.1, 4.6.2**
 
@@ -834,7 +834,7 @@ For any structure, cursor position and prefix, key completions are exactly the d
 
 ### Property 25: Reference completions are unique and layer-attributed
 
-For any Chain, reference completions list each name once, use the highest Layer's entry, include the originating Layer in the detail, and never include names from unusable Layers.
+For any Chain, reference completions list each name once, use the highest Layer's entry, include the originating Layer in the detail, and never include names from missing or unusable Layers. A Chain with no game Layer is complete, so its completions use every declared Layer and the Project.
 
 **Validates: Requirements 4.6.4, 6.3, 14.14**
 
@@ -923,7 +923,7 @@ For any valid tree and any re-indentation of it using tabs, spaces or a mix of b
 | Corrupt or stale cache | Discarded; index rebuilt. Cache write failures are logged and ignored. |
 | File unreadable or not UTF-8 | The file is read with `utf-8-sig`, falling back to `latin-1`; unreadable files give an error Diagnostic. |
 | Manifest write failure | The backup is created before the write; if the write fails, the original is untouched and the error is reported. Writes go through a temporary file and atomic replace. |
-| Reference Root absent | Not an error. Reference checks limited as per Property 14. |
+| Reference Root absent | Not an error and not a reason for an incomplete Chain. References resolve against the declared Layers and the Project (Property 14). |
 
 Logging uses the `logging` module configured to stderr. Network access is never used (Requirement 10.4).
 
