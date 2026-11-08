@@ -181,7 +181,8 @@ def _run_verify(reg: Registry, check: dict) -> None:
     an entry can check a structure's
     `extension`, its `child_names` or `first_child`, the declared order of the
     gates of same-named children (`field` plus `versions_in_order`), or an
-    enumeration (`enum` plus `members`).
+    enumeration (`enum` plus `members` for the exact list, or
+    `members_include` for names that must be present).
 
     Args:
         reg: Loaded Definitions.
@@ -190,7 +191,11 @@ def _run_verify(reg: Registry, check: dict) -> None:
     if "enum" in check:
         enum = reg.enum(check["enum"])
         assert enum is not None, check
-        assert [m.name for m in enum.values] == check["members"], check
+        names = [m.name for m in enum.values]
+        if "members_include" in check:
+            assert set(check["members_include"]) <= set(names), check
+        else:
+            assert names == check["members"], check
         return
     structure = reg.structure(check["structure"])
     assert structure is not None, check

@@ -506,7 +506,8 @@
         "DamageAsDamageTargetFromForward",
         "DamageAsDamageDealer",
         "MaxShieldPoints",
-        "PlanetBombingCooldown"
+        "PlanetBombingCooldown",
+        "EnergyDamageAsDamageDealer"
       ]
     },
     {

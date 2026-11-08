@@ -466,6 +466,21 @@
           "count": 1
         }
       ]
+    },
+    {
+      "structure": "Buff:entityModifier",
+      "field": "buffEntityModifierType",
+      "change": "added EnergyDamageAsDamageDealer to the buffEntityModifierType enumeration (no version gate)",
+      "game_version": "Rebellion 1.98",
+      "evidence": "Reported as a valid, previously undocumented value by Sovereign Echo. Not found in the Rebellion 1.98 Reference Root; the value is accepted on that report alone.",
+      "verify": [
+        {
+          "enum": "buffEntityModifierType",
+          "members_include": [
+            "EnergyDamageAsDamageDealer"
+          ]
+        }
+      ]
     }
   ]
 }
