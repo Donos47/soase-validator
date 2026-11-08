@@ -2,7 +2,7 @@
   "name": "soase-validator",
   "displayName": "SoaSE Validator",
   "description": "Validation, completion, hover help and go-to-definition for Sins of a Solar Empire mod files, powered by the soase-validator language server.",
-  "publisher": "publisher-placeholder",
+  "publisher": "donos47",
   "version": "0.1.0",
   "license": "MIT",
   "repository": {
@@ -16,12 +16,15 @@
   "keywords": [
     "sins of a solar empire",
     "soase",
+    "soase:r",
+    "soaser",
+    "sins rebellion",
     "mod",
     "language server",
     "validation"
   ],
   "engines": {
-    "vscode": "^1.141.0",
+    "vscode": "^1.131.0",
     "node": ">=24"
   },
   "main": "./out/src/extension.js",
@@ -213,7 +216,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "^24.19.2",
-    "@types/vscode": "~1.140.0",
+    "@types/vscode": "~1.125.0",
     "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.1.0",
     "eslint": "^10.14.0",

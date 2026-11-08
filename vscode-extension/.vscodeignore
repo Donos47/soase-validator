@@ -1,3 +1,5 @@
+.mocharc.json
+.node-version
 src/**
 test/**
 scripts/**

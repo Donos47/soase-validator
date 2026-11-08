@@ -7,7 +7,7 @@
  * profile with workspace trust left enabled, so the tests decide when trust is granted.
  *
  * Environment variables:
- * - `SOASE_HOST_VSCODE_VERSION`: run only this VS Code version (`1.141.0`, `stable`, ...).
+ * - `SOASE_HOST_VSCODE_VERSION`: run only this VS Code version (`1.131.0`, `stable`, ...).
  *   By default the `engines.vscode` floor and `stable` run one after the other.
  * - `SOASE_HOST_TEST_DIR`: directory searched for `*.test.js`; defaults to `out/test/host`.
  *
@@ -81,7 +81,7 @@ function pinnedVersion(): string {
  * The script lives outside `rootDir`, so it is imported at runtime instead of compiled
  * or copied, which keeps one definition of the constant.
  *
- * @returns The minimum embedded Node.js version, for example `24.21.0`.
+ * @returns The minimum embedded Node.js version, for example `24.18.0`.
  */
 async function loadMinEmbeddedNode(): Promise<string> {
   const url = pathToFileURL(path.join(EXTENSION_ROOT, 'scripts', 'min-embedded-node.mjs')).href;
