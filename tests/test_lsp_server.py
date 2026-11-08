@@ -29,7 +29,8 @@ from soase_validator.lsp.server import create_server
 
 TIMEOUT = 15.0
 BRUSHES = 'TXT2\nSinsArchiveVersion 194\nbrushCount 1\nbrush\n\tname "{name}"\n'
-ENTITY_STUB = "TXT2\nSinsArchiveVersion 194\n"
+ENTITY_STUB = 'TXT2\nSinsArchiveVersion 194\nentityType "Stub"\n'
+ENTITY_ENUMS = {"enums": [{"name": "entityType", "values": ["Stub"]}]}
 
 
 def _engine(tmp_path: Path) -> Engine:
@@ -38,13 +39,18 @@ def _engine(tmp_path: Path) -> Engine:
             "name": "Root",
             "extension": ".foo",
             "children": [{"node": "field", "name": "b", "validation": "Brush"}],
-        }
+        },
+        {"name": "Stub", "children": []},
     ]
+    texts = {
+        "s.json": json.dumps({"structures": structures}),
+        "enums.json": json.dumps(ENTITY_ENUMS),
+    }
     return Engine(
         user_config_path=tmp_path / "no-user-file.json",
         env={},
         layer_cache=LayerCache(use_disk=False),
-        registry=load_registry_from_texts({"s.json": json.dumps({"structures": structures})}),
+        registry=load_registry_from_texts(texts),
     )
 
 

@@ -122,7 +122,7 @@ Conventions for every task:
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
-- [x] 5. Primitives and validator
+- [ ] 5. Primitives and validator
   - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
@@ -208,6 +208,36 @@ Conventions for every task:
     - Tests (synthetic, real-shaped): a `.constants` count line one tab short with its repeats and the fields after it gives one `SOASE-V080` and nothing else; a shallow key that is not a field of the ended block keeps `SOASE-V020`; a shallow key that is also defined where it sits is untouched; two levels shallower is not placed; the Reference Root test still passes
     - Update `design.md` (Validator, shallow members) and the `validator.py` docstring
     - _Requirements: 3.5, 3.6, 3.7, 3.14, 3.16, 3.17_
+
+  - [x] 5.15 Survey Definition-guided placement before changing the validator
+    - Read design.md "Definition-guided structure" and `reference/plugin-bytecode-findings.md` first. Build a read-only prototype of the placement and the indentation check in a temporary script (system temp folder, deleted afterwards) that imports the Engine and changes no repository file
+    - Over the Rebellion 1.98 Reference Root, tally per extension: lines whose Definition parent differs from their indentation parent, by shape; lines where several open blocks define the key, and which block the indentation tie-break picks; `SOASE-V080` findings under the new check and where they sit compared with today; every other finding that would change
+    - Run the same prototype on the user's Strike Groups mod (read in place) and list per shape the findings before and after
+    - Write the results to `reference/structure-placement-survey.md` (names, shapes and counts only). STOP and report to the user before task 5.16: any Reference Root finding other than `SOASE-V080` that would change, any ambiguous placement the tie-break does not settle, and every place where the new `SOASE-V080` count or position differs from today
+    - _Requirements: 3.14, 3.15, 3.16_
+
+  - [x] 5.16 Implement `engine/structure.py` and switch the validator to it
+    - Implement the placement and expected-indentation rules of design.md "Definition-guided structure" as a pure module sharing one Definition expansion with `StructureCursor`; the validator validates the placed blocks and reports `SOASE-V080` from the indentation check
+    - Remove the shallow-member placement, the known-previous-line filter and the separate repeat-style check; keep the parser unchanged
+    - Use the relative indentation rule of Requirement 3.15 (user decision; no survey re-run). Expected from the task 5.15 data: the Reference Root keeps exactly 132 `SOASE-V080`, one on each shallow planet `owner` line, the space-indented `SoundEffects` blocks give none, and no other finding changes. Run the Reference Root tests with `SOASE_REFERENCE_ROOT_REBELLION_198` set; if the result differs, STOP and report with shapes and counts instead of adjusting the rule. Then run `validate` on the Strike Groups mod once and add the per-shape counts to `reference/structure-placement-survey.md`
+    - Change the catalogue severity of `SOASE-V080` to info in `engine/diagnostics.py`, and update the README diagnostic table and any test that expects it as an error; a file whose only findings are `SOASE-V080` exits 0 from the CLI
+    - Rewrite the design.md paragraphs on shallow members, unexpected indentation and the Reference Root `SOASE-V080` facts to the new rule with the survey results, and update the `validator.py` docstring
+    - _Requirements: 3.5, 3.6, 3.7, 3.11, 3.12, 3.13, 3.14, 3.15, 3.16_
+
+  - [ ] 5.17 Use the same placement for completion, hover and go-to-definition
+    - Locate the enclosing structure of a position from the placed blocks instead of the indentation tree
+    - Tests: a cursor after a shallow member and after an over-indented header resolves to the block validation uses
+    - _Requirements: 3.17, 6.4, 6.5, 7.1_
+
+  - [ ] 5.18 Rewrite the indentation tests
+    - Synthetic, real-shaped tests per shape: shallow planet `owner`; a `.constants` count line one level short; an over-indented `brush` header with an under-indented first member; a counted repeat less indented than its count line; a block shifted as a whole (one finding); random-map `starCount` written after `randomizerParams` (tie-break, no finding); an unknown key with deeper lines (`SOASE-V020`, no `SOASE-V080`); a correctly indented file gives no `SOASE-V080`
+    - Update the Reference Root tests to the counts recorded by task 5.15 and remove tests of the removed rules; keep at least one rejected shape per rule
+    - _Requirements: 3.14, 3.15, 3.16, 11.3_
+
+  - [ ]* 5.19 Write property test for indentation independence
+    - For a generated file whose keys are all known, changing the indentation of any lines (keeping their order) never changes any finding other than `SOASE-V080`, and restoring the expected indentation removes every `SOASE-V080`
+    - **Property 38: Placement does not depend on indentation**
+    - **Validates: Requirements 3.14, 3.15, 3.16**
 - [x] 6. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 

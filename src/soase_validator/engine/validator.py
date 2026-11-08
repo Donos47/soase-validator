@@ -32,10 +32,9 @@ Codes produced
     Plain key or count line used more than once in a block (on the repeated
     key); the message gives the line of the first use.
 ``SOASE-V080``
-    Unexpected indentation (on the deeper line's key): a line deeper than
-    the known value line before it, which is named as probably
-    under-indented, or a counted repeat at another depth or in a style
-    other than its run's first repeat.
+    Unexpected indentation (on the line's key): the line is not at the
+    indentation its block expects; the message names the line or block it
+    should match. Informational.
 ``SOASE-R010``
     Reference value that the ``ReferenceLookup`` reports as not found (on
     the value). An ``Unknown`` result (incomplete Chain) reports nothing.
@@ -85,29 +84,20 @@ Walk rules
   at a key path listed in ``FILE_LOCAL_NAME_SOURCES`` for its kind and the
   file's extension resolves without asking the lookup. Matching is
   case-insensitive.
-* Shallow members: a line with a value at the indentation of the block
-  that ends right before it, unknown to the enclosing block (not a field,
-  count key or repeat key there) but a field or count key of that block,
-  belongs to that block, together with the deeper lines after it (the
-  galaxy planet ``owner`` shape, and a count line one level short in any
-  block whose lines sit one level deeper). The block validates them as its
-  own members, so they give no unknown-key, count, order or duplicate
-  findings. The shape is reported once, as ``SOASE-V080`` on the first
-  deeper line after the shallow line, or on the shallow line itself when
-  a block (not a counted repeat) has no deeper line after it. Any other
-  unknown key keeps ``SOASE-V020``.
-* Indentation: after the walk, every line deeper than the line before it
-  is checked. A block header (no value) may be followed by a deeper line;
-  so may a count line, by the first repeat of its run exactly one level
-  deeper. Any other deeper line gets ``SOASE-V080`` when the previous line
-  is known: matched in its block as a field, count line or repeat, or an
-  unknown key that is a field of the repeat block ending right before it
-  at the same indentation, when that repeat is not placed by a count line.
-  Other unknown keys, repeats without a count line and lines inside
-  unmatched blocks are skipped. The repeats of a run sit at the count
-  line's level or one level deeper, one style per run. The pass leaves the
-  tree and the other findings unchanged.
-
+* Placement: before the walk, ``engine.structure.place`` gives every line
+  the parent its Definition names, whatever its indentation (the galaxy
+  planet ``owner`` written at the planet's own indentation, a count line
+  one level short, an over-indented header). The walk validates that
+  placed tree, so misplaced indentation gives no unknown-key, count, order
+  or duplicate findings. A key no open block defines is unknown
+  (``SOASE-V020``) and is neither placed nor checked for indentation.
+* Indentation: ``place`` also reports ``SOASE-V080`` for a line whose
+  indentation differs from the one its block expects (the indentation most
+  of the block's members use, deeper than the block's own expected line;
+  a counted run at the count line's indentation or one shared deeper
+  indentation). Indentation is compared by order and equality only.
+  Unknown keys, files without a root Definition and lines in unmatched
+  blocks are not checked. The finding is informational.
 """
 
 from __future__ import annotations
@@ -168,6 +158,7 @@ from soase_validator.engine.registry import (
     StructureReferenceDef,
 )
 from soase_validator.engine.registry import Node as DefNode
+from soase_validator.engine.structure import Expander, StructureCursor, place, text_of
 from soase_validator.engine.versions import (
     GameVersion,
     display_name,
@@ -312,146 +303,6 @@ class _Rule:
     constraint: str | None
 
 
-class StructureCursor:
-    """Definition nodes of one block plus the keys seen so far.
-
-    Attributes:
-        active: Gate-filtered, branch-expanded Definition nodes.
-        plain: Key name mapped to its non-iterative Definition node.
-        counts: Count key mapped to its iterative field.
-        repeats: Repeat key mapped to the iterative fields using it.
-        seen: Keys of Definition nodes that matched a file node.
-        position: Key (plain name, or count key of an iterative field) mapped
-            to the index of its Definition node in ``active``.
-        first: Key mapped to the first file node that used it (for the
-            duplicate check).
-        placed: ``(file node, declared position)`` of every file node that
-            takes a position in the declared order, in file order.
-    """
-
-    __slots__ = ("active", "counts", "first", "placed", "plain", "position", "repeats", "seen")
-
-    def __init__(self, active: list[DefNode]) -> None:
-        """Index the active Definition nodes.
-
-        Args:
-            active: Gate-filtered, branch-expanded nodes in declared order.
-
-        Returns:
-            None.
-
-        Raises:
-            None.
-        """
-        self.active = active
-        self.plain: dict[str, DefNode] = {}
-        self.counts: dict[str, IterativeFieldDef] = {}
-        self.repeats: dict[str, list[IterativeFieldDef]] = {}
-        self.seen: set[str] = set()
-        self.position: dict[str, int] = {}
-        self.first: dict[str, Node] = {}
-        self.placed: list[tuple[Node, int]] = []
-        for index, node in enumerate(active):
-            if isinstance(node, IterativeFieldDef):
-                self.counts.setdefault(node.count_key, node)
-                self.repeats.setdefault(node.name, []).append(node)
-                self.position.setdefault(node.count_key, index)
-            else:
-                self.plain.setdefault(node.name, node)
-                self.position.setdefault(node.name, index)
-
-    def place(self, node: Node) -> Node | None:
-        """Record a file node that matched a plain field or a count line.
-
-        Args:
-            node: The matched file node.
-
-        Returns:
-            The first earlier node with the same key when ``node`` is a
-            duplicate (it takes no position); None otherwise.
-
-        Raises:
-            None.
-        """
-        earlier = self.first.get(node.key)
-        if earlier is not None:
-            return earlier
-        self.first[node.key] = node
-        self.placed.append((node, self.position[node.key]))
-        return None
-
-    def out_of_order(self) -> list[tuple[Node, str, str]]:
-        """Pick the keys that break the declared order.
-
-        The keys that stay in order are a longest strictly increasing run of
-        declared positions (when several runs are equally long, the one
-        patience sorting finds), so one misplaced key yields one entry and
-        the keys after it are not blamed.
-
-        Returns:
-            ``(node, "before" | "after", neighbour key)`` for each misplaced
-            key in file order: the key must come before (or after) the
-            neighbouring in-order key that is next in declared order.
-
-        Raises:
-            None.
-        """
-        placed = self.placed
-        count = len(placed)
-        if count < 2:
-            return []
-        # Patience sorting with back links; tails[k] is the index of the
-        # smallest tail of a run of length k + 1.
-        tails: list[int] = []
-        link: list[int] = [-1] * count
-        for i, (_, pos) in enumerate(placed):
-            lo, hi = 0, len(tails)
-            while lo < hi:
-                mid = (lo + hi) // 2
-                if placed[tails[mid]][1] < pos:
-                    lo = mid + 1
-                else:
-                    hi = mid
-            link[i] = tails[lo - 1] if lo else -1
-            if lo == len(tails):
-                tails.append(i)
-            else:
-                tails[lo] = i
-        keep: set[int] = set()
-        cur = tails[-1]
-        while cur != -1:
-            keep.add(cur)
-            cur = link[cur]
-        anchors = sorted((placed[i][1], placed[i][0].key) for i in keep)
-        result: list[tuple[Node, str, str]] = []
-        for i, (node, pos) in enumerate(placed):
-            if i in keep:
-                continue
-            after = next((key for p, key in anchors if p > pos), None)
-            if after is not None:
-                result.append((node, "before", after))
-            else:
-                before = [key for p, key in anchors if p < pos]
-                result.append((node, "after", before[-1] if before else ""))
-        return result
-
-    def missing_required(self) -> list[str]:
-        """List required keys that were not seen, in declared order.
-
-        Returns:
-            Key names (the count key for an iterative field).
-
-        Raises:
-            None.
-        """
-        missing: list[str] = []
-        for node in self.active:
-            key = node.count_key if isinstance(node, IterativeFieldDef) else node.name
-            if node.required and key not in self.seen and key not in missing:
-                missing.append(key)
-        return missing
-
-
 def definition_warnings(registry: Registry) -> tuple[LoadWarning, ...]:
     """Report malformed ``constraint`` attributes once, at Definition load.
 
@@ -533,32 +384,8 @@ def _is_ai_use_time_buff_type(node: Node, nodes: Sequence[Node], label: str) -> 
     return (
         selector is not None
         and selector.key_span.line < node.key_span.line
-        and _text_of(selector.value) == AI_USE_TIME_BUFF_VALUE
+        and text_of(selector.value) == AI_USE_TIME_BUFF_VALUE
     )
-
-
-def _text_of(value: Value | None) -> str | None:
-    """Return the text a scalar value is matched by.
-
-    Args:
-        value: Parsed value or None.
-
-    Returns:
-        The quoted text, the ``TRUE``/``FALSE`` word or the raw token; None
-        for a list or a missing value.
-
-    Raises:
-        None.
-    """
-    match value:
-        case StringValue():
-            return value.text
-        case BoolValue():
-            return "TRUE" if value.value else "FALSE"
-        case NumberValue() | HexValue():
-            return value.raw
-        case _:
-            return None
 
 
 def _member_text(value: Value | None) -> str | None:
@@ -653,17 +480,7 @@ class _Walker:
         self.version = ctx.version
         self.archive_version: int | None = None
         self._gates: dict[str | None, bool] = {}
-        # State for the V080 pass, by node id: lines matched to a known field,
-        # count line or repeat; matched lines whose block has no structure;
-        # lines reported as unknown keys; the keys each repeat block defines;
-        # and the repeats that follow each count line.
-        self._matched: set[int] = set()
-        self._flagged: set[int] = set()
-        self._unknown_ids: set[int] = set()
-        self._block_keys: dict[int, frozenset[str]] = {}
-        self._runs: dict[int, list[Node]] = {}
-        self._shallow: dict[int, Node] = {}
-        self._shallow_more: set[int] = set()
+        self.expander = Expander(self.registry, self.allowed)
         self._roots: Sequence[Node] = ()
         self._declared: dict[str, tuple[str, ...]] = {}
 
@@ -714,10 +531,7 @@ class _Walker:
         Raises:
             None.
         """
-        struct = self.registry.structure(name)
-        if struct is None or not self.allowed(struct.version):
-            return None
-        return struct
+        return self.expander.structure(name)
 
     def run(self, parsed: ParsedFile) -> list[Diagnostic]:
         """Validate a whole file.
@@ -732,24 +546,32 @@ class _Walker:
             None.
         """
         self._set_file_version(parsed)
-        self._roots = parsed.nodes
         ext = self.ctx.file.suffix.lower()
         header_end = len(parsed.header) if parsed.header else 0
         anchor = Span(0, 0, 0, header_end)
-        nodes = list(parsed.nodes)
         if ext == ENTITY_EXTENSION:
-            root = self._entity_root(nodes, anchor)
+            root = self._entity_root(list(parsed.nodes), anchor)
             if root is None:
                 return self.diags
-            nodes = [n for n in nodes if n.key != ENTITY_TYPE_KEY or n.parent is not None]
         else:
             root = self.registry.structure_for_extension(ext)
             if root is None or not self.allowed(root.version):
                 return self.diags
+        placement = place(
+            parsed.nodes,
+            root.children,
+            self.expander,
+            frozenset({ENTITY_TYPE_KEY, ARCHIVE_VERSION_KEY}),
+        )
+        self._roots = placement.nodes
+        nodes = list(placement.nodes)
+        if ext == ENTITY_EXTENSION:
+            nodes = [n for n in nodes if n.key != ENTITY_TYPE_KEY]
         if parsed.header == "TXT2" and not self._defines(root, ARCHIVE_VERSION_KEY):
             nodes = [n for n in nodes if n.key != ARCHIVE_VERSION_KEY]
         self._scope(root.children, nodes, None, root.name, anchor)
-        self._check_indentation(parsed.nodes)
+        for finding in placement.findings:
+            self.emit(finding.node.key_span, V080, finding.message)
         return self.diags
 
     def _set_file_version(self, parsed: ParsedFile) -> None:
@@ -864,34 +686,6 @@ class _Walker:
             )
         return struct
 
-    def _expand(self, defs: Iterable[DefNode], nodes: Sequence[Node], out: list[DefNode]) -> None:
-        """Gate-filter Definition nodes and merge the selected branches.
-
-        Args:
-            defs: Definition nodes to expand.
-            nodes: Sibling file nodes, searched for each selector.
-            out: Receives the active nodes in declared order.
-
-        Returns:
-            None.
-
-        Raises:
-            None.
-        """
-        for node in defs:
-            if not self.allowed(node.version):
-                continue
-            if isinstance(node, StructureReferenceDef):
-                struct = self.registry.structure(node.structure)
-                if struct is not None and not self.allowed(struct.version):
-                    continue
-            out.append(node)
-            if isinstance(node, ConditionFieldDef) and node.branches:
-                selector = next((n for n in nodes if n.key == node.name), None)
-                text = _text_of(selector.value) if selector is not None else None
-                if text is not None and text in node.branches:
-                    self._expand(node.branches[text], nodes, out)
-
     def _scope(
         self,
         defs: Iterable[DefNode],
@@ -918,7 +712,7 @@ class _Walker:
             None.
         """
         active: list[DefNode] = []
-        self._expand(defs, nodes, active)
+        self.expander.expand(defs, nodes, active)
         cursor = StructureCursor(active)
         self._walk_nodes(cursor, defs, nodes, label)
         if not skip_required:
@@ -954,7 +748,6 @@ class _Walker:
             iterative = cursor.counts.get(node.key)
             if iterative is not None:
                 self._place(cursor, node, nodes, label)
-                self._matched.add(id(node))
                 i = self._iterate(cursor, iterative, nodes, i, label)
                 continue
             definition = cursor.plain.get(node.key)
@@ -962,9 +755,8 @@ class _Walker:
                 self._unknown(cursor, defs, node, label)
             else:
                 self._place(cursor, node, nodes, label)
-                self._matched.add(id(node))
                 cursor.seen.add(node.key)
-                i += self._check_node(definition, node, nodes, label, cursor, i + 1)
+                self._check_node(definition, node, nodes, label)
             i += 1
         for node, side, neighbour in cursor.out_of_order():
             self.emit(
@@ -1021,13 +813,6 @@ class _Walker:
             return
         owners = cursor.repeats.get(node.key)
         if owners:
-            if node.value is None:
-                self._block_keys[id(node)] = frozenset(
-                    child.count_key if isinstance(child, IterativeFieldDef) else child.name
-                    for it in owners
-                    for child in it.children
-                    if self.allowed(child.version)
-                )
             counts = ", ".join(sorted({it.count_key for it in owners}))
             self.emit(
                 node.key_span,
@@ -1035,7 +820,6 @@ class _Walker:
                 f"'{node.key}' is a repeated entry and must follow its count line ({counts})",
             )
             return
-        self._unknown_ids.add(id(node))
         newer = self._introduced_hint(defs, node.key)
         if newer:
             self.emit(node.key_span, V020, newer)
@@ -1070,9 +854,7 @@ class _Walker:
         node: Node,
         siblings: Sequence[Node],
         label: str,
-        cursor: StructureCursor,
-        following: int,
-    ) -> int:
+    ) -> None:
         """Validate one node against its non-iterative Definition node.
 
         Args:
@@ -1080,12 +862,9 @@ class _Walker:
             node: The file node.
             siblings: The block's nodes (for a condition reference selector).
             label: Name used in messages.
-            cursor: Cursor for the block that holds ``node``.
-            following: Index in ``siblings`` of the node after ``node``.
 
         Returns:
-            The number of following siblings that were validated as members
-            of ``node`` (shallow members of a block).
+            None.
 
         Raises:
             None.
@@ -1095,13 +874,12 @@ class _Walker:
         elif isinstance(definition, ConditionFieldDef):
             self._check_value(node, _Rule(definition.type, definition.validation, None, None))
         elif isinstance(definition, StructureReferenceDef):
-            return self._check_block(node, definition.structure, cursor, siblings, following)
+            self._check_block(node, definition.structure)
         elif isinstance(definition, ConditionReferenceDef):
             selector = next((n for n in siblings if n.key == definition.selector), None)
-            text = _text_of(selector.value) if selector is not None else None
+            text = text_of(selector.value) if selector is not None else None
             target = definition.cases.get(text) if text is not None else None
             if target is None:
-                self._flagged.add(id(node))
                 self.emit(
                     node.key_span,
                     V020,
@@ -1109,8 +887,7 @@ class _Walker:
                     f"is {text!r}",
                 )
             else:
-                return self._check_block(node, target, cursor, siblings, following)
-        return 0
+                self._check_block(node, target)
 
     def _field_rule(self, definition: FieldDef) -> _Rule:
         """Build the value rule of a field.
@@ -1170,43 +947,26 @@ class _Walker:
         self,
         node: Node,
         structure_name: str,
-        cursor: StructureCursor,
-        siblings: Sequence[Node],
-        following: int,
-    ) -> int:
+    ) -> None:
         """Validate a block node against a named structure.
 
         Args:
             node: The block node.
             structure_name: Name of the structure describing it.
-            cursor: Cursor for the block that holds ``node``.
-            siblings: The nodes of the block that holds ``node``.
-            following: Index in ``siblings`` of the node after ``node``.
 
         Returns:
-            The number of following siblings validated as shallow members of
-            the block.
+            None.
 
         Raises:
             None.
         """
         if node.value is not None:
             self.emit(_value_span(node), V050, f"'{node.key}' must be a block, found a value")
-            return 0
+            return
         struct = self.registry.structure(structure_name)
         if struct is None:
-            return 0
-        members = list(node.children)
-        end = following
-        if members and members[0].indent == node.indent + 1:
-            keys = self._member_keys(struct.children, node)
-            end = self._take_shallow(cursor, node, siblings, following, keys, members)
-            heads = [m for m in members[len(node.children) :] if m.indent == node.indent]
-            if heads:
-                self._shallow[id(heads[0])] = node
-                self._shallow_more.update(id(m) for m in heads[1:])
-        self._scope(struct.children, members, node, struct.name, node.key_span)
-        return end - following
+            return
+        self._scope(struct.children, node.children, node, struct.name, node.key_span)
 
     def _iterate(
         self,
@@ -1235,12 +995,10 @@ class _Walker:
         cursor.seen.add(count_node.key)
         count = self._count_of(count_node)
         flat = bool(iterative.children) and iterative.children[0].name == iterative.name
-        repeats: list[Node] = []
         if flat:
-            end, found = self._flat_run(iterative, nodes, index + 1, repeats)
+            end, found = self._flat_run(iterative, nodes, index + 1)
         else:
-            end, found = self._repeat_run(cursor, iterative, nodes, index + 1, repeats)
-        self._runs[id(count_node)] = repeats
+            end, found = self._repeat_run(iterative, nodes, index + 1)
         if count is not None:
             line = _line_span(count_node)
             if iterative.limit is not None and count > iterative.limit:
@@ -1282,25 +1040,16 @@ class _Walker:
 
     def _repeat_run(
         self,
-        cursor: StructureCursor,
         iterative: IterativeFieldDef,
         nodes: Sequence[Node],
         start: int,
-        repeats: list[Node],
     ) -> tuple[int, int]:
         """Validate the consecutive block or value repeats after a count line.
 
-        A line that follows a block repeat at the repeat's own indentation,
-        has a value, is unknown to the enclosing block and is a field of the
-        repeat block belongs to that repeat, together with the deeper lines
-        after it.
-
         Args:
-            cursor: Cursor for the block that holds the run.
             iterative: The iterative field.
             nodes: The block's child nodes.
             start: Index just after the count line.
-            repeats: Receives the repeat nodes of the run.
 
         Returns:
             The index after the run and the number of repeats in it.
@@ -1312,9 +1061,7 @@ class _Walker:
         found = 0
         while end < len(nodes) and nodes[end].key == iterative.name:
             repeat = nodes[end]
-            repeats.append(repeat)
             found += 1
-            self._matched.add(id(repeat))
             end += 1
             if iterative.children:
                 if repeat.value is not None:
@@ -1324,93 +1071,22 @@ class _Walker:
                         f"'{repeat.key}' must be a block, found a value",
                     )
                     continue
-                members = list(repeat.children)
-                keys = self._member_keys(iterative.children, repeat)
-                end = self._take_shallow(cursor, repeat, nodes, end, keys, members)
-                inner = self._scope(
+                self._scope(
                     iterative.children,
-                    members,
+                    repeat.children,
                     repeat,
                     repeat.key,
                     repeat.key_span,
                 )
-                self._block_keys[id(repeat)] = frozenset(inner.plain) | frozenset(inner.counts)
             else:
                 self._check_value(repeat, _Rule(iterative.type, iterative.validation, None, None))
         return end, found
-
-    def _member_keys(self, defs: Iterable[DefNode], block: Node) -> frozenset[str]:
-        """List the keys a block defines.
-
-        Args:
-            defs: Definition nodes of the block.
-            block: The block node.
-
-        Returns:
-            Plain field names and count keys active for the block.
-
-        Raises:
-            None.
-        """
-        active: list[DefNode] = []
-        self._expand(defs, block.children, active)
-        inner = StructureCursor(active)
-        return frozenset(inner.plain) | frozenset(inner.counts)
-
-    @staticmethod
-    def _take_shallow(
-        cursor: StructureCursor,
-        block: Node,
-        nodes: Sequence[Node],
-        start: int,
-        keys: frozenset[str],
-        members: list[Node],
-    ) -> int:
-        """Collect the shallow members that follow a block.
-
-        A line with a value at the block's own indentation, whose key the
-        block defines and the enclosing block does not, is a member written
-        one level too shallow. It and the deeper lines after it belong to
-        the block.
-
-        Args:
-            cursor: Cursor for the block that holds ``block``.
-            block: The block node.
-            nodes: The nodes of the block that holds ``block``.
-            start: Index in ``nodes`` of the node after ``block``.
-            keys: Keys the block defines.
-            members: Receives the shallow members and the deeper lines after
-                each of them.
-
-        Returns:
-            The index after the last collected node.
-
-        Raises:
-            None.
-        """
-        end = start
-        while (
-            end < len(nodes)
-            and nodes[end].value is not None
-            and nodes[end].indent == block.indent
-            and nodes[end].key in keys
-            and nodes[end].key not in cursor.plain
-            and nodes[end].key not in cursor.counts
-            and nodes[end].key not in cursor.repeats
-        ):
-            members.append(nodes[end])
-            end += 1
-            while end < len(nodes) and nodes[end].indent > block.indent:
-                members.append(nodes[end])
-                end += 1
-        return end
 
     def _flat_run(
         self,
         iterative: IterativeFieldDef,
         nodes: Sequence[Node],
         start: int,
-        repeats: list[Node],
     ) -> tuple[int, int]:
         """Validate sequences of sibling lines after a count line.
 
@@ -1422,7 +1098,6 @@ class _Walker:
             iterative: The iterative field.
             nodes: The block's child nodes.
             start: Index just after the count line.
-            repeats: Receives the selector node of each sequence.
 
         Returns:
             The index after the run and the number of sequences in it.
@@ -1442,17 +1117,15 @@ class _Walker:
         found = 0
         while index < len(nodes) and nodes[index].key == iterative.name:
             selector = nodes[index]
-            repeats.append(selector)
-            self._matched.add(id(selector))
             found += 1
             self._check_value(selector, rule)
             defs: list[DefNode] = []
             # Declared order: the selected branch sits right after the selector.
             if isinstance(selector_def, ConditionFieldDef) and selector_def.branches:
-                text = _text_of(selector.value)
+                text = text_of(selector.value)
                 if text is not None and text in selector_def.branches:
-                    self._expand(selector_def.branches[text], nodes[index + 1 :], defs)
-            self._expand(rest, nodes[index + 1 :], defs)
+                    self.expander.expand(selector_def.branches[text], nodes[index + 1 :], defs)
+            self.expander.expand(rest, nodes[index + 1 :], defs)
             names = {d.name for d in defs}
             end = index + 1
             taken: set[str] = set()
@@ -1467,150 +1140,6 @@ class _Walker:
             self._scope(defs, nodes[index + 1 : end], selector, selector.key, selector.key_span)
             index = end
         return index, found
-
-    def _check_indentation(self, roots: Sequence[Node]) -> None:
-        """Report lines indented deeper than a value line (``SOASE-V080``).
-
-        Walks every node in source order. A line deeper than the line right
-        before it is expected only when that line is a block header (no
-        value), or the count line of an iterative field and the deeper line
-        is the first repeat of its run, exactly one level deeper. Otherwise
-        the deeper line is reported when the previous line is a known line:
-
-        * a plain field, count line or repeat matched in its block (a count
-          mismatch on the count line does not change that), or
-        * an unknown key (``SOASE-V020``) that is a field of the repeat block
-          (an entry of an iterative field) ending right before it at the same
-          indentation: the line was meant to sit one level deeper, inside
-          that repeat. This applies to a repeat that is unplaced
-          (``SOASE-V030``), because a placed repeat takes such a line as
-          one of its own members.
-
-        Every other previous line is skipped: other unknown keys (including
-        keys that a preceding non-repeat block defines, which is a
-        Definition placement question), repeats without a count line, list
-        rows, and everything inside blocks that no Definition matched.
-
-        Repeats of one run sit at the count line's level or exactly one
-        level deeper, one style per run; the first repeat that breaks the
-        style of the first repeat is reported once.
-
-        Args:
-            roots: Top-level nodes of the file.
-
-        Returns:
-            None.
-
-        Raises:
-            None.
-        """
-        order: list[Node] = []
-        stack = list(reversed(roots))
-        while stack:
-            node = stack.pop()
-            order.append(node)
-            stack.extend(reversed(node.children))
-        by_id = {id(n): n for n in order}
-        later_repeats = {id(r) for run in self._runs.values() for r in run[1:]}
-        for index in range(1, len(order)):
-            prev, node = order[index - 1], order[index]
-            if node.indent <= prev.indent or prev.value is None:
-                continue
-            if id(node) in later_repeats:
-                continue  # judged by the run-style check below
-            if id(prev) in self._shallow_more:
-                continue
-            if id(prev) in self._shallow:
-                self._report_under_indented(prev, node)
-                continue
-            if not self._known_line(prev, order[index - 2] if index > 1 else None):
-                continue
-            run = self._runs.get(id(prev))
-            if run and run[0] is node and node.indent - prev.indent == 1:
-                continue
-            if run and run[0] is node:
-                line = prev.key_span.line + 1
-                message = (
-                    f"'{node.key}' is indented {node.indent - prev.indent} levels under count "
-                    f"line '{prev.key}' (line {line}); repeats sit at the count line's level "
-                    "or one level deeper"
-                )
-                self.emit(node.key_span, V080, message)
-            else:
-                self._report_under_indented(prev, node)
-        for index, node in enumerate(order):
-            header = self._shallow.get(id(node))
-            if header is not None and (
-                index + 1 == len(order) or order[index + 1].indent <= node.indent
-            ):
-                line = header.key_span.line + 1
-                self.emit(
-                    node.key_span,
-                    V080,
-                    f"'{node.key}' is at the indentation of '{header.key}' on line {line}, "
-                    f"but is a member of it; '{node.key}' is probably under-indented",
-                )
-        for count_id, run in self._runs.items():
-            count_line = by_id.get(count_id)
-            if not run or count_line is None or run[0].indent - count_line.indent not in (0, 1):
-                continue  # a first repeat at another depth was reported above
-            first = run[0]
-            odd = next((r for r in run[1:] if r.indent != first.indent), None)
-            if odd is not None:
-                self.emit(
-                    odd.key_span,
-                    V080,
-                    f"'{odd.key}' is indented differently from the first '{first.key}' of its "
-                    f"run (line {first.key_span.line + 1}); a run uses one indentation",
-                )
-
-    def _report_under_indented(self, prev: Node, node: Node) -> None:
-        """Report a line indented under a value line (``SOASE-V080``).
-
-        Args:
-            prev: The value line before ``node``.
-            node: The deeper line, which gets the Diagnostic.
-
-        Returns:
-            None.
-
-        Raises:
-            None.
-        """
-        line = prev.key_span.line + 1
-        self.emit(
-            node.key_span,
-            V080,
-            f"'{node.key}' is indented under '{prev.key}' on line {line}, which has a "
-            f"value; line {line} is probably under-indented",
-        )
-
-    def _known_line(self, line: Node, before: Node | None) -> bool:
-        """Whether a value line counts as known for the V080 check.
-
-        Args:
-            line: The value line before a deeper line.
-            before: The line before ``line`` in source order, or None.
-
-        Returns:
-            True for a matched field, count line or repeat, and for an
-            unknown key that is a field of the repeat block ending right
-            before it at the same indentation.
-
-        Raises:
-            None.
-        """
-        if id(line) in self._matched:
-            return id(line) not in self._flagged
-        if id(line) not in self._unknown_ids:
-            return False
-        block = before
-        while block is not None and block.indent > line.indent:
-            block = block.parent
-        if block is None or block.indent != line.indent:
-            return False
-        keys = self._block_keys.get(id(block))
-        return keys is not None and line.key in keys
 
     def _enum_allows(self, enum: EnumDef, text: str) -> bool:
         """Whether a text is a member of an enumeration for the version.
@@ -1714,7 +1243,7 @@ class _Walker:
         else:
             ok = enum is not None and text is not None and self._enum_allows(enum, text)
         if not ok:
-            shown = _text_of(node.value)
+            shown = text_of(node.value)
             self.emit(
                 _value_span(node),
                 V050,

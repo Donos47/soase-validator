@@ -20,7 +20,8 @@ from soase_validator.engine.registry import Registry, load_registry_from_texts
 from soase_validator.engine.versions import GameVersion
 
 BRUSHES = 'TXT2\nSinsArchiveVersion 194\nbrushCount 1\nbrush\n\tname "{name}"\n'
-ENTITY_STUB = "TXT2\nSinsArchiveVersion 194\n"
+ENTITY_STUB = 'TXT2\nSinsArchiveVersion 194\nentityType "Stub"\n'
+ENTITY_ENUMS = {"enums": [{"name": "entityType", "values": ["Stub"]}]}
 
 
 def _registry() -> Registry:
@@ -32,9 +33,15 @@ def _registry() -> Registry:
                 {"node": "field", "name": "b", "validation": "Brush"},
                 {"node": "field", "name": "e", "validation": "Entity"},
             ],
-        }
+        },
+        {"name": "Stub", "children": []},
     ]
-    return load_registry_from_texts({"s.json": json.dumps({"structures": structures})})
+    return load_registry_from_texts(
+        {
+            "s.json": json.dumps({"structures": structures}),
+            "enums.json": json.dumps(ENTITY_ENUMS),
+        }
+    )
 
 
 class _RecordingCache(LayerCache):

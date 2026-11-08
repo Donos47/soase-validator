@@ -314,7 +314,7 @@ Codes are stable. Hide a code with `disabledCodes`.
 | `SOASE-V050` | error | Invalid value for the field |
 | `SOASE-V060` | error | Key out of the declared order |
 | `SOASE-V070` | error | Duplicate key in a block |
-| `SOASE-V080` | error | Unexpected indentation |
+| `SOASE-V080` | info | Unexpected indentation |
 | `SOASE-R010` | error | Unresolved reference |
 | `SOASE-C010` | error | Layer chain cycle |
 | `SOASE-C020` | warning | Layer missing or unusable |

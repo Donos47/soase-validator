@@ -94,7 +94,12 @@ from soase_validator.engine.registry import (
     load_registry,
     structure_to_json,
 )
-from soase_validator.engine.validator import ValidationContext, definition_warnings, validate
+from soase_validator.engine.validator import (
+    ENTITY_EXTENSION,
+    ValidationContext,
+    definition_warnings,
+    validate,
+)
 from soase_validator.engine.versions import (
     DEFAULT_REBELLION,
     GameVersion,
@@ -769,7 +774,7 @@ class Engine:
             return
         registry = self.registry
         state = self._state_for(settings)
-        if registry.structure_for_extension(path.suffix) is not None:
+        if _has_rules(registry, path.suffix):
             source = read_text_file(path) if text is None else text
             parsed = parse(source, path, settings.game_version)
             out.extend(parsed.diagnostics)
@@ -809,10 +814,7 @@ class Engine:
             for name in sorted(names):
                 file = folder / name
                 suffix = file.suffix.casefold()
-                if (
-                    suffix != MANIFEST_EXTENSION
-                    and registry.structure_for_extension(suffix) is None
-                ):
+                if suffix != MANIFEST_EXTENSION and not _has_rules(registry, suffix):
                     continue
                 if folder not in memo:
                     memo[folder] = self.resolve_settings(folder)
@@ -1205,6 +1207,23 @@ def _within(roots: Iterable[Path], path: Path) -> bool:
         True when some directory contains the path.
     """
     return any(_is_below(root, path) for root in roots)
+
+
+def _has_rules(registry: Registry, suffix: str) -> bool:
+    """Tell whether files with an extension are validated against Definitions.
+
+    Args:
+        registry: Loaded Definitions.
+        suffix: File extension with its leading dot, any case.
+
+    Returns:
+        True for ``.entity``, whose root structure comes from its
+        ``entityType`` value, and for every extension with a root Definition.
+    """
+    return (
+        suffix.casefold() == ENTITY_EXTENSION
+        or registry.structure_for_extension(suffix) is not None
+    )
 
 
 def _skipped(name: str) -> bool:

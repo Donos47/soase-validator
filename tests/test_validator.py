@@ -16,7 +16,7 @@ from typing import Any
 import pytest
 
 from soase_validator.engine import diagnostics as dg
-from soase_validator.engine.model import Diagnostic
+from soase_validator.engine.model import Diagnostic, Severity
 from soase_validator.engine.parser import parse
 from soase_validator.engine.primitives import NumericPrefs
 from soase_validator.engine.registry import Registry, load_registry, load_registry_from_texts
@@ -1003,18 +1003,18 @@ def _indent_registry() -> Registry:
     )
 
 
-def test_line_deeper_than_a_matched_value_line_is_v080() -> None:
-    # The owner shape: a value line followed by a deeper line (the value line
-    # is under-indented). V080 sits on the deeper key; the other findings stay.
+def test_line_deeper_than_a_value_line_is_placed_by_definition() -> None:
+    # A value line opens no block: the deeper line is an unknown key of `blk`,
+    # which is not checked for indentation.
     registry = _indent_registry()
     diags = _run(registry, "blk\n\ta 1\n\tb 2\n\t\tc 3\n")
-    assert _v080(diags) == [(4, 2)]
-    assert "line 4" in next(d for d in diags if d.code == dg.V080).message
-    assert sorted(d.code for d in diags) == [dg.V020, dg.V080]
+    assert [d.code for d in diags] == [dg.V020]
     assert _v080(_run(registry, "blk\n\ta 1\n\tb 2\n")) == []
-    # A count line stays known when its count is wrong (RandomEventDefs shape).
+    # A member written deeper than the others of its block gets one V080.
+    deep = _run(registry, "blk\n\ta 1\n\t\tb 2\n")
+    assert [d.code for d in deep] == [dg.V080]
+    # A line under a count line that is not a repeat is an unknown key.
     counted = _run(registry, "wCount 2\n\tx 1\n")
-    assert _v080(counted) == [(2, 1)]
     assert dg.V030 in [d.code for d in counted]
 
 
@@ -1054,9 +1054,31 @@ def test_shallow_owner_gives_one_v080_per_planet_and_nothing_else() -> None:
     registry = _galaxy_registry()
     diags = _run(registry, _SHALLOW_OWNERS)
     assert [d.code for d in diags] == [dg.V080, dg.V080]
-    assert _v080(diags) == [(6, 2), (10, 2)]
+    assert _v080(diags) == [(5, 1), (9, 1)]
     message = diags[0].message
-    assert "'owner' on line 6" in message and "under-indented" in message
+    assert "'owner'" in message and "'designName' on line 5" in message
+    assert "block 'planet'" in message
+
+
+def test_v080_is_informational() -> None:
+    diags = _run(_galaxy_registry(), _SHALLOW_OWNERS)
+    assert {d.severity for d in diags} == {Severity.INFO}
+
+
+def test_indentation_is_compared_by_order_not_by_character() -> None:
+    registry = _galaxy_registry()
+    spaced = _SHALLOW_OWNERS.replace("\t", "    ")
+    assert _v080(_run(registry, spaced)) == [(5, 4), (9, 4)]
+    consistent = _run(_indent_registry(), "blk\n    a 1\n    b 2\n")
+    assert consistent == []
+
+
+def test_a_block_shifted_as_a_whole_gives_one_v080() -> None:
+    registry = _indent_registry()
+    body = "\t\tblk\n\t\t\ta 1\n\t\t\tb 2\nstarCount 0\nwCount 1\nw 1\n"
+    diags = _run(registry, body)
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(1, 2)]
 
 
 def test_correctly_placed_owner_is_untouched() -> None:
@@ -1068,7 +1090,9 @@ def test_correctly_placed_owner_is_untouched() -> None:
 def test_shallow_owner_without_deeper_lines_is_a_member_of_its_planet() -> None:
     registry = _galaxy_registry()
     body = 'star\n\tplanetCount 1\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n'
-    assert _run(registry, body) == []
+    diags = _run(registry, body)
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(5, 1)]
 
 
 def test_unknown_key_next_to_a_shallow_owner_is_still_v020() -> None:
@@ -1078,7 +1102,7 @@ def test_unknown_key_next_to_a_shallow_owner_is_still_v020() -> None:
         '\t\tisHomePlanet TRUE\n\tzzz "x"\n'
     )
     diags = _run(registry, body)
-    assert sorted((d.code, d.range.start.line) for d in diags) == [(dg.V020, 7), (dg.V080, 6)]
+    assert sorted((d.code, d.range.start.line) for d in diags) == [(dg.V020, 7), (dg.V080, 5)]
 
 
 def test_shallow_owner_does_not_hide_problems_inside_its_planet() -> None:
@@ -1092,7 +1116,7 @@ def test_shallow_line_after_an_unplaced_repeat_keeps_its_findings() -> None:
     registry = _galaxy_registry()
     body = 'star\n\tplanet\n\t\tdesignName "a"\n\towner "P0"\n'
     codes = [d.code for d in _run(registry, body)]
-    assert dg.V030 in codes and dg.V020 in codes
+    assert dg.V030 in codes and dg.V020 not in codes
 
 
 def test_repeats_one_level_under_their_count_line_pass() -> None:
@@ -1107,11 +1131,14 @@ def test_repeats_at_the_count_line_level_pass() -> None:
     assert _run(registry, "wCount 2\nw 1\nw 2\n") == []
 
 
-def test_repeats_two_levels_deeper_are_v080() -> None:
-    registry = _indent_registry()
-    diags = _run(registry, "wCount 1\n\t\tw 1\n")
-    assert _v080(diags) == [(2, 2)]
-    assert "2 levels" in diags[0].message
+def test_repeat_less_indented_than_its_count_line_is_v080() -> None:
+    registry = _galaxy_registry()
+    diags = _run(registry, 'star\n\tplanetCount 1\nplanet\n\t\tdesignName "a"\n')
+    assert [d.code for d in diags] == [dg.V080]
+    assert _v080(diags) == [(3, 0)]
+    assert "less indented than its count line 'planetCount'" in diags[0].message
+    deeper = _run(registry, 'star\n\tplanetCount 1\n\t\tplanet\n\t\t\tdesignName "a"\n')
+    assert deeper == []
 
 
 def test_mixed_styles_in_one_run_give_one_v080_on_the_first_offender() -> None:
@@ -1466,8 +1493,8 @@ _SHALLOW_COUNT = (
 def test_shallow_count_line_of_a_block_gives_one_v080_and_nothing_else() -> None:
     diags = _run(_shallow_block_registry(), _SHALLOW_COUNT)
     assert [d.code for d in diags] == [dg.V080]
-    assert _v080(diags) == [(5, 2)]
-    assert "'EffectName' is indented under 'NumEffects' on line 5" in diags[0].message
+    assert _v080(diags) == [(4, 1)]
+    assert "'NumEffects' is indented differently from 'hull' on line 4" in diags[0].message
     fixed = _SHALLOW_COUNT.replace("\tNumEffects", "\t\tNumEffects")
     assert _run(_shallow_block_registry(), fixed) == []
 
@@ -1480,8 +1507,8 @@ def test_shallow_count_line_still_checks_its_run() -> None:
 
 def test_shallow_key_that_the_ended_block_does_not_define_stays_v020() -> None:
     body = "Game\n\tDamage\n\t\thull 0.01\n\tzzz 1\n\t\tregen 0.5\n"
-    codes = [d.code for d in _run(_shallow_block_registry(), body)]
-    assert dg.V020 in codes and dg.V080 not in codes
+    diags = _run(_shallow_block_registry(), body)
+    assert [(d.code, d.range.start.line) for d in diags] == [(dg.V020, 4), (dg.V080, 5)]
 
 
 def test_shallow_key_that_the_enclosing_block_defines_is_untouched() -> None:
@@ -1489,10 +1516,10 @@ def test_shallow_key_that_the_enclosing_block_defines_is_untouched() -> None:
     assert _run(_shallow_block_registry(), body) == []
 
 
-def test_key_two_levels_shallower_than_the_block_lines_is_not_placed() -> None:
+def test_key_two_levels_shallower_than_the_block_lines_is_placed_by_definition() -> None:
     body = 'Game\n\tDamage\n\t\t\thull 0.01\n\tNumEffects 1\n\t\tEffectName "a"\n'
     codes = [d.code for d in _run(_shallow_block_registry(), body)]
-    assert dg.V020 in codes and dg.V080 not in codes
+    assert codes == [dg.V080, dg.V080]
 
 
 def test_shallow_member_without_deeper_lines_gives_v080_on_itself() -> None:
@@ -1500,7 +1527,7 @@ def test_shallow_member_without_deeper_lines_gives_v080_on_itself() -> None:
     diags = _run(_shallow_block_registry(), body)
     assert [d.code for d in diags] == [dg.V080]
     assert _v080(diags) == [(4, 1)]
-    assert "'NumEffects' is at the indentation of 'Damage' on line 3" in diags[0].message
+    assert "'NumEffects' is indented differently from 'hull' on line 4" in diags[0].message
 
 
 def test_later_shallow_members_of_the_same_block_add_no_further_v080() -> None:
@@ -1510,4 +1537,4 @@ def test_later_shallow_members_of_the_same_block_add_no_further_v080() -> None:
     )
     diags = _run(_shallow_block_registry(), body)
     assert [d.code for d in diags] == [dg.V080]
-    assert _v080(diags) == [(5, 2)]
+    assert _v080(diags) == [(4, 1)]
