@@ -179,8 +179,8 @@ Conventions for every task:
     - File `test/properties/p08-config-debounce.test.ts`, fake clock and timers, at least 100 runs
     - _Requirements: 6.4_
 
-- [ ] 7. Wire the extension entry point
-  - [ ] 7.1 Implement activation, commands and `extension.ts`
+- [x] 7. Wire the extension entry point
+  - [x] 7.1 Implement activation, commands and `extension.ts`
     - Create `src/activation.ts`: seed trust from `workspace.isTrusted`, dispatch `AutoStart` without awaiting, handle `onDidGrantWorkspaceTrust` (dispatch `TrustChanged`, which only records the trust flag, and then dispatch `AutoStart` so the Server starts without a reload, Requirement 2.7) and `onDidOpenTextDocument` for `soase` `file` documents, send `ConfigSync.notifyChange` from `onDidChangeConfiguration`, apply trace changes without restart
     - Create `src/commands.ts` registering `soase-validator.restartServer`, `soase-validator.stopServer`, `soase-validator.showOutput` and `soase-validator.showStatus` (`formatStatus` in an information message)
     - Create `src/extension.ts` with `activate` and `deactivate`: whole of `activate` in a try/catch that logs, shows one error notification and returns normally; completes without waiting for the Server; returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`; `deactivate` stops the Server within 5 seconds and disposes the channel and status item

@@ -261,6 +261,25 @@
         "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
         "timestamp": 1794160631916
       }
+    ],
+    "7.1 Implement activation, commands and `extension.ts`": [
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160672182
+      },
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160797114
+      }
+    ],
+    "7. Wire the extension entry point": [
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160797195
+      }
     ]
   }
 }
