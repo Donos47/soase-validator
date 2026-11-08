@@ -33,8 +33,8 @@ Conventions for every task:
 
 - [x] 2. Scaffold the extension project
   - [x] 2.1 Create the npm project and base configuration
-    - Create `vscode-extension/package.json` with name, version, `engines` (`vscode` `^1.141.0`, `node` `>=24`), `main` `./out/src/extension.js`, MIT license, and the scripts `compile`, `lint`, `test:unit`, `test:host`, `test`, `audit` and `package` from the design
-    - Add dev dependencies with the ranges in the design (`typescript` `~6.0.3`, `@types/vscode` `~1.140.0`, `@types/node` `^24.19.2`, `eslint`, `typescript-eslint`, `eslint-plugin-n`, `mocha`, `@types/mocha`, `fast-check`, `@vscode/vsce`, `@vscode/test-electron`, `vscode-languageserver`) and the runtime dependency `vscode-languageclient` `^11.0.0`. Re-check each version on npm first and record any deviation from the design table
+    - Create `vscode-extension/package.json` with name, version, `engines` (`vscode` `^1.131.0`, `node` `>=24`), `main` `./out/src/extension.js`, MIT license, and the scripts `compile`, `lint`, `test:unit`, `test:host`, `test`, `audit` and `package` from the design
+    - Add dev dependencies with the ranges in the design (`typescript` `~6.0.3`, `@types/vscode` `~1.125.0`, `@types/node` `^24.19.2`, `eslint`, `typescript-eslint`, `eslint-plugin-n`, `mocha`, `@types/mocha`, `fast-check`, `@vscode/vsce`, `@vscode/test-electron`, `vscode-languageserver`) and the runtime dependency `vscode-languageclient` `^11.0.0`. Re-check each version on npm first and record any deviation from the design table
     - Create `tsconfig.json` (`module` and `moduleResolution` `node16`, `target` `ES2022`, `strict`, `noUncheckedIndexedAccess`, `outDir` `out`, `rootDir` `.`, source maps, `lib` `ES2022`), `.node-version` containing `24`, `.mocharc.json` (specs under `out/test/unit` and `out/test/properties`), and `.vscodeignore` as listed in the design
     - Run `npm install` to create `package-lock.json`, then `npm audit`, and report findings of high or critical severity
     - _Requirements: 13.4, 13.7, 13.10, 13.11, 13.12, 16.1_
@@ -42,7 +42,7 @@ Conventions for every task:
   - [x] 2.2 Configure ESLint and the embedded-Node guard
     - Create `eslint.config.mjs` (flat config, `typescript-eslint` recommended type-checked rules) covering `src`, `test` and `scripts`
     - In `src/`: forbid `no-console`, `process.stdout` and `process.stderr` writes, network modules (`http`, `https`, `net`, `tls`, `dgram` and their `node:` forms), every `node:` module except `child_process`, `fs`, `path`, `os` and `process`, `child_process` outside `src/client/spawn-server.ts` and the injected exec adapter, and the `vscode` module inside `src/launcher`, `src/settings` (except `vscode-config-reader.ts`), `src/lifecycle` and `src/format`
-    - Enable `eslint-plugin-n` rules `n/no-unsupported-features/node-builtins`, `es-builtins` and `es-syntax` for `src/` using the version constant from `scripts/min-embedded-node.mjs` (`MIN_EMBEDDED_NODE = '24.21.0'`, expressed as `>=24.21.0`)
+    - Enable `eslint-plugin-n` rules `n/no-unsupported-features/node-builtins`, `es-builtins` and `es-syntax` for `src/` using the version constant from `scripts/min-embedded-node.mjs` (`MIN_EMBEDDED_NODE = '24.18.0'`, expressed as `>=24.18.0`)
     - Verify the config loads with a lint run, and leave no temporary files behind
     - _Requirements: 10.1, 10.2, 10.3, 15.10, 15.11, 16.1_
 
@@ -188,7 +188,7 @@ Conventions for every task:
 
 - [x] 8. Contribute the extension manifest
   - [x] 8.1 Complete `package.json` contributions
-    - Add `displayName`, a placeholder `publisher`, `activationEvents` (`onLanguage:soase`, `workspaceContains:**/soase.json`, `workspaceContains:**/*.{entity,galaxy,brushes,sounddata,str,constants,galaxyScenarioDef,particle,explosiondata}`) and `capabilities.untrustedWorkspaces` with `supported` `limited` and `restrictedConfigurations` listing `soase-validator.uvPath` and `soase-validator.serverSource`
+    - Add `displayName`, the `publisher` `donos47`, `activationEvents` (`onLanguage:soase`, `workspaceContains:**/soase.json`, `workspaceContains:**/*.{entity,galaxy,brushes,sounddata,str,constants,galaxyScenarioDef,particle,explosiondata}`) and `capabilities.untrustedWorkspaces` with `supported` `limited` and `restrictedConfigurations` listing `soase-validator.uvPath` and `soase-validator.serverSource`
     - Contribute the language `soase` with exactly the nine extensions `.entity`, `.galaxy`, `.brushes`, `.sounddata`, `.str`, `.constants`, `.galaxyScenarioDef`, `.particle`, `.explosiondata` and no `.manifest`
     - Contribute one setting per `SERVER_SETTINGS` key with `scope` `window`, the declared JSON type, no `default`, no `enum`, and a description that ends with the precedence sentence and names accepted values using placeholder paths only; contribute `uvPath`, `serverSource`, `startupTimeoutSeconds` (default 180, minimum 10) and `trace.server` (`off`, `messages`, `verbose`, default `off`)
     - Contribute the four commands with the exact titles of Requirement 7 and no `commandPalette` hiding
@@ -207,7 +207,7 @@ Conventions for every task:
     - _Requirements: 9.1, 9.2, 9.3, 9.5, 9.6, 9.7, 9.8, 15.5_
 
   - [x] 9.2 Implement the host test runner
-    - Create `test/host/run-tests.ts` using `@vscode/test-electron` to run the host mocha suite on VS Code `1.141.0` and on `stable`, with a clean profile; log `process.versions.node` from inside the host and compare it with the value expected for the pinned VS Code
+    - Create `test/host/run-tests.ts` using `@vscode/test-electron` to run the host mocha suite on VS Code `1.131.0` and on `stable`, with a clean profile; log `process.versions.node` from inside the host and compare it with the value expected for the pinned VS Code
     - Add synthetic fixtures under `test/fixtures/` (a synthetic mod folder with a SoaSE File, a `.manifest` file and a `.txt` file) containing no game content
     - _Requirements: 13.6, 15.1, 15.5_
 
@@ -229,8 +229,8 @@ Conventions for every task:
 - [x] 10. Checkpoint - Extension complete
   - Run `npm run compile`, `npm run lint`, `npm run test:unit` and `npm run test:host` in `vscode-extension/`. Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 11. Implement packaging
-  - [ ] 11.1 Implement the packaging scripts
+- [x] 11. Implement packaging
+  - [x] 11.1 Implement the packaging scripts
     - Create `scripts/package.mjs` running, without a shell, in order: clean `out/`, `tsc` (step `compile`), `eslint` (step `lint`), `vsce ls` plus the contents check (step `contents`), `vsce package` into `dist/.build/`, then move the `.vsix` into `dist/`; any failure prints `package failed at step: <name>`, removes `dist/.build/` and any `.vsix` it wrote, and exits non-zero
     - Create `scripts/check-vsix-contents.mjs` asserting from the `vsce ls` list that `package.json`, `README.md`, `LICENSE`, `out/src/extension.js` and each production dependency's license file are present, and that nothing from `src/soase_validator`, `reference/`, `tests/`, `.kiro/`, no `uv` binary, no Definition JSON and no game file is included
     - Add the `NOTICE`-style third-party license text needed for `vscode-languageclient` and its dependencies to the package contents
@@ -240,15 +240,15 @@ Conventions for every task:
     - File `test/unit/package-script.test.ts`: `npm run package` exits 0 and produces exactly one `.vsix` in `dist/`; with an injected TypeScript error the script exits non-zero, names the `compile` step and leaves no `.vsix` or `dist/.build/`
     - _Requirements: 13.1, 13.5, 15.10_
 
-- [ ] 12. Integrate with the repository and write documentation
-  - [ ] 12.1 Write the extension README, LICENSE and notices
+- [x] 12. Integrate with the repository and write documentation
+  - [x] 12.1 Write the extension README, LICENSE and notices
     - Create `vscode-extension/LICENSE` as a copy of the repository MIT license
     - Create `vscode-extension/README.md` with separate sections for installing `uv`, installing the `.vsix`, Settings, Commands, States and Building from source (Node.js 24 or newer and npm); list every setting by exact id, every command by exact title and the states `stopped`, `starting`, `running` and `error`
     - State: the nearest project `soase.json` takes precedence over editor settings; link to the configuration section of the main README instead of restating setting meanings; the only network access is the `uvx` fetch and how a local `serverSource` avoids it; `uv` must provide Python 3.14 or later, managed Python downloads must stay enabled, no minimum `uv` version; `uvPath` must name `uvx` or `uvx.exe` itself; `*.manifest` files are not associated and manifest support is deferred; the unofficial-community-tool statement and the credits (zombiesrus5, GoaFan77, Stardock Entertainment, Ironclad Games)
     - Use placeholder paths only
     - _Requirements: 10.3, 13.2, 13.9, 14.1, 14.2, 14.3, 14.4, 14.5, 14.7, 14.8, 14.9_
 
-  - [ ] 12.2 Update the project README
+  - [x] 12.2 Update the project README
     - In the root `README.md` remove the statement that no VS Code extension is shipped and the generic LSP client instructions, link to `vscode-extension/README.md` in their place, and remove the extension bullet from "Future improvements"
     - _Requirements: 14.6_
 
@@ -257,7 +257,7 @@ Conventions for every task:
     - File `test/unit/no-network.test.ts`: `src/` contains no `fetch(`, `XMLHttpRequest` or network module import, and no `console.log` or `process.stdout` use
     - _Requirements: 6.10, 10.1, 10.2, 10.3, 14.1, 14.2, 14.7, 15.11_
 
-- [ ] 13. Final checkpoint - Ensure all tests pass
+- [x] 13. Final checkpoint - Ensure all tests pass
   - Run in `vscode-extension/`: `npm ci`, `npm run package`, `npm run test` and `npm audit`; run `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` in the repository root. Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

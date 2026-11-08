@@ -46,7 +46,7 @@ Read from the published package source (`lib/node/main.js`, `lib/common/configur
 9. **Test-only API.** `activate` returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`, so host tests can start the stub server without a fake `uvx` binary (`ExtensionTestApi.setTestOverride`, which replaces both resolution and spawn). The override does not exist in production modes.
 10. **Manual restart clears the crash window (decided).** A user-initiated start (the `soase-validator.restartServer` command and the "Restart server" notification action) clears the crash-loop counter, because the user has taken action. Requirement 11 is silent on this; the user confirmed the behaviour.
 11. **No classification of `uvx` errors (decided).** The Extension does not recognise causes such as a missing Python interpreter or an unreachable network. Any exit before `initialize` takes the generic path: the first 20 stderr lines in the notification, the full output in the channel, no automatic retry (Requirements 10.6, 12.2). A classifier can be added later as a pure function over stderr text once sample `uvx` outputs are available; it would only change the notification text and not the lifecycle.
-12. **Node 24 for build tooling and runtime (decided).** The build tooling (npm scripts, tests, `vsce`) runs on Node 24 and `@types/node` is the 24 line. The Extension itself runs in the Node embedded in VS Code's Electron; VS Code 1.141 embeds Node 24.21.0 (Electron 43.7.7), so the build and runtime Node majors match. A lint guard keeps `src/` to APIs available in the embedded runtime. See "Node versions" under Build and packaging.
+12. **Node 24 for build tooling and runtime (decided).** The build tooling (npm scripts, tests, `vsce`) runs on Node 24 and `@types/node` is the 24 line. The Extension itself runs in the Node embedded in VS Code's Electron; the supported hosts embed Node 24.18.0 (VS Code 1.131.0, Electron 42.7.0), 24.21.0 (VS Code 1.141, Electron 43.x) and 24.22.1 (Kiro 1.4.121, Electron 44.10.0), so the build and runtime Node majors match. A lint guard keeps `src/` to APIs available in the embedded runtime. See "Node versions" under Build and packaging.
 
 ## Architecture
 
@@ -1018,10 +1018,10 @@ export class StderrCapture {
 {
   "name": "soase-validator",
   "displayName": "SoaSE Validator",
-  "publisher": "publisher-placeholder",
+  "publisher": "donos47",
   "version": "0.1.0",
   "license": "MIT",
-  "engines": { "vscode": "^1.141.0", "node": ">=24" },
+  "engines": { "vscode": "^1.131.0", "node": ">=24" },
   "main": "./out/src/extension.js",
   "activationEvents": [
     "onLanguage:soase",
@@ -1052,7 +1052,7 @@ export class StderrCapture {
 }
 ```
 
-The `publisher` value is not known; see Open Items. The placeholder `publisher-placeholder` is an identifier-shaped value, because `vsce` rejects values that are not publisher identifiers (for example `<publisher placeholder>`). `activationEvents` also lists the four commands implicitly (VS Code generates `onCommand` events for contributed commands). The brace glob in `workspaceContains` is supported by VS Code's glob matcher.
+The `publisher` is `donos47`, the owner of the repository; `vsce` requires an identifier without spaces. The extension id is `donos47.soase-validator`, and the value changes when a Marketplace publisher is created. `activationEvents` also lists the four commands implicitly (VS Code generates `onCommand` events for contributed commands). The brace glob in `workspaceContains` is supported by VS Code's glob matcher.
 
 Configuration properties. Every Server Setting has `scope: "window"`, a type taken from `SERVER_SETTINGS`, and a description that ends with: "A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README." (Requirement 6.7). Examples use placeholders only (Requirement 6.10).
 
@@ -1119,11 +1119,11 @@ export interface StatusSnapshot {
 | `audit` | `npm audit --audit-level=high` | surfaces high and critical findings (Requirement 13.10) |
 | `package` | `node scripts/package.mjs` | build the `.vsix` |
 
-`scripts/package.mjs` runs these steps in order with `child_process.spawnSync(process.execPath, [binScript, ...args])`, no shell: (1) remove `out/`; (2) `tsc` (step name `compile`); (3) `eslint` (step name `lint`); (4) `vsce ls` and `check-vsix-contents.mjs` (step name `contents`); (5) `vsce package --out dist/.build/soase-validator-<version>.vsix`; (6) move the file to `dist/`. Any non-zero exit prints `package failed at step: <name>`, removes `dist/.build/` and any `.vsix` it wrote, and exits with a non-zero code, so no partial file stays in the output location (Requirements 13.5, 15.10). A clean checkout needs only `npm ci` and `npm run package` (Requirement 13.4).
+`scripts/package.mjs` runs these steps in order with `child_process.spawnSync(process.execPath, [binScript, ...args])`, no shell: (1) remove `out/`; (2) `tsc` (step name `compile`); (3) `eslint` (step name `lint`); (4) `generate-notices.mjs` writes the git-ignored `THIRD_PARTY_NOTICES.txt` (name, version and the license, notice and third-party-notice files of each production dependency, read from `node_modules`), then `vsce ls` output goes through `check-vsix-contents.mjs` (step name `contents`); (5) `vsce package --out dist/.build/soase-validator-<version>.vsix`; (6) move the file to `dist/`. Any non-zero exit prints `package failed at step: <name>`, removes `dist/.build/` and any `.vsix` it wrote, and exits with a non-zero code, so no partial file stays in the output location (Requirements 13.5, 15.10). A clean checkout needs only `npm ci` and `npm run package` (Requirement 13.4).
 
-`check-vsix-contents.mjs` asserts from the `vsce ls` list: `package.json`, `README.md`, `LICENSE`, `out/src/extension.js` and the license file of each production dependency are present, and nothing under `src/soase_validator`, `reference/`, `tests/` or `.kiro/`, no `uv` binary and no `*.json` Definition is present (Requirements 13.2, 13.3).
+`check-vsix-contents.mjs` reads the `vsce ls` list from standard input (so it runs alone as `node node_modules/@vscode/vsce/vsce ls | node scripts/check-vsix-contents.mjs`), prints one line per violation and exits 1 on any. It asserts that `package.json`, `README.md`, `LICENSE`, `out/src/extension.js`, `THIRD_PARTY_NOTICES.txt` and every license, notice and third-party-notice file of each production dependency are present, and that nothing under `src/soase_validator`, `reference/`, `tests/` or `.kiro/`, no `uv` or `uvx` binary, no Python file, no game file extension and no first-party `*.json` other than `package.json` (a Definition) is present (Requirements 13.2, 13.3). JSON shipped inside `node_modules` is the dependencies' own and is not a Definition. The production dependency tree comes from `scripts/production-dependencies.mjs`, which follows `dependencies` through `node_modules` with Node's resolution rules; `vsce` itself excludes development dependencies.
 
-`.vscodeignore` excludes `src/**`, `test/**`, `scripts/**`, `out/test/**`, `**/*.map`, `.vscode-test/**`, `eslint.config.mjs`, `tsconfig.json` and `dist/**`, and does not exclude `node_modules/**/LICENSE*`.
+`.vscodeignore` excludes `.mocharc.json`, `.node-version`, `src/**`, `test/**`, `scripts/**`, `out/test/**`, `**/*.map`, `.vscode-test/**`, `eslint.config.mjs`, `tsconfig.json` and `dist/**`, and does not exclude `node_modules/**/LICENSE*`.
 
 ### Dependency versions
 
@@ -1131,9 +1131,9 @@ Checked on the npm registry when this design was written:
 
 | Package | Latest | Chosen range | Role and note |
 | --- | --- | --- | --- |
-| `vscode-languageclient` | 11.0.0 | `^11.0.0` | runtime; `engines.vscode ^1.91.0` |
+| `vscode-languageclient` | 11.0.0 | `^11.0.0` | runtime; `engines.vscode ^1.91.0`, below the Kiro-compatible floor |
 | `vscode-languageserver` | 11.0.0 | `^11.0.0` | dev; stub LSP server |
-| `@types/vscode` | 1.145.0 | `~1.140.0` | dev; see note 1 |
+| `@types/vscode` | 1.145.0 | `~1.125.0` | dev; see note 1 |
 | `@types/node` | 24.19.2 (24.x line; registry `latest` is 26.x) | `^24.19.2` | dev; see note 2 and the Node versions section |
 | `eslint-plugin-n` | 18.5.0 | `^18.5.0` | dev; runtime API guard, see the Node versions section; peer `eslint >=8.57.1` |
 | `typescript` | 7.0.2 | `~6.0.3` | dev; see note 3 |
@@ -1148,8 +1148,8 @@ Checked on the npm registry when this design was written:
 | `vitest` | 5.1.0 | not used | mocha is the single runner |
 | `esbuild` | 0.28.2 | not used | no bundler |
 
-1. `vsce` rejects a package whose `@types/vscode` is newer than `engines.vscode`. `engines.vscode` is `^1.141.0` (Requirement 13.7), and the npm registry has no `@types/vscode@1.141.0`; the highest version at or below 1.141 is 1.140.0, so the dev range is `~1.140.0`. The registry's 1.145.0 would break `vsce package`.
-2. `@types/node` follows the Node 24 line by user decision, which matches the Node embedded in VS Code 1.141. The registry `latest` tag points at a newer major, so the range is pinned to `^24.19.2` to stay on the 24 line.
+1. `vsce` rejects a package whose `@types/vscode` is newer than `engines.vscode`. `engines.vscode` is `^1.131.0` (Requirement 13.7), and the npm registry has no `@types/vscode@1.131.0`; the highest version at or below 1.131 is 1.125.0, so the dev range is `~1.125.0`. The compiler therefore checks the code against the 1.125 API surface, which is a subset of the 1.131 floor. The registry's 1.145.0 would break `vsce package`.
+2. `@types/node` follows the Node 24 line by user decision, which matches the Node major embedded in the supported hosts. The registry `latest` tag points at a newer major, so the range is pinned to `^24.19.2` to stay on the 24 line.
 3. `typescript` 7.0.2 is the registry's latest, but `typescript-eslint` 8.72.1 declares `typescript <6.1.0`. The design uses the latest 6.0.x line. This departs from the "latest" preference, and the reason is the peer range. `npm install` with an unmet peer range fails under npm 7 and later, so the choice is forced, not a preference.
 
 #### Node versions
@@ -1160,7 +1160,9 @@ Facts checked on npm and nodejs.org when this design was written, plus the publi
 | --- | --- | --- |
 | Node.js 24 | 24.22.2, codename Krypton | LTS since 2025-10-28; maintenance LTS since 2026-10-20; end of life 2028-04-30 |
 | `@types/node` 24 | 24.19.2, the highest 24.x on the registry | stable |
-| Node embedded in VS Code 1.141.0 to 1.143.1 | 24.21.0 (Electron 43.7.7) | same major as the build Node; version from a community mapping |
+| Node embedded in VS Code 1.131.0 | 24.18.0 (Electron 42.7.0) | observed with `process.versions` in the extension host; this is the lowest supported host |
+| Node embedded in VS Code 1.141.0 | 24.21.0 (Electron 43.x) | observed with `process.versions` in the installed VS Code |
+| Node embedded in Kiro 1.4.121 (`product.json` `vsCodeVersion` 1.131.0) | 24.22.1 (Electron 44.10.0) | observed by running `Kiro.exe` with `ELECTRON_RUN_AS_NODE=1` |
 | Build tooling engines | `@vscode/vsce` and `@vscode/test-electron` `>=22`; `mocha` `^20.19 \|\| >=22.12`; `eslint` and `eslint-plugin-n` `^20.19 \|\| ^22.13 \|\| >=24`; `typescript` 6.0.x `>=14.17`; `typescript-eslint` `^18.18 \|\| ^20.9 \|\| >=21.1` | all accept Node 24 |
 
 Node 24 is in maintenance LTS, so it receives security fixes only until 2028-04-30; this is the same major that the minimum supported VS Code embeds.
@@ -1168,12 +1170,12 @@ Node 24 is in maintenance LTS, so it receives security fixes only until 2028-04-
 Two Node installations are involved, and they share a major version:
 
 - **Build and test Node** (the developer's or CI's Node). It runs `npm` scripts, `tsc`, `eslint`, `mocha`, `vsce` and the `@vscode/test-electron` launcher. The design sets `engines.node` to `>=24` in `package.json` and the build documentation (`vscode-extension/README.md`, section "Building from source") states "Node.js 24 or newer and npm" as the prerequisite. A `.node-version` file in `vscode-extension/` contains `24`.
-- **Runtime Node** (the Node inside VS Code's Electron extension host). It runs the compiled extension. For the minimum supported VS Code, 1.141, it is Node 24.21.0. A newer developer Node can still expose built-in APIs that the embedded runtime lacks, so the source is guarded as follows.
+- **Runtime Node** (the Node inside VS Code's Electron extension host). It runs the compiled extension. For the minimum supported VS Code, 1.131.0, it is Node 24.18.0, the lowest among the supported hosts (VS Code 1.141 has 24.21.0 and Kiro 1.4.121 has 24.22.1). A newer developer Node can still expose built-in APIs that the embedded runtime lacks, so the source is guarded as follows.
 
-1. **Lint guard.** `eslint-plugin-n` rule `n/no-unsupported-features/node-builtins` is enabled for `src/` with `version: '>=24.21.0'`, so any Node built-in API newer than the embedded runtime is an error. A companion `n/no-unsupported-features/es-builtins` and `es-syntax` pair uses the same version. The `version` value lives in one constant that the packaging check keeps in step with `MIN_EMBEDDED_NODE` below.
+1. **Lint guard.** `eslint-plugin-n` rule `n/no-unsupported-features/node-builtins` is enabled for `src/` with `version: '>=24.18.0'`, so any Node built-in API newer than the embedded runtime is an error. A companion `n/no-unsupported-features/es-builtins` and `es-syntax` pair uses the same version. The `version` value lives in one constant that the packaging check keeps in step with `MIN_EMBEDDED_NODE` below.
 2. **Allowed Node surface.** `src/` imports only `node:child_process` (spawn adapter), `node:fs`, `node:path`, `node:os` and `node:process`, and uses `Buffer`, `TextDecoder` and timers. `no-restricted-imports` rejects every other `node:` module in `src/`.
-3. **Host test on the minimum VS Code.** The host suite runs on VS Code `1.141.0` (the `engines.vscode` floor, passed to `@vscode/test-electron` as `version`) and on `stable`. The minimum-version run is the one that proves the compiled output works on the embedded Node 24.21.0. The test also asserts `process.versions.node` inside the host against the expected value for the pinned VS Code and logs it, so a change of the embedded runtime is visible.
-4. **Single place to change.** `MIN_EMBEDDED_NODE = '24.21.0'` is a constant in `scripts/` used by the lint config and the host test. When `engines.vscode` is raised, update it from the VS Code to Node mapping.
+3. **Host test on the minimum VS Code.** The host suite runs on VS Code `1.131.0` (the `engines.vscode` floor, passed to `@vscode/test-electron` as `version`) and on `stable`. The minimum-version run is the one that proves the compiled output works on the embedded Node 24.18.0. The test also asserts `process.versions.node` inside the host against the expected value for the pinned VS Code and logs it, so a change of the embedded runtime is visible.
+4. **Single place to change.** `MIN_EMBEDDED_NODE = '24.18.0'` is a constant in `scripts/` used by the lint config and the host test. When `engines.vscode` is raised, update it from the Node versions observed in the supported hosts, and keep it equal to the lowest of them.
 Run `npm audit` after install and after every dependency change, and report high and critical findings. `vscode-languageclient` is the only runtime dependency; its dependencies are `semver`, `minimatch`, `vscode-languageserver-protocol` and `vscode-languageserver-textdocument`.
 
 `tsconfig.json`: `module` and `moduleResolution` `node16`, `target` `ES2022`, `strict`, `noUncheckedIndexedAccess`, `outDir` `out`, `rootDir` `.` (so `test/` compiles next to `src/`), `sourceMap` on, `lib` `["ES2022"]`.
@@ -1257,7 +1259,7 @@ For any message and any level in `error`, `warn`, `info`, `debug`, the formatted
 
 ### Property 11: Manifest consistency
 
-For the extension manifest, the language `soase` registers exactly the nine file extensions of Requirement 1.1 and not `.manifest`; the contributed configuration keys equal the keys of `SERVER_SETTINGS` plus `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server`, each Server Setting carrying the precedence sentence and no default value; the contributed commands equal the four commands with the exact titles; `engines.vscode` is `^1.141.0`; `capabilities.untrustedWorkspaces.supported` is `limited`; the activation events include `onLanguage:soase` and the two `workspaceContains` events; and no default, description or example contains a machine-specific absolute path.
+For the extension manifest, the language `soase` registers exactly the nine file extensions of Requirement 1.1 and not `.manifest`; the contributed configuration keys equal the keys of `SERVER_SETTINGS` plus `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server`, each Server Setting carrying the precedence sentence and no default value; the contributed commands equal the four commands with the exact titles; `engines.vscode` is `^1.131.0`; `capabilities.untrustedWorkspaces.supported` is `limited`; the activation events include `onLanguage:soase` and the two `workspaceContains` events; and no default, description or example contains a machine-specific absolute path.
 
 **Validates: Requirements 1.1, 1.6, 2.1, 2.2, 2.5, 6.1, 6.2, 6.7, 6.10, 6.11, 7.1, 7.5, 7.8, 7.11, 8.9, 13.7, 15.7**
 
@@ -1331,7 +1333,7 @@ Runs only when a Python checkout is available: the repository root containing `p
 
 - Documentation consistency test: the README lists every setting id from the manifest, every command title and every state name, contains the required statements, and neither README nor manifest contains a drive-letter path or a user-home path (Requirements 6.10, 14.1 to 14.9).
 - Network check: ESLint's restricted-import rules for `http`, `https`, `net`, `tls`, `dgram` plus a test that greps `src/` for `fetch(` and `XMLHttpRequest` (Requirements 10.1 to 10.3).
-- Runtime Node guard: `npm run lint` fails when `src/` uses a Node built-in newer than `MIN_EMBEDDED_NODE`; the host suite runs on VS Code 1.141.0 and `stable`.
+- Runtime Node guard: `npm run lint` fails when `src/` uses a Node built-in newer than `MIN_EMBEDDED_NODE`; the host suite runs on VS Code 1.131.0 and `stable`.
 - Packaging smoke test: `npm run package` exits 0 and produces one `.vsix` in `dist/`; with an injected TypeScript error the script exits non-zero, names the `compile` step and leaves no `.vsix` or `dist/.build` (Requirements 13.1, 13.5, 15.10).
 - Repository check: `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` still pass (Requirement 16.5).
 
@@ -1344,10 +1346,10 @@ Unit and property tests run the resolver for all three platforms through injecti
 These points could not be verified from the sources available, or the requirements leave them undecided. None is guessed in the design above beyond what is stated. Decisions already made are recorded under Design decisions 10 to 12.
 
 1. **Tree kill of `uvx`.** Whether killing only the `uvx` process leaves its Python child running on each platform has not been tested. The design stops gracefully first (LSP `shutdown` and `exit`) and uses a tree kill (`taskkill /T`, process group) as the fallback. Please confirm or run a manual check on Windows.
-2. **Publisher identifier.** The `publisher` field of `package.json` is required by `vsce` and no value is specified. A placeholder is used until you decide.
-3. **`@types/vscode` version.** `@types/vscode@1.141.0` does not exist on npm, so `~1.140.0` is chosen.
+2. **Publisher identifier.** The `publisher` field is `donos47` (decided). It is revisited when a Marketplace publisher is created; the extension id changes with it.
+3. **`@types/vscode` version.** `@types/vscode@1.131.0` does not exist on npm, so `~1.125.0`, the highest version below it, is chosen.
 4. **TypeScript major.** TypeScript 7.0.2 is the registry latest but conflicts with the `typescript-eslint` peer range, so the 6.0 line is used until `typescript-eslint` supports 7.
-5. **Embedded Node version source.** The Node 24.21.0 value for VS Code 1.141 comes from a community VS Code to Electron to Node mapping, not from a VS Code release note. Re-verify it, and update `MIN_EMBEDDED_NODE`, when the minimum VS Code version is raised. The host test logs `process.versions.node` so a mismatch is visible.
+5. **Embedded Node version source.** The Node 24.18.0 value for VS Code 1.131.0 was observed with `process.versions` inside the extension host, not taken from a release note. Re-verify it, and update `MIN_EMBEDDED_NODE`, when the minimum VS Code version is raised. The host test logs `process.versions.node` so a mismatch is visible.
 6. **`serverInfo.version` at runtime.** pygls documents that the constructor arguments populate `serverInfo`, and `server.py` passes `"0.1.0"`, but the actual `initialize` result has not been executed. The integration test records it.
 7. **Dynamic registration capability flags.** The server only registers file watchers when the client advertises `didChangeWatchedFiles.dynamicRegistration` and chooses relative patterns from `relativePatternSupport`. I expect `vscode-languageclient` 11 to advertise both. The host test with the stub confirms registration and notifications; whether relative patterns outside the workspace (Layer directories) deliver events is only exercised by the integration test and manual use.
 8. **Language ownership of generic extensions.** `.str`, `.constants` and `.particle` may already be claimed by other installed extensions. VS Code resolves such conflicts by its own rules, so Requirement 1.2 is verified on a clean profile and cannot be guaranteed on every installation.

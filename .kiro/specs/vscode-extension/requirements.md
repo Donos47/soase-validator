@@ -236,7 +236,7 @@ Out of scope: any change to the validation rules or to the server's settings mod
 4. WHEN the documented build command is run on a clean checkout that has only Node.js and npm installed, THE project SHALL produce the `.vsix` without any manual step beyond the documented command.
 5. IF the build command fails, THEN THE project SHALL exit with a non-zero code, print an error naming the failing step, and leave no partial `.vsix` file in the output location.
 6. THE Extension SHALL activate without error on VS Code for Windows, macOS and Linux.
-7. THE Extension manifest SHALL declare the minimum supported VS Code engine version `^1.141.0`.
+7. THE Extension manifest SHALL declare the minimum supported VS Code engine version `^1.131.0`, which is the VS Code version that Kiro 1.4.121 reports in its `product.json` `vsCodeVersion`, so the same `.vsix` installs in VS Code and in Kiro.
 8. IF the installed VS Code version is lower than the declared minimum engine version, THEN VS Code SHALL refuse to install the `.vsix` and THE Extension SHALL NOT activate.
 9. THE Extension SHALL carry the same MIT license as the project's original code, and its README SHALL repeat the unofficial-community-tool statement and the Credits of the `soase-validator` README (zombiesrus5, GoaFan77, Stardock Entertainment and Ironclad Games).
 10. THE Extension's dependencies SHALL be version-pinned by a lockfile, and WHEN dependencies are added or updated, THE project SHALL run `npm audit` and report every finding of high or critical severity.
@@ -297,7 +297,7 @@ Out of scope: any change to the validation rules or to the server's settings mod
 3. **Fallback `uv` locations.** After the `PATH`, the Launcher searches the standalone installer's per-user bin directory and then `$CARGO_HOME/bin`, which are the locations `uv` installers use.
 4. **Server source.** `soase-validator.serverSource` exists and the default tracks the repository's default branch, because no release tags exist and pinning would add maintenance without a defined release process.
 5. **Startup timeout.** `soase-validator.startupTimeoutSeconds` defaults to 180 seconds with a minimum of 10, because the first start builds the package from GitHub.
-6. **Dependencies and engine.** `vscode-languageclient` is accepted at its current stable release, and the minimum VS Code engine is `^1.141.0`; VS Code has no LTS channel to target instead.
+6. **Dependencies and engine.** `vscode-languageclient` is accepted at its current stable release, and the minimum VS Code engine is `^1.131.0` so that Kiro (a VS Code fork whose `product.json` `vsCodeVersion` is 1.131.0) accepts the `.vsix`; `vscode-languageclient` 11.0.0 needs only `^1.91.0`, and VS Code has no LTS channel to target instead.
 7. **Settings payload.** The `soase-validator` section form is used for initialization options and `didChangeConfiguration`; the Server's `editor_settings_from` serves both and reads only that section when present.
 8. **Multi-root workspaces.** One Server per VS Code window, because a single Engine resolves the nearest `soase.json` per file; per-folder Servers are out of scope.
 9. **Publication.** Marketplace and Open VSX publication is intended later and is out of scope for this specification, which does not require a GitHub release asset.
