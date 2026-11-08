@@ -37,7 +37,7 @@ build-backend = "uv_build"
 line-length = 100
 target-version = "py314"
 src = ["src", "tests"]
-extend-exclude = [".kiro"]
+extend-exclude = [".kiro", "vscode-extension"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "D", "ERA", "W505"]

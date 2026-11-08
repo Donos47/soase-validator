@@ -38,6 +38,13 @@ soase-validator/
     test_primitives.py           # primitive checkers
     test_registry.py, test_bundled_definitions.py, test_convert_definitions.py
     test_versions.py, test_engine_model.py, test_smoke.py, ...
+  vscode-extension/              # (planned) VS Code extension, TypeScript; see below
+    package.json, package-lock.json, tsconfig.json, eslint.config.mjs, README.md, LICENSE
+    scripts/                     # package.mjs, check-vsix-contents.mjs
+    src/                         # extension sources, kebab-case files
+    test/                        # unit/, properties/, host/, stub/, fixtures/
+    out/                         # git-ignored, tsc output
+    dist/                        # git-ignored, packaged .vsix
   reference/                     # git-ignored, local evidence only
     zombiesrus5-xml-definitions/ # original XML Definitions and entity_definitions.xsd
     primitive-survey.md          # Reference Root survey (shapes and counts)
@@ -45,15 +52,24 @@ soase-validator/
   audit-output/                  # git-ignored audit reports
   .kiro/
     specs/soase-validator/       # requirements.md, design.md, tasks.md
+    specs/vscode-extension/      # requirements.md, design.md, tasks.md
     steering/
 ```
 
+## VS Code extension
+
+- `vscode-extension/` is a separate npm project: TypeScript compiled by `tsc` to `out/`, tested with mocha and fast-check, packaged by `scripts/package.mjs` into `dist/`. It uses Node 24 and npm; the Python tooling (`uv`, `ruff`, `pytest`) does not touch it.
+- `vscode-extension/` neither imports from nor ships with the Python package. `src/soase_validator/` is the only code in the Python distribution.
+- The extension launches `soase-validator-lsp` as a separate process and contains no validation logic.
+- `out/`, `dist/`, `node_modules/`, `.vscode-test/` and `*.vsix` are build output and are git-ignored.
+- Work through `.kiro/specs/vscode-extension/tasks.md` in order for the extension.
+
 ## Conventions
 
-- Engine code must not import from `lsp/`, `mcp_server/`, or `cli/`.
+- Engine code must not import from `lsp/`, `mcp_server/`, or `cli/`, and no Python code imports from `vscode-extension/`.
 - Definition corrections go only in the bundled JSON, with an entry in `PROVENANCE.json` `audit_corrections` (game version, evidence and a `verify` list that a test checks). Never make one by re-running the converter: it refuses to write into the bundled directory while corrections are recorded, unless `--overwrite-corrections` is given.
 - Per-field shape parameters (for example a Position item count) use the Definition `constraint` attribute, for example `count=4`.
 - Survey and analysis output goes to `reference/` (git-ignored), never into the repo. Temporary scripts live in the system temp folder and are deleted afterwards.
-- `.gitignore` also covers `.venv`, caches and any local reference copies.
+- `.gitignore` also covers `.venv`, caches, any local reference copies and the extension build output.
 - Game files are never stored in the repo. Manifest rules and the base-game-unlisted list contain names only.
 - Work through `.kiro/specs/soase-validator/tasks.md` in order; tasks marked `*` are optional tests. Only the orchestrator changes task statuses; sub-agents leave them alone unless told to.
