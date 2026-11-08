@@ -147,28 +147,28 @@ Conventions for every task:
     - Cover timeout, spawn failure, exit before `initialize` (no retry, 20-line notification), three automatic restarts then stop on the fourth, manual restart clearing the crash window, forced kill after 5 seconds, late events from an old generation ignored, `stopServer` blocking auto-start until `restartServer`, and the restart order (stop, re-resolve, start, settings re-sent)
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 5.8, 5.9, 5.10, 7.2, 7.3, 7.9, 7.10, 10.6, 11.1, 11.2, 11.3, 11.4, 12.2, 15.6_
 
-- [ ] 6. Implement the VS Code adapters
-  - [ ] 6.1 Implement the configuration reader
+- [x] 6. Implement the VS Code adapters
+  - [x] 6.1 Implement the configuration reader
     - Create `src/settings/vscode-config-reader.ts`: a `ConfigReader` over `workspace.getConfiguration('soase-validator').inspect(key)` that passes only `globalValue`, `workspaceValue` and `workspaceFolderValue` and ignores `defaultValue`; plus readers for `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server` that use the normalisers
     - This is the only file in `src/settings` that imports `vscode`
     - _Requirements: 6.5, 6.6, 6.11, 11.8_
 
-  - [ ] 6.2 Implement the output channel, status item and notifications
+  - [x] 6.2 Implement the output channel, status item and notifications
     - Create `src/ui/output-log.ts`: exactly one `SoaSE Validator` channel, Extension lines through `formatLogLine`, a de-duplicating warning helper keyed by setting key plus serialized value, `console.error` only if the channel is disposed
     - Create `src/ui/status-item.ts`: one left-aligned status bar item with command `soase-validator.showStatus`, labels per state, error background, visible only while the active editor's language is `soase`, shown as `stopped` until the first start, updated synchronously on state change
     - Create `src/ui/notifications.ts`: the error notifications and actions of the design; "Open install instructions" opens the `uv` installation documentation with `env.openExternal`, "Set uvPath" runs `workbench.action.openSettings` filtered to `soase-validator.uvPath`; the Extension never downloads or runs an installer
     - _Requirements: 4.1, 4.4, 4.5, 4.7, 5.9, 5.10, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 11.5, 15.11_
 
-  - [ ] 6.3 Implement the server process spawner
+  - [x] 6.3 Implement the server process spawner
     - Create `src/client/spawn-server.ts`, the only module importing `child_process` for the Server: spawn with `shell: false`, an argument array and piped stdio (`detached: true` on POSIX), expose `child`, `exited` and `kill()` (process tree via `taskkill /PID <pid> /T /F` on Windows, group signal on POSIX), attach the stderr listener that feeds a `LineSplitter` and passes each line to the `stderrLines` callback only (the language client writes stderr to the Output Channel), write nothing to stdin; export `ServerProcess`, `TestOverride` and `spawnServer` as specified in design.md
     - _Requirements: 5.1, 5.4, 5.5, 5.6, 7.3, 10.5_
 
-  - [ ] 6.4 Implement trace mapping and the language client factory
+  - [x] 6.4 Implement trace mapping and the language client factory
     - Create `src/client/trace.ts` mapping the setting to the library `Trace` values
     - Create `src/client/client-factory.ts`, the only module importing `vscode-languageclient/node` (loaded with dynamic `import()` on first start): `documentSelector` `[{ scheme: 'file', language: 'soase' }]`, the shared output channel for stderr and trace, `initializationOptions` as a function returning the current payload, an `errorHandler` that never restarts, `serverOptions` returning the spawned child, no `synchronize.configurationSection`, no middleware; apply the trace on start and expose `sendConfiguration`, `stop` and the `serverInfo.version` from the `initialize` result
     - _Requirements: 1.3, 1.4, 1.6, 5.1, 5.7, 6.3, 8.9, 8.10, 8.11, 8.12, 8.13, 8.14, 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 12.3, 12.4_
 
-  - [ ] 6.5 Implement configuration change synchronisation
+  - [x] 6.5 Implement configuration change synchronisation
     - Create `src/client/config-sync.ts` with `ConfigSync` (250 ms quiet timer, 500 ms maximum wait, payload rebuilt at send time, one `workspace/didChangeConfiguration` with `{ settings: payload }`, nothing sent while no Server runs, no restart)
     - Only changes affecting a key in `SERVER_SETTINGS` call `notifyChange`; `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server` do not; no watcher on `soase.json` or the user-level file
     - _Requirements: 6.3, 6.4, 6.9_
