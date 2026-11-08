@@ -340,6 +340,7 @@ Planned, not yet available:
   supported file types and exposes the `soase.json` settings in the editor.
 - Syntax coloring for the supported file types in code editors.
 - Research tier cost standardization
+- Review and revise code severities, numbering, and descriptions. 
 
 ## Game files
 
