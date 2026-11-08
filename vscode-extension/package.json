@@ -3,7 +3,8 @@
   "displayName": "SoaSE Validator",
   "description": "Validation, completion, hover help and go-to-definition for Sins of a Solar Empire mod files, powered by the soase-validator language server.",
   "publisher": "donos47",
-  "version": "0.1.0",
+  "icon": "images/icon.png",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
