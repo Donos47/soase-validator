@@ -1,0 +1,36 @@
+{
+  "name": "soase-validator",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.141.0",
+    "node": ">=24"
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "lint": "eslint .",
+    "test:unit": "mocha",
+    "test:host": "node ./out/test/host/run-tests.js",
+    "test": "npm run compile && npm run test:unit && npm run test:host",
+    "audit": "npm audit --audit-level=high",
+    "package": "node scripts/package.mjs"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.19.2",
+    "@types/vscode": "~1.140.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-n": "^18.5.0",
+    "fast-check": "^4.10.2",
+    "mocha": "^12.0.3",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1",
+    "vscode-languageserver": "^11.0.0"
+  }
+}

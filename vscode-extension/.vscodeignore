@@ -1,0 +1,9 @@
+src/**
+test/**
+scripts/**
+out/test/**
+**/*.map
+.vscode-test/**
+eslint.config.mjs
+tsconfig.json
+dist/**

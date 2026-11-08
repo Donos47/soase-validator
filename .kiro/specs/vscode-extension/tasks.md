@@ -15,8 +15,8 @@ Conventions for every task:
 
 ## Tasks
 
-- [ ] 1. Update the steering rules and repository ignore files
-  - [ ] 1.1 Update the steering rules for the extension tooling
+- [x] 1. Update the steering rules and repository ignore files
+  - [x] 1.1 Update the steering rules for the extension tooling
     - Update `.kiro/steering/structure.md` to describe the `vscode-extension/` tree (sources, tests, scripts, `out/` and `dist/` build output) and its tooling: Node 24, npm, TypeScript, mocha and fast-check
     - Update `.kiro/steering/tech.md` to state that Node.js 24 and npm are used for the VS Code extension in `vscode-extension/` only, and that the Engine, LSP server, MCP server and CLI stay Python; record the extension's TypeScript style (2-space indent, single quotes, semicolons, trailing commas, kebab-case file names) and the Node 24 decision
     - Reconcile every existing Python-only statement so that none contradicts the extension: scope the "Language and tooling" section (Python 3.14+, `uv`, `src/` layout, no global installs) and the "Code style (Python)", "Comments and docstrings" and "Testing" sections explicitly to the `soase_validator` package, `tests/` and `tools/`, and add the extension's own build, lint and test commands (`npm run compile`, `npm run lint`, `npm run test`) next to the Python commands; keep the "Run `ruff check`, `ruff format --check` and `pytest` before finishing a task" rule for Python work and add the npm equivalent for extension work
@@ -24,20 +24,20 @@ Conventions for every task:
     - Check the other steering files in `.kiro/steering/` for Python-only or "no Node" wording that would conflict, and reconcile it the same way
     - _Requirements: 16.3, 16.4_
 
-  - [ ] 1.2 Update ignore files and Python tool exclusions
+  - [x] 1.2 Update ignore files and Python tool exclusions
     - Add `node_modules/`, `vscode-extension/out/`, `vscode-extension/dist/`, `vscode-extension/.vscode-test/` and `*.vsix` to the repository `.gitignore`
     - Add `vscode-extension` to `[tool.ruff] extend-exclude` in `pyproject.toml` and confirm `uv run ruff check`, `uv run ruff format --check` and `uv run pytest` are unaffected; the Python package neither imports nor ships anything from `vscode-extension/`
     - _Requirements: 16.2, 16.5, 16.6_
 
-- [ ] 2. Scaffold the extension project
-  - [ ] 2.1 Create the npm project and base configuration
+- [x] 2. Scaffold the extension project
+  - [x] 2.1 Create the npm project and base configuration
     - Create `vscode-extension/package.json` with name, version, `engines` (`vscode` `^1.141.0`, `node` `>=24`), `main` `./out/extension.js`, MIT license, and the scripts `compile`, `lint`, `test:unit`, `test:host`, `test`, `audit` and `package` from the design
     - Add dev dependencies with the ranges in the design (`typescript` `~6.0.3`, `@types/vscode` `~1.140.0`, `@types/node` `^24.19.2`, `eslint`, `typescript-eslint`, `eslint-plugin-n`, `mocha`, `@types/mocha`, `fast-check`, `@vscode/vsce`, `@vscode/test-electron`, `vscode-languageserver`) and the runtime dependency `vscode-languageclient` `^11.0.0`. Re-check each version on npm first and record any deviation from the design table
     - Create `tsconfig.json` (`module` and `moduleResolution` `node16`, `target` `ES2022`, `strict`, `noUncheckedIndexedAccess`, `outDir` `out`, `rootDir` `.`, source maps, `lib` `ES2022`), `.node-version` containing `24`, `.mocharc.json` (specs under `out/test/unit` and `out/test/properties`), and `.vscodeignore` as listed in the design
     - Run `npm install` to create `package-lock.json`, then `npm audit`, and report findings of high or critical severity
     - _Requirements: 13.4, 13.7, 13.10, 13.11, 13.12, 16.1_
 
-  - [ ] 2.2 Configure ESLint and the embedded-Node guard
+  - [x] 2.2 Configure ESLint and the embedded-Node guard
     - Create `eslint.config.mjs` (flat config, `typescript-eslint` recommended type-checked rules) covering `src`, `test` and `scripts`
     - In `src/`: forbid `no-console`, `process.stdout` and `process.stderr` writes, network modules (`http`, `https`, `net`, `tls`, `dgram` and their `node:` forms), every `node:` module except `child_process`, `fs`, `path`, `os` and `process`, `child_process` outside `src/client/spawn-server.ts` and the injected exec adapter, and the `vscode` module inside `src/launcher`, `src/settings` (except `vscode-config-reader.ts`), `src/lifecycle` and `src/format`
     - Enable `eslint-plugin-n` rules `n/no-unsupported-features/node-builtins`, `es-builtins` and `es-syntax` for `src/` using the version constant from `scripts/min-embedded-node.mjs` (`MIN_EMBEDDED_NODE = '24.21.0'`, expressed as `>=24.21.0`)
