@@ -11,6 +11,8 @@ Conventions for every task:
 - No machine-specific absolute paths in source, tests, fixtures, manifest or docs. Use placeholders such as `~/path/to/sins-rebellion-reference`.
 - Check current dependency versions on npm before adding a dependency, use the ranges in the design, and run `npm audit` after adding or updating dependencies. Report high and critical findings.
 - The extension contains no validation, completion, hover or reference logic. All of that stays in the Python Engine.
+- Interface names, signatures, exported members and file paths follow `design.md` exactly. A task that needs to deviate stops, reports the deviation, and updates `design.md` in the same change rather than drifting. Sub-agents must read the matching `design.md` section before coding (for the controller and adapters: "Controller ports", "Language client wiring", "Activation and trust" and "Status item and output channel").
+- While no test files exist, task verification skips the mocha step and relies on `npm run compile`, `npm run lint` and throwaway scripts in the system temp folder, which are deleted afterwards.
 - Task statuses in this file are changed only by the orchestrator.
 
 ## Tasks
@@ -44,35 +46,35 @@ Conventions for every task:
     - Verify the config loads with a lint run, and leave no temporary files behind
     - _Requirements: 10.1, 10.2, 10.3, 15.10, 15.11, 16.1_
 
-- [ ] 3. Implement the pure core modules
-  - [ ] 3.1 Implement path expansion and the `uvx` resolver
+- [x] 3. Implement the pure core modules
+  - [x] 3.1 Implement path expansion and the `uvx` resolver
     - Create `src/launcher/expand-path.ts`: expand a leading `~` and environment variable references (`%VAR%` on Windows, `$VAR` and `${VAR}` elsewhere); a string with neither is returned unchanged
     - Create `src/launcher/resolve-uvx.ts` with `Platform`, `ResolverPorts`, `UvxResolution` and `resolveUvx` exactly as in the design: `uvPath` only when non-blank (no fallback on failure), else `PATH` entries in order, then the installer bin directory, then `$CARGO_HOME/bin` (default `<home>/.cargo/bin`); executable name `uvx.exe` on `win32`, otherwise `uvx`; `searched` lists probed candidates in probe order
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 4.2_
 
-  - [ ] 3.3 Implement the Server Command builder
+  - [x] 3.3 Implement the Server Command builder
     - Create `src/launcher/server-command.ts` with `DEFAULT_SERVER_SOURCE`, `ServerCommand` and `buildServerCommand`: arguments `['--from', source, 'soase-validator-lsp']`, source is the trimmed `serverSource` when non-blank and the default otherwise and is passed unchanged, `cwd` is the first workspace folder or the home directory
     - _Requirements: 5.2, 5.3, 5.4, 5.12_
 
-  - [ ] 3.5 Implement the `uvx` version probe
+  - [x] 3.5 Implement the `uvx` version probe
     - Create `src/launcher/uv-version.ts` with `probeUvVersion(uvxPath, exec, timeoutMs = 10_000)` over an injected `exec` port; return `{ available: true, text }` or `{ available: false, reason }` for spawn failure, non-zero exit or timeout; run `uvx --version`
     - _Requirements: 3.6, 3.8_
 
-  - [ ] 3.6 Implement the Server Settings schema and payload builder
+  - [x] 3.6 Implement the Server Settings schema and payload builder
     - Create `src/settings/server-settings-schema.ts` with `SettingType`, `ServerSettingDef` and the `SERVER_SETTINGS` list of Requirement 6.2 (types as in the design)
     - Create `src/settings/payload.ts` with `ScopedValue`, `ConfigReader`, `PayloadResult` and `buildPayload`: most specific scope wins without merging, unset keys omitted, empty values count as set, shallow type check only (never judges meaning), wrong-typed keys omitted and listed in `invalid`, dotted keys nested, strings copied character for character
     - _Requirements: 6.1, 6.2, 6.3, 6.5, 6.6, 6.8, 11.5_
 
-  - [ ] 3.8 Implement Extension setting normalisers
+  - [x] 3.8 Implement Extension setting normalisers
     - Create `src/settings/extension-settings.ts` with `normaliseTimeout` (finite number of at least 10 as is; below 10 gives 10 with a warning; anything else gives 180 with a warning), `normaliseTrace` (default `off`) and `readString` (non-strings give an empty string)
     - _Requirements: 5.8, 8.9, 11.8_
 
-  - [ ] 3.10 Implement the restart policy and lifecycle reducer
+  - [x] 3.10 Implement the restart policy and lifecycle reducer
     - Create `src/lifecycle/restart-policy.ts` with `RestartPolicy`, `DEFAULT_RESTART_POLICY` (3 restarts per 300000 ms) and `decideRestart` returning `restart` and the pruned exit list
     - Create `src/lifecycle/lifecycle.ts` with `ServerState`, `Lifecycle`, `LifecycleEvent`, `LifecycleEffect` and the pure `step` reducer: auto-start only in `stopped` with `userStopped` false and a trusted workspace, no auto-start from `error`, `Spawn` only when not `live`, `Kill` on every transition into `error` or `stopped` while `live`, unexpected exit after `running` consults the policy, exits before `running` go to `error` without restart, requested exits never count toward the crash window, `RestartRequested` clears `userStopped` and the crash history, at most one error `Notify` per failure event
     - _Requirements: 2.3, 2.4, 2.6, 2.7, 2.9, 5.9, 5.13, 7.4, 7.9, 7.10, 11.2, 11.3, 11.4_
 
-  - [ ] 3.13 Implement the formatters
+  - [x] 3.13 Implement the formatters
     - Create `src/format/log-line.ts` (`<ISO-8601 timestamp> [<level>] <message>`, levels `error`, `warn`, `info`, `debug`), `src/format/line-splitter.ts` (chunk to lines across arbitrary and multi-byte boundaries, plus a tail buffer holding the last 20 lines) and `src/format/status-text.ts` (`StatusSnapshot`, `formatStatus`, status item labels, `extractServerVersion`)
     - `formatStatus` renders `not available` for missing `uvxPath` and `command`; the Server version renders as given, `unknown` when running without `serverInfo.version`, and `not available` when the Server is not running
     - _Requirements: 5.5, 5.9, 7.6, 7.7, 8.2, 8.8, 12.3, 12.4_
@@ -125,14 +127,17 @@ Conventions for every task:
     - One file each: `p07-stderr-line-handling.test.ts`, `p09-status-text.test.ts`, `p10-log-line-format.test.ts` under `test/properties/`, at least 100 runs each
     - _Requirements: 5.5, 5.9, 7.6, 7.7, 8.8, 12.3, 12.4_
 
-- [ ] 4. Checkpoint - Core modules
+- [x] 4. Checkpoint - Core modules
   - Run `npm run compile`, `npm run lint` and `npm run test:unit` in `vscode-extension/`. Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Implement the server controller
-  - [ ] 5.1 Implement the controller interpreter
+- [x] 5. Implement the server controller
+  - [x] 5.1 Implement the controller interpreter
     - Create `src/lifecycle/server-controller.ts` with `ControllerPorts`, `UiPort` and the controller: feed events through `step`, run effects through ports, tag processes, timers and clients with `generation` and drop late events from old generations
-    - Start sequence: resolve `uvx`; on failure log each searched location, set `error`, show one notification with "Open install instructions" and "Set uvPath", do not spawn; on success log the path, run the version probe in the background without delaying the start, build the command, arm the startup timer, call `startClient`, set `running` after `initialize`
-    - Timeout, spawn failure, early exit and unexpected exit paths log and notify as in the design (stderr tail of 20 lines in the log, first 20 lines in the notification, "Show output" and "Restart server" actions); restart and stop use graceful stop with a 5 second forced kill and log the forced termination
+    - Start sequence follows the reducer as built: the reducer emits `Resolve`; the controller runs the resolver and dispatches `Resolved` or `ResolveFailed`. On `ResolveFailed` log each searched location, show one notification with "Open install instructions" and "Set uvPath", do not spawn. The `Spawn` effect (emitted only after `Resolved`) means: log the path, run the version probe in the background without delaying the start, build the command, arm the startup timer, call `startClient`; dispatch `Initialized` after the `initialize` response
+    - `Notify` effects carry only a kind and `Log` effects are fixed messages, so the controller supplies the details: the searched locations for `resolve-failed`, the exit code and last-20 stderr lines log entry for unexpected exits (Requirement 5.9), the first-20 stderr lines in the notification for exits before `initialize` (Requirement 12.2), and the configured seconds in the startup-timeout log entry (Requirement 11.1); use `StderrCapture` (`HeadBuffer` plus `TailBuffer`) for the stderr lines
+    - Automatic restart: the reducer goes `running -> starting` directly (no `error` in between); the user-visible notification for Requirement 5.9 appears only on `restarts-stopped`
+    - Restart ordering: `RestartRequested` emits `Kill` and `Resolve` together with the new generation already set; complete the graceful stop of the old process (5 second forced kill, log the forced termination) before running the resolver for the new generation, and drop late events from the old generation
+    - Use the implemented names `UvVersionProbe`, `ExecPort`, `execFileAdapter`, `TraceLevel`, `ServerState` (single state type, also used by `StatusSnapshot`) and `formatCommand`
     - Expose `dispatch`, a status snapshot (state, `uvxPath`, command, server version) and `dispose` that stops the process within 5 seconds
     - _Requirements: 2.4, 2.9, 3.6, 3.8, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 5.7, 5.8, 5.9, 5.10, 5.11, 5.13, 7.2, 7.3, 7.4, 7.8, 7.9, 7.10, 10.6, 11.1, 11.2, 11.3, 11.4, 11.7, 12.2, 12.5_
 
@@ -155,7 +160,7 @@ Conventions for every task:
     - _Requirements: 4.1, 4.4, 4.5, 4.7, 5.9, 5.10, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 11.5, 15.11_
 
   - [ ] 6.3 Implement the server process spawner
-    - Create `src/client/spawn-server.ts`, the only module importing `child_process` for the Server: spawn with `shell: false`, an argument array and piped stdio (`detached: true` on POSIX), expose `child`, `exited` and `kill()` (process tree via `taskkill /PID <pid> /T /F` on Windows, group signal on POSIX), attach the stderr listener that feeds the line splitter and the output channel, write nothing to stdin
+    - Create `src/client/spawn-server.ts`, the only module importing `child_process` for the Server: spawn with `shell: false`, an argument array and piped stdio (`detached: true` on POSIX), expose `child`, `exited` and `kill()` (process tree via `taskkill /PID <pid> /T /F` on Windows, group signal on POSIX), attach the stderr listener that feeds a `LineSplitter` and passes each line to the `stderrLines` callback only (the language client writes stderr to the Output Channel), write nothing to stdin; export `ServerProcess`, `TestOverride` and `spawnServer` as specified in design.md
     - _Requirements: 5.1, 5.4, 5.5, 5.6, 7.3, 10.5_
 
   - [ ] 6.4 Implement trace mapping and the language client factory
@@ -176,7 +181,7 @@ Conventions for every task:
 
 - [ ] 7. Wire the extension entry point
   - [ ] 7.1 Implement activation, commands and `extension.ts`
-    - Create `src/activation.ts`: seed trust from `workspace.isTrusted`, dispatch `AutoStart` without awaiting, handle `onDidGrantWorkspaceTrust` (`TrustChanged` then `AutoStart`) and `onDidOpenTextDocument` for `soase` `file` documents, send `ConfigSync.notifyChange` from `onDidChangeConfiguration`, apply trace changes without restart
+    - Create `src/activation.ts`: seed trust from `workspace.isTrusted`, dispatch `AutoStart` without awaiting, handle `onDidGrantWorkspaceTrust` (dispatch `TrustChanged`, which only records the trust flag, and then dispatch `AutoStart` so the Server starts without a reload, Requirement 2.7) and `onDidOpenTextDocument` for `soase` `file` documents, send `ConfigSync.notifyChange` from `onDidChangeConfiguration`, apply trace changes without restart
     - Create `src/commands.ts` registering `soase-validator.restartServer`, `soase-validator.stopServer`, `soase-validator.showOutput` and `soase-validator.showStatus` (`formatStatus` in an information message)
     - Create `src/extension.ts` with `activate` and `deactivate`: whole of `activate` in a try/catch that logs, shows one error notification and returns normally; completes without waiting for the Server; returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`; `deactivate` stops the Server within 5 seconds and disposes the channel and status item
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.6, 2.7, 2.8, 7.1, 7.2, 7.5, 7.6, 7.8, 7.9, 7.10, 7.11, 11.6, 11.7, 15.11_

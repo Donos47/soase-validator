@@ -1,4 +1,4 @@
-﻿# Design Document
+# Design Document
 
 ## Overview
 
@@ -43,7 +43,7 @@ Read from the published package source (`lib/node/main.js`, `lib/common/configur
 6. **Settings scope.** All Server Settings and Extension settings use `scope: "window"`, so one value set per window feeds the one Server of the window (Requirement 5.14). The reader still inspects the workspace-folder value so a folder value is not silently lost if VS Code ever supplies one.
 7. **Most-specific scope, unmerged.** For a set key the payload value is the value at the most specific scope that sets it (workspace folder, then workspace, then user). Object and array values are not merged across scopes. This keeps "values unchanged" (Requirement 6.8) and "no precedence logic" (Requirement 6.6).
 8. **Free-form settings schema.** The contributed schema declares types only, with no `enum` for `gameVersion` or `manifest.unreferencedSeverity`, because the Extension must not judge meaning (Requirement 6.6). Descriptions name the accepted values and link to the project README.
-9. **Test-only API.** `activate` returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`, so host tests can start the stub server without a fake `uvx` binary. The override does not exist in production modes.
+9. **Test-only API.** `activate` returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`, so host tests can start the stub server without a fake `uvx` binary (`ExtensionTestApi.setTestOverride`, which replaces both resolution and spawn). The override does not exist in production modes.
 10. **Manual restart clears the crash window (decided).** A user-initiated start (the `soase-validator.restartServer` command and the "Restart server" notification action) clears the crash-loop counter, because the user has taken action. Requirement 11 is silent on this; the user confirmed the behaviour.
 11. **No classification of `uvx` errors (decided).** The Extension does not recognise causes such as a missing Python interpreter or an unreachable network. Any exit before `initialize` takes the generic path: the first 20 stderr lines in the notification, the full output in the channel, no automatic retry (Requirements 10.6, 12.2). A classifier can be added later as a pure function over stderr text once sample `uvx` outputs are available; it would only change the notification text and not the lifecycle.
 12. **Node 24 for build tooling and runtime (decided).** The build tooling (npm scripts, tests, `vsce`) runs on Node 24 and `@types/node` is the 24 line. The Extension itself runs in the Node embedded in VS Code's Electron; VS Code 1.141 embeds Node 24.21.0 (Electron 43.7.7), so the build and runtime Node majors match. A lint guard keeps `src/` to APIs available in the embedded runtime. See "Node versions" under Build and packaging.
@@ -104,12 +104,14 @@ stateDiagram-v2
     error --> stopped: StopRequested (userStopped = true)
 ```
 
-State is `stopped`, `starting`, `running` or `error`. Two further fields travel with it: `userStopped` (set by `stopServer`, cleared by `restartServer`) and `live` (a process exists). `live` is never true in `stopped`, and a `Spawn` effect is only emitted when `live` is false.
+State is `stopped`, `starting`, `running` or `error`. Two further fields travel with it: `userStopped` (set by `stopServer`, cleared by `restartServer`) and `live` (a process exists). `live` is never true in `stopped`. The reducer never emits `Spawn` directly from a start trigger: a start trigger (`AutoStart`, or an automatic restart permitted by the policy) emits `Resolve`, and `Spawn` is emitted only on the later `Resolved` event, and only when `live` is false. `ServerState` from `lifecycle.ts` is the single state type; `StatusSnapshot`, the status item and the controller all use it.
 
 Rules the reducer implements:
 
 - Auto-start triggers (activation, trust granted, SoaSE document opened) are honoured only in `stopped` with `userStopped = false` and a trusted workspace (Requirements 2.3, 2.4, 2.6, 2.7, 7.9). They are ignored in `error`, so a failed start is not retried silently (Requirement 2.9).
-- `ExitedUnexpectedly` after `running` consults the restart policy; any exit before `running` goes to `error` without restart (Requirement 5.9).
+- `ExitedUnexpectedly` after `running` consults the restart policy; any exit before `running` goes to `error` without restart (Requirement 5.9). When the policy allows a restart, the reducer goes `running -> starting` directly, with no `error` state in between, and emits `Resolve` (then `Spawn` after `Resolved`). The user-visible notification for Requirement 5.9 appears only when restarts stop (`Notify` kind `restarts-stopped`).
+- `RestartRequested` emits `Kill` and `Resolve` together, with the new generation already set, clears `userStopped` and the crash history.
+- `TrustChanged` only records the trust flag. The activation code dispatches `AutoStart` after `TrustChanged`, which starts the Server without a reload (Requirement 2.7).
 - Every transition into `error` or `stopped` carries a `Kill` effect when `live` is true, so no process survives an error (Requirement 7.4).
 
 ## Components and Interfaces
@@ -142,6 +144,7 @@ vscode-extension/
     lifecycle/
       lifecycle.ts           # state, events, effects, reducer
       restart-policy.ts      # rolling-window policy
+      ports.ts               # port interfaces shared by controller and adapters (no vscode import)
       server-controller.ts   # interpreter with ports
     client/
       client-factory.ts      # vscode-languageclient wiring
@@ -151,9 +154,10 @@ vscode-extension/
     format/
       log-line.ts            # timestamp and level
       status-text.ts         # showStatus text and status item labels
-      line-splitter.ts       # chunk -> lines, tail buffer
+      line-splitter.ts       # chunk -> lines, HeadBuffer, TailBuffer, StderrCapture
     ui/
       status-item.ts, output-log.ts, notifications.ts
+      ui-port.ts             # UiPort implementation over the three modules above
   test/
     unit/                    # plain Node, no vscode import
     properties/              # fast-check, one file per property
@@ -201,9 +205,59 @@ Algorithm:
 3. Otherwise search, in order: each directory of `PATH` (split on `;` on Windows, `:` elsewhere; the variable name is `Path` or `PATH` according to case-insensitive match on Windows); then `<home>/.local/bin` (`%USERPROFILE%\.local\bin` on Windows); then `$CARGO_HOME/bin`, with `CARGO_HOME` defaulting to `<home>/.cargo` when unset or empty (Requirements 3.2, 3.3). The first existing candidate wins.
 4. Every probed candidate path is appended to `searched`, in probe order, which the missing-`uv` path writes one per line to the output channel (Requirement 4.2).
 
+`expand-path.ts` exports the following, implemented as written:
+
+```ts
+/** Environment map as the launcher sees it. */
+export type EnvMap = Readonly<Record<string, string | undefined>>;
+
+/** Looks up an environment variable; case-insensitive when `caseInsensitive` is true (Windows). */
+export function lookupEnv(env: EnvMap, name: string, caseInsensitive: boolean): string | undefined;
+
+/** Expands a leading `~` and `%VAR%` (Windows) or `$VAR` and `${VAR}` (elsewhere); unset references stay unchanged. */
+export function expandPath(input: string, env: EnvMap, homeDir: string, isWindows: boolean): string;
+```
+
+`expandPath` expands once (values that contain references are not expanded again), and `PATH`, `Path` and `CARGO_HOME` are looked up with `lookupEnv`. Empty `PATH` entries are dropped and Windows entries wrapped in double quotes are unquoted.
+
 A `.cmd` or `.bat` target is not an executable for this purpose. Node refuses to spawn those without a shell on current releases, and the Extension never uses a shell (Requirement 5.4). The README says `uvPath` must name `uvx` or `uvx.exe` itself.
 
-`uv-version.ts` exposes `probeUvVersion(uvxPath, exec, timeoutMs = 10_000)`, where `exec` is an injected `(file, args, timeoutMs) => Promise<{ code: number; stdout: string }>` port. It runs `uvx --version` and returns `{ available: true, text }` or `{ available: false, reason }` for a spawn failure, a non-zero exit or a timeout. The controller logs the result and keeps `uvx` resolved either way (Requirements 3.6, 3.8). The probe runs in the background after resolution and never delays the start.
+`uv-version.ts` exports, as implemented:
+
+```ts
+/** Default time allowed for `uvx --version` before the probe gives up. */
+export const DEFAULT_PROBE_TIMEOUT_MS = 10_000;
+
+/** Outcome of a finished process: exit code and captured standard output. */
+export interface ExecResult {
+  readonly code: number;
+  readonly stdout: string;
+}
+
+/** Runs a file and resolves on exit with any code; rejects on spawn failure or timeout. */
+export type ExecPort = (
+  file: string,
+  args: readonly string[],
+  timeoutMs: number,
+) => Promise<ExecResult>;
+
+/** Result of probing `uvx --version`. */
+export type UvVersionProbe =
+  | { readonly available: true; readonly text: string }
+  | { readonly available: false; readonly reason: string };
+
+/** Production ExecPort over `child_process.execFile`; no shell. */
+export const execFileAdapter: ExecPort;
+
+/** Runs `uvx --version` through the port; never rejects. */
+export function probeUvVersion(
+  uvxPath: string,
+  exec: ExecPort,
+  timeoutMs?: number,
+): Promise<UvVersionProbe>;
+```
+
+`probeUvVersion` returns `{ available: true, text }` (trimmed standard output) or `{ available: false, reason }` for a spawn failure, a non-zero exit or a timeout; it also guards against a port that never settles. `uv-version.ts` is therefore the second module that imports `child_process` (through `execFileAdapter`). The controller logs the result and keeps `uvx` resolved either way (Requirements 3.6, 3.8). The probe runs in the background after resolution and never delays the start.
 
 `server-command.ts`:
 
@@ -234,24 +288,48 @@ export function buildServerCommand(
 ): ServerCommand;
 ```
 
+The same module exports `formatCommand`, which builds the display string used by the status text and the log (not meant to be run in a shell):
+
+```ts
+/** Joins the executable and arguments with single spaces, wrapping elements that contain whitespace in double quotes. */
+export function formatCommand(command: ServerCommand): string;
+```
+
 Arguments are exactly `['--from', source, 'soase-validator-lsp']`, where `source` is the trimmed `serverSource` when it has any non-whitespace character and `DEFAULT_SERVER_SOURCE` otherwise (Requirements 5.2, 5.3). `cwd` is the first workspace folder or the home directory (Requirement 5.12). The source string is passed unchanged (no expansion), because `uvx` interprets it and an argument array is used (Requirement 5.4). No tag or commit is pinned (Requirement 5.3).
 
 `spawn-server.ts` is the only module that imports `child_process`:
 
 ```ts
-/** A running Server process as the controller sees it. */
-export interface ServerProcess {
-  readonly pid: number | undefined;
+/** A spawned Server process; extends the vscode-free handle the controller sees. */
+export interface ServerProcess extends ServerProcessHandle {
+  /** The child whose stdin and stdout the language client connects to. */
   readonly child: ChildProcess;
-  /** Resolves with the exit code and signal after the process ends. */
-  readonly exited: Promise<{ code: number | null; signal: string | null }>;
-  /** Sends SIGTERM, or kills the process tree on Windows. */
-  kill(): void;
 }
 
-/** Spawns the Server Command with shell disabled and all three stdio streams piped. */
-export function spawnServer(command: ServerCommand, env: NodeJS.ProcessEnv): ServerProcess;
+/** Replaces both uvx resolution and process spawn; honoured only in Test mode. */
+export interface TestOverride {
+  /** Path reported as the resolved uvx, for example `stub`. */
+  readonly uvxPath: string;
+  /** Spawns the stub Server instead of the real Server Command. */
+  readonly spawn: (command: ServerCommand, env: NodeJS.ProcessEnv) => ServerProcess;
+}
+
+/**
+ * Spawns the Server Command with shell disabled and all three stdio streams piped.
+ *
+ * `exited` resolves once when the process ends. `stderrLines` receives each
+ * complete stderr line (through a LineSplitter, flushed at exit). `spawned`
+ * resolves on the child's `spawn` event and rejects with the operating system
+ * error when the child cannot be spawned; in that case `exited` never resolves.
+ */
+export function spawnServer(
+  command: ServerCommand,
+  env: NodeJS.ProcessEnv,
+  stderrLines: (line: string) => void,
+): ServerProcess & { readonly spawned: Promise<void> };
 ```
+
+`ServerProcessHandle` and `ServerExit` are defined in `lifecycle/ports.ts` (see "Controller ports"), so the controller never imports `child_process`. The stderr listener in `spawnServer` feeds only `stderrLines` (the controller's `StderrCapture`); it does not write to the Output Channel, because the language client already pipes the stderr of a `ChildProcess` returned from `serverOptions` to its output channel (verified above), and writing in both places would duplicate every line (Requirement 5.5).
 
 Stopping first uses the LSP `shutdown` and `exit` through `client.stop()`. If the process has not exited 5 seconds after the stop request, `kill()` runs and the forced termination is logged (Requirement 7.3). `kill()` terminates the process tree: `taskkill /PID <pid> /T /F` on Windows, and on POSIX the child is spawned with `detached: true` and the group is signalled with `process.kill(-pid, 'SIGTERM')`. `uvx` runs the Server as a child process, so killing only the parent could leave the Python interpreter running. This tree-kill behaviour is not verified here; see Open Items.
 
@@ -277,7 +355,6 @@ export const SERVER_SETTINGS: readonly ServerSettingDef[] = [
   { key: 'referenceRoots', type: 'object<string,string>' },
   { key: 'modRoots', type: 'string[]' },
   { key: 'layers', type: 'string[]' },
-  { key: 'aliases', type: 'object<string,string>' },
   { key: 'language', type: 'string' },
   { key: 'disabledCodes', type: 'string[]' },
   { key: 'numeric.integerStrict', type: 'boolean' },
@@ -290,7 +367,7 @@ export const SERVER_SETTINGS: readonly ServerSettingDef[] = [
 ];
 ```
 
-The types match the README settings table and the Engine's `_lookup` consumers (`referenceRoots` and `aliases` are objects from name to path text; `modRoots`, `layers`, `disabledCodes` and the two `exempt*` keys are lists of strings).
+The types match the README settings table and the Engine's `_lookup` consumers (`referenceRoots` is an object from name to path text; `modRoots`, `layers`, `disabledCodes` and the two `exempt*` keys are lists of strings).
 
 `payload.ts`:
 
@@ -329,13 +406,51 @@ For each key in `SERVER_SETTINGS`:
 
 The caller de-duplicates warnings: `output-log.ts` keeps a set of `key + JSON.stringify(value)` pairs and writes one `warn` line per new pair.
 
-`vscode-config-reader.ts` implements `ConfigReader` with `workspace.getConfiguration('soase-validator').inspect(key)` and passes only the three explicit scope members. It ignores `defaultValue`, which is how an unset key stays unset.
+The key `aliases` is not a Server Setting (Requirement 6.2): the Server reads Layer aliases only from the user-level configuration file. `payload.ts` writes each value with own-property definition, so key names such as `__proto__` cannot reach the prototype chain.
 
-`extension-settings.ts` has pure normalisers:
+`vscode-config-reader.ts` is the only file in `src/settings` that imports `vscode`:
 
-- `normaliseTimeout(raw: unknown): { seconds: number; warning?: string }`: a finite number of at least 10 gives itself; a number below 10 gives 10 with a warning; anything else, including `NaN`, gives 180 with a warning (Requirements 5.8, 11.8).
-- `normaliseTrace(raw: unknown): 'off' | 'messages' | 'verbose'`, defaulting to `off`.
-- `readString(raw: unknown): string`, returning `''` for non-strings.
+```ts
+/** Extension-only settings after normalisation. */
+export interface ExtensionSettings {
+  readonly uvPath: string;
+  readonly serverSource: string;
+  readonly timeoutSeconds: number;
+  readonly trace: TraceLevel;
+  /** Warnings from normalisation, for the caller to log once each. */
+  readonly warnings: readonly string[];
+}
+
+/** ConfigReader over `workspace.getConfiguration('soase-validator').inspect(key)`; passes only the three scope members and ignores `defaultValue`, which is how an unset key stays unset. */
+export function createConfigReader(): ConfigReader;
+
+/** Reads and normalises uvPath, serverSource, startupTimeoutSeconds and trace.server. */
+export function readExtensionSettings(): ExtensionSettings;
+```
+
+`extension-settings.ts` has pure normalisers and constants, as implemented:
+
+```ts
+/** Startup timeout in seconds used when the configured value is not a finite number. */
+export const DEFAULT_STARTUP_TIMEOUT_SECONDS = 180;
+/** Smallest startup timeout in seconds the Extension accepts. */
+export const MIN_STARTUP_TIMEOUT_SECONDS = 10;
+/** Trace level of the language client. */
+export type TraceLevel = 'off' | 'messages' | 'verbose';
+/** Result of normaliseTimeout. */
+export interface NormalisedTimeout {
+  readonly seconds: number;
+  /** Text for the Output Channel when the configured value was replaced. */
+  readonly warning?: string;
+}
+export function normaliseTimeout(raw: unknown): NormalisedTimeout;
+export function normaliseTrace(raw: unknown): TraceLevel;
+export function readString(raw: unknown): string;
+```
+
+- `normaliseTimeout`: a finite number of at least 10 gives itself; a finite number below 10 gives 10 with a warning; anything else, including `NaN` and infinities, gives 180 with a warning (Requirements 5.8, 11.8).
+- `normaliseTrace` defaults to `off`.
+- `readString` returns `''` for non-strings.
 
 ### Lifecycle
 
@@ -369,21 +484,40 @@ export type LifecycleEvent =
   | { readonly type: 'Exited'; readonly at: number; readonly requested: boolean }
   | { readonly type: 'RestartTimerFired' };
 
-/** Effects the controller executes. */
+/** Kinds of error notification the controller can show. */
+export type NotifyKind =
+  | 'resolve-failed'
+  | 'spawn-failed'
+  | 'timeout'
+  | 'exited'
+  | 'restarts-stopped';
+
+/** Effects the controller executes, in order. */
 export type LifecycleEffect =
   | { readonly type: 'Resolve' }
   | { readonly type: 'Spawn' }
   | { readonly type: 'Kill' }
-  | { readonly type: 'Notify'; readonly kind: 'resolve-failed' | 'spawn-failed' | 'timeout' | 'exited' | 'restarts-stopped' }
+  | { readonly type: 'Notify'; readonly kind: NotifyKind }
   | { readonly type: 'Log'; readonly level: 'info' | 'warn' | 'error'; readonly message: string };
+
+/** Result of one reducer step. */
+export interface StepResult {
+  readonly next: Lifecycle;
+  readonly effects: readonly LifecycleEffect[];
+}
+
+/** Builds the `stopped` state of a window that has not started the Server. */
+export function initialLifecycle(trusted: boolean): Lifecycle;
 
 /** Reducer: pure, total over all state and event combinations. */
 export function step(
   current: Lifecycle,
   event: LifecycleEvent,
   policy: RestartPolicy,
-): { readonly next: Lifecycle; readonly effects: readonly LifecycleEffect[] };
+): StepResult;
 ```
+
+Behaviour of the reducer as built, beyond the rules listed under the state diagram: `Spawn` is emitted only by `Resolved`, which sets `live` to true; `Resolve` is emitted by `AutoStart`, by an automatic restart and by `RestartRequested`. `RestartRequested` in an untrusted workspace emits `Kill` (when live) and a `warn` `Log`, clears `userStopped` and the crash history, and ends in `stopped` so that the grant of trust starts the Server (Requirement 2.6). `RestartTimerFired` is a no-op, because automatic restarts start at once. A `ResolveFailed` or `Resolved` event in any state other than `starting` with `live` false is ignored. `SpawnFailed` in `starting` goes to `error` with a `spawn-failed` notification and a `Kill` when `live`. `Exited` while not `live` is ignored; an `Exited` with `requested: true` while still `live` goes to `error` without a notification.
 
 `generation` increments on each start and tags the process, timers and client of that start. A late `Exited` or `Initialized` from an old generation is dropped by the controller before reaching the reducer, which prevents a killed process from re-triggering a restart (Requirement 5.13). An `Exited` with `requested: true` (the user stopped or restarted it) never counts toward the crash window.
 
@@ -399,6 +533,14 @@ export interface RestartPolicy {
 /** Defaults from Requirement 11: three restarts in five minutes. */
 export const DEFAULT_RESTART_POLICY: RestartPolicy = { maxRestarts: 3, windowMs: 300_000 };
 
+/** Outcome of decideRestart. */
+export interface RestartDecision {
+  /** True when the exit is followed by an automatic restart. */
+  readonly restart: boolean;
+  /** Exits still inside the window, with the current exit appended. */
+  readonly exits: readonly number[];
+}
+
 /**
  * Decides whether an unexpected exit is followed by an automatic restart.
  *
@@ -411,36 +553,215 @@ export function decideRestart(
   previousExits: readonly number[],
   now: number,
   policy: RestartPolicy,
-): { readonly restart: boolean; readonly exits: readonly number[] };
+): RestartDecision;
 ```
 
 An earlier exit lies within the window when `now - t < windowMs`. The first, second and third unexpected exits in a window restart; the fourth does not (Requirements 11.3, 11.4). `exits` is the pruned list with `now` appended, so the reducer state stays bounded.
 
-`server-controller.ts` is the interpreter. Its ports:
+#### Controller ports
+
+`lifecycle/ports.ts` holds every interface the controller shares with the adapters. It imports no `vscode`, `child_process` or `vscode-languageclient` symbol, only types from the core modules, so the controller and its unit tests run in plain Node. The adapters in `src/ui` and `src/client` implement these interfaces.
 
 ```ts
+import type { UvxResolution } from '../launcher/resolve-uvx';
+import type { ServerCommand } from '../launcher/server-command';
+import type { UvVersionProbe } from '../launcher/uv-version';
+import type { LogLevel } from '../format/log-line';
+import type { TraceLevel } from '../settings/extension-settings';
+import type { NotifyKind, ServerState } from './lifecycle';
+
+/** A timer that can be cancelled. */
+export interface TimerHandle {
+  /** Cancels the timer; harmless after it has fired. */
+  cancel(): void;
+}
+
+/** How a Server process ended. */
+export interface ServerExit {
+  /** Exit code, or null when the process was ended by a signal. */
+  readonly code: number | null;
+  /** Signal name, or null when the process exited by itself. */
+  readonly signal: string | null;
+}
+
+/** The part of a spawned Server process the controller uses. */
+export interface ServerProcessHandle {
+  /** Operating system process id, undefined until spawned. */
+  readonly pid: number | undefined;
+  /** Resolves once, with the exit, when the process has ended. */
+  readonly exited: Promise<ServerExit>;
+  /** Terminates the process tree immediately; used for the forced kill. */
+  kill(): void;
+}
+
+/** Buttons an error notification can offer. */
+export type NotifyAction =
+  | 'open-install-docs'
+  | 'set-uv-path'
+  | 'show-output'
+  | 'restart-server';
+
+/** Text shown by an error notification. */
+export interface NotifyDetails {
+  /** First line of the notification. */
+  readonly message: string;
+  /** Extra lines, for example the first 20 stderr lines; empty when none. */
+  readonly lines: readonly string[];
+}
+
+/** Everything the controller needs from the user interface. */
+export interface UiPort {
+  /** Updates the Status Item synchronously. */
+  setState(state: ServerState): void;
+  /** Writes one Extension line to the Output Channel. */
+  log(level: LogLevel, message: string): void;
+  /**
+   * Shows one error notification with the given buttons.
+   *
+   * @returns The chosen action, or undefined when the user dismisses it.
+   */
+  notifyError(
+    kind: NotifyKind,
+    details: NotifyDetails,
+    actions: readonly NotifyAction[],
+  ): Promise<NotifyAction | undefined>;
+  /** Opens the uv installation documentation in the default browser. */
+  openInstallDocs(): Promise<void>;
+  /** Opens the settings editor filtered to `soase-validator.uvPath`. */
+  openUvPathSetting(): Promise<void>;
+  /** Reveals the Output Channel. */
+  showOutput(): void;
+}
+
+/** Callbacks the client factory invokes for one start. All are bound to one generation by the controller. */
+export interface ClientHooks {
+  /** Called once with the process as soon as it has been spawned, before `initialize` completes. */
+  onSpawned(process: ServerProcessHandle): void;
+  /** Called for each complete line the process writes to standard error. */
+  onStderrLine(line: string): void;
+  /** Called once when the process has ended, for any reason. */
+  onExit(exit: ServerExit): void;
+}
+
+/** A language client whose `initialize` request has completed. */
+export interface StartedClient {
+  /** The process the client talks to. */
+  readonly process: ServerProcessHandle;
+  /** `serverInfo.version` from the `initialize` result; undefined when absent. */
+  readonly serverVersion: string | undefined;
+  /** Sends LSP `shutdown` and `exit`; resolves when the client has stopped. Never kills the process. */
+  stop(): Promise<void>;
+  /** Sends one `workspace/didChangeConfiguration` with the payload built at call time. */
+  sendConfiguration(): void;
+  /** Applies a trace level without restarting. */
+  setTrace(level: TraceLevel): void;
+}
+
+/** Extension-only settings the controller reads at each start. */
+export interface ControllerSettings {
+  readonly serverSource: string;
+  readonly timeoutSeconds: number;
+  readonly trace: TraceLevel;
+}
+
+/** Workspace information for the Server Command. */
+export interface FolderInfo {
+  readonly paths: readonly string[];
+  readonly home: string;
+}
+
 /** Everything the controller needs from the outside. */
 export interface ControllerPorts {
+  /** Epoch milliseconds. */
   readonly now: () => number;
-  readonly setTimer: (ms: number, fn: () => void) => { cancel(): void };
+  /** Starts a one-shot timer. */
+  readonly setTimer: (ms: number, fn: () => void) => TimerHandle;
+  /** Resolves uvx from the current `uvPath` setting and environment. */
   readonly resolve: () => UvxResolution;
-  readonly probeVersion: (uvxPath: string) => Promise<UvVersionResult>;
-  readonly settings: () => { serverSource: string; timeoutSeconds: number; trace: TraceSetting };
-  readonly folders: () => { paths: readonly string[]; home: string };
-  readonly startClient: (cmd: ServerCommand, hooks: ClientHooks) => Promise<StartedClient>;
+  /** Runs `uvx --version` for the resolved path. */
+  readonly probeVersion: (uvxPath: string) => Promise<UvVersionProbe>;
+  /** Reads the current Extension-only settings. */
+  readonly settings: () => ControllerSettings;
+  /** Reads the current workspace folders and home directory. */
+  readonly folders: () => FolderInfo;
+  /**
+   * Spawns the Server, starts the language client and resolves after the
+   * `initialize` response. Rejects when the process cannot be spawned or the
+   * client fails to initialise.
+   */
+  readonly startClient: (command: ServerCommand, hooks: ClientHooks) => Promise<StartedClient>;
+  /** The user interface. */
   readonly ui: UiPort;
 }
 ```
 
-`UiPort` covers `setState(state)`, `log(level, message)`, `notifyError(kind, details, actions)` and `openInstallDocs()`, `openUvPathSetting()`, `showOutput()`. `startClient` wraps spawn plus client start; in production it uses `client-factory.ts` and `spawn-server.ts`, in unit tests it is a fake, and in host tests the production factory runs with a spawn override pointing at the stub server.
+`server-controller.ts` exports the controller and its factory:
 
-Sequence for a start (`Spawn` effect):
+```ts
+/** Events that callers outside the controller may dispatch. */
+export type ExternalEvent = Extract<
+  LifecycleEvent,
+  { readonly type: 'AutoStart' | 'TrustChanged' | 'RestartRequested' | 'StopRequested' }
+>;
 
-1. `resolve()`; on `found: false` log each `searched` entry, set `error`, show one notification with the actions "Open install instructions" and "Set uvPath", and do not spawn (Requirements 4.1 to 4.3). Dismissing leaves the state `error` and shows nothing more until the next activation attempt or restart (Requirement 4.6). The actions call `openInstallDocs()` (the `uv` installation documentation URL, opened with `env.openExternal`) and `executeCommand('workbench.action.openSettings', 'soase-validator.uvPath')` (Requirements 4.4, 4.5).
+/** Options of createServerController. */
+export interface ControllerOptions {
+  /** Initial value of `workspace.isTrusted`. */
+  readonly trusted: boolean;
+  /** Restart policy; defaults to DEFAULT_RESTART_POLICY. */
+  readonly policy?: RestartPolicy;
+  /** Time allowed for a graceful stop before the forced kill; defaults to 5000. */
+  readonly stopGraceMs?: number;
+}
+
+/** The interpreter around the lifecycle reducer. */
+export interface ServerController {
+  /**
+   * Applies the event to the reducer immediately, then runs its effects in
+   * order. The promise resolves when the effects have finished; the new state
+   * is visible before that.
+   */
+  dispatch(event: ExternalEvent): Promise<void>;
+  /** Current values for the status command. */
+  snapshot(): StatusSnapshot;
+  /** True while a started client exists, that is, after `initialize` and before the process ends. */
+  isRunning(): boolean;
+  /** Forwards to the started client; does nothing when no Server runs. */
+  sendConfiguration(): void;
+  /** Applies the level to the started client; does nothing when no Server runs. */
+  setTrace(level: TraceLevel): void;
+  /** Stops the process within 5 seconds and cancels timers. */
+  dispose(): Promise<void>;
+}
+
+/** Creates the controller. */
+export function createServerController(
+  ports: ControllerPorts,
+  options: ControllerOptions,
+): ServerController;
+```
+
+The controller, not the reducer, owns these interpretations:
+
+- `Kill` while a started client exists calls `client.stop()` and waits for `process.exited`; if the process has not exited after `stopGraceMs`, it calls `process.kill()` and logs the forced termination (Requirement 7.3). `Kill` before `initialize` has completed (no started client) calls `process.kill()` and waits for `exited`. Effects of one step run in order and each is awaited, so the `Kill` of a restart finishes before `Resolve` runs.
+- `onExit` dispatches `Exited { at: now(), requested }` to the reducer, where `requested` is true when the controller itself issued the `Kill` for that generation. Hooks are created per start with the generation in a closure, and events from an older generation are dropped.
+- `startClient` rejecting while no process was reported through `onSpawned` dispatches `SpawnFailed`. Rejecting while a process exists (the process is alive but `initialize` failed) also dispatches `SpawnFailed`, which makes the reducer emit `Kill` and the `spawn-failed` notification; the reducer has no separate event for this case and the choice keeps it that way.
+- The startup timer runs `timeoutSeconds` seconds from the `Spawn` effect and dispatches `TimedOut`; it is cancelled on `Initialized`, on failure and on kill.
+- After `Initialized` the controller stores the `StartedClient`; `snapshot().serverVersion` is its `serverVersion` (undefined when the Server reported none; `formatStatus` renders `unknown` for a running Server).
+- Notification actions: the `Promise` from `notifyError` is handled without blocking effect execution. `open-install-docs` calls `ui.openInstallDocs()`, `set-uv-path` calls `ui.openUvPathSetting()`, `show-output` calls `ui.showOutput()`, and `restart-server` dispatches `RestartRequested`. Actions per kind: `resolve-failed` offers exactly `['open-install-docs', 'set-uv-path']`; every other kind offers `['show-output', 'restart-server']`. A dismissed notification (`undefined`) does nothing (Requirement 4.6).
+
+Choices made here where the requirements are silent: (1) `notifyError` returns the chosen action and the controller acts on it, so action handling is unit-testable with a fake `UiPort` and the adapter holds no controller reference; (2) stderr lines reach the controller only through `ClientHooks.onStderrLine`, while the Output Channel receives them from the language client (see `spawn-server.ts`); (3) there is one `ControllerSettings` read per start, so a changed `serverSource` or timeout applies at the next start, never to a running Server.
+
+The reducer is authoritative for ordering; the controller only interprets effects. `Notify` effects carry only a kind and `Log` effects carry fixed messages, so the controller supplies every detail: the searched locations for `resolve-failed`, the exit code and last-20 stderr lines for unexpected exits, the first-20 stderr lines in the notification for exits before `initialize`, and the configured seconds in the timeout log entry. Stderr is held by a `StderrCapture` (a `HeadBuffer` of the first 20 lines and a `TailBuffer` of the last 20 lines).
+
+Sequence for a start (`Resolve` effect, then `Spawn` effect):
+
+1. On `Resolve`, the controller runs `resolve()` and dispatches `Resolved` or `ResolveFailed`. On `found: false` (`ResolveFailed`) log each `searched` entry, set `error`, show one notification with the actions "Open install instructions" and "Set uvPath", and do not spawn (Requirements 4.1 to 4.3). Dismissing leaves the state `error` and shows nothing more until the next activation attempt or restart (Requirement 4.6). The actions call `openInstallDocs()` (the `uv` installation documentation URL, opened with `env.openExternal`) and `executeCommand('workbench.action.openSettings', 'soase-validator.uvPath')` (Requirements 4.4, 4.5).
 2. Log the resolved path; start `probeVersion` in the background and log its result (Requirements 3.6, 3.8).
-3. Build the command, set the timer for `timeoutSeconds`, call `startClient`. `starting` lasts until `client.start()` resolves, which happens after the `initialize` response (Requirement 5.7).
+3. The `Spawn` effect, emitted only after `Resolved`, means: build the command, set the timer for `timeoutSeconds`, call `startClient`. `starting` lasts until `client.start()` resolves, which happens after the `initialize` response; the controller then dispatches `Initialized` (Requirement 5.7).
 4. On timeout, `Kill`, log "startup timed out after N seconds" once, set `error`, notify with "Show output" and "Restart server" (Requirements 5.8, 11.1).
-5. On `Exited` the controller supplies the exit code and the stderr tail (the last 20 lines from the line splitter) to the log (Requirement 5.9).
+5. On `Exited` the controller supplies the exit code and the stderr tail (the last 20 lines from `StderrCapture`) to the log (Requirement 5.9).
+6. Restart ordering: `RestartRequested` emits `Kill` and `Resolve` together with the new generation already set. The controller completes the graceful stop of the old process (forced kill after 5 seconds, logging the forced termination) before it runs the resolver for the new generation, and drops late events from the old generation.
 
 When `uvx` exits before `initialize` completes, the notification shows the first 20 lines of captured stderr, and the full output is already in the output channel (Requirement 12.2). The Extension does not classify the cause (for example "no Python available" or "network unavailable"); see Design decision 11. Requirement 10.6 is met by the same generic path: exit before `initialize`, no automatic retry, documents untouched.
 
@@ -468,30 +789,80 @@ Decisions behind each option:
 
 - `documentSelector` with `scheme: 'file'` and `language: 'soase'` restricts document sync to SoaSE Files. A `.manifest` file or any other file never reaches the Server (Requirements 1.3, 1.4, 1.6).
 - Diagnostics, completion, hover, definition, code actions and file watchers are registered by the client from the server's capabilities and dynamic registrations, with no middleware. The Extension therefore adds, drops, merges or reorders nothing (Requirements 9.1 to 9.8). Request failures use the client's default failed-request handling, which returns an empty result; a host test confirms that the stub's error response produces no substitute result and leaves Diagnostics untouched.
-- `outputChannel` receives the Server's stderr lines through the client (verified above). The controller additionally attaches its own `stderr` listener to feed the 20-line tail buffer; the client's pipe and the tail buffer both read the same stream without interfering.
+- `outputChannel` receives the Server's stderr lines through the client (verified above). `spawnServer` attaches its own `stderr` listener that only feeds `ClientHooks.onStderrLine` (the 20-line capture); two `data` listeners on one stream both receive every chunk, so the client's pipe and the capture do not interfere. That the client does pipe stderr of a returned `ChildProcess` into `outputChannel` was read from the library source and is confirmed by the host test for Requirement 5.5.
 - The client's stdout handling uses the protocol reader only. The Extension never writes to `child.stdin` (Requirement 5.6).
+
+The module exports one factory that produces the controller's `startClient` port:
+
+```ts
+/** Dependencies of the client factory. */
+export interface ClientFactoryDeps {
+  /** The shared Output Channel; receives stderr and trace output. */
+  readonly outputChannel: vscode.OutputChannel;
+  /** Reader behind the `initializationOptions` function and `sendConfiguration`. */
+  readonly readConfig: ConfigReader;
+  /** Called at each start; undefined outside Test mode or when no override is set. */
+  readonly getTestOverride: () => TestOverride | undefined;
+  /** Current trace level, applied when the client is created. */
+  readonly getTrace: () => TraceLevel;
+  /** Called with each wrong-typed Server Setting found when a payload is built. */
+  readonly onInvalidSetting: (key: string, value: unknown) => void;
+  /** Environment for the Server process. */
+  readonly env: NodeJS.ProcessEnv;
+}
+
+/**
+ * Builds the `startClient` port of ControllerPorts.
+ *
+ * Each call spawns the Server (`spawnServer`, or the override's `spawn`),
+ * reports the process through `hooks.onSpawned`, forwards stderr lines and the
+ * exit through `hooks`, creates and starts a LanguageClient over the child,
+ * and resolves after the `initialize` response. It rejects when the spawn
+ * fails or the client fails to start.
+ */
+export function createStartClient(
+  deps: ClientFactoryDeps,
+): (command: ServerCommand, hooks: ClientHooks) => Promise<StartedClient>;
+```
+
+`StartedClient.stop()` calls `client.stop()`; `sendConfiguration()` builds the payload with `buildPayload(readConfig)`, reports each `invalid` entry to `onInvalidSetting` and sends the notification; `serverVersion` is `extractServerVersion(client.initializeResult)`. `trace.ts` exports `toLibraryTrace(level: TraceLevel): Trace`.
 
 Trace: `trace.ts` maps the setting to the library's `Trace` enum (`off` to `Trace.Off`, `messages` to `Trace.Messages`, `verbose` to `Trace.Verbose`). The value is applied on start with `client.setTrace` and again on `onDidChangeConfiguration` for `soase-validator.trace.server`, without a restart (Requirements 8.9 to 8.13). Per the library, `Messages` logs method names and ids and `Verbose` adds parameters, which matches Requirements 8.11, 8.12 and 8.14. The host test checks that with `off` and `messages` no document text reaches the output channel.
 
 `config-sync.ts`:
 
 ```ts
-/** Debounces change events and sends one didChangeConfiguration with the full payload. */
+/** Dependencies of ConfigSync. */
+export interface ConfigSyncDeps {
+  /** Epoch milliseconds. */
+  readonly now: () => number;
+  /** Starts a one-shot timer (TimerHandle is defined in lifecycle/ports.ts). */
+  readonly setTimer: (ms: number, fn: () => void) => TimerHandle;
+  /** Sends the notification; in production `controller.sendConfiguration`. */
+  readonly send: () => void;
+  /** Quiet period in milliseconds; defaults to DEFAULT_QUIET_MS. */
+  readonly quietMs?: number;
+  /** Longest wait since the first change of a burst; defaults to DEFAULT_MAX_WAIT_MS. */
+  readonly maxWaitMs?: number;
+}
+
+/** Default quiet period of the debouncer. */
+export const DEFAULT_QUIET_MS = 250;
+
+/** Default maximum wait of the debouncer. */
+export const DEFAULT_MAX_WAIT_MS = 500;
+
+/** Debounces change events and calls `send` once per burst. */
 export class ConfigSync {
-  constructor(deps: {
-    readonly now: () => number;
-    readonly setTimer: (ms: number, fn: () => void) => { cancel(): void };
-    readonly send: () => void;
-    readonly quietMs: number;   // 250
-    readonly maxWaitMs: number; // 500
-  });
+  constructor(deps: ConfigSyncDeps);
   /** Records a Server Setting change. */
   notifyChange(): void;
+  /** Cancels any pending send. */
   dispose(): void;
 }
 ```
 
-A change event starts a 250 ms quiet timer that restarts on each further change, but the notification is sent no later than 500 ms after the first change in the burst. This keeps every change within 1000 ms of its notification (Requirement 6.4). `send` rebuilds the payload at send time and calls `client.sendNotification('workspace/didChangeConfiguration', { settings: payload })`, with the same `{ 'soase-validator': { ... } }` shape as the initialization options. Only changes that affect a Server Setting key (`event.affectsConfiguration('soase-validator.<key>')` for a key in `SERVER_SETTINGS`) call `notifyChange`; changes to `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server` do not. Changes to `soase.json` or the user-level file send nothing, because the Extension watches neither (Requirement 6.9). When the Server is not running, nothing is sent; the next `initialize` carries the current payload.
+A change event starts a 250 ms quiet timer that restarts on each further change, but the notification is sent no later than 500 ms after the first change in the burst. This keeps every change within 1000 ms of its notification (Requirement 6.4). `send` is `controller.sendConfiguration`, which calls `StartedClient.sendConfiguration()`; that rebuilds the payload at send time and calls `client.sendNotification('workspace/didChangeConfiguration', { settings: payload })`, with the same `{ 'soase-validator': { ... } }` shape as the initialization options. Only changes that affect a Server Setting key (`event.affectsConfiguration('soase-validator.<key>')` for a key in `SERVER_SETTINGS`) call `notifyChange`; changes to `uvPath`, `serverSource`, `startupTimeoutSeconds` and `trace.server` do not. Changes to `soase.json` or the user-level file send nothing, because the Extension watches neither (Requirement 6.9). When the Server is not running, nothing is sent; the next `initialize` carries the current payload.
 
 ### Activation and trust
 
@@ -503,7 +874,73 @@ A change event starts a 250 ms quiet timer that restarts on each further change,
 - Activation itself is the only trigger that exists when the workspace holds neither a SoaSE File nor `soase.json`, because VS Code activates the Extension only through the declared events (Requirement 2.3).
 - The whole of `activate` is wrapped in a try/catch that logs the message to the output channel, shows one error notification and returns normally (Requirement 11.6).
 
+`extension.ts` exports:
+
+```ts
+/** Test-only hooks; present on the returned API only when `context.extensionMode === vscode.ExtensionMode.Test`. */
+export interface ExtensionTestApi {
+  /** Replaces uvx resolution and process spawn; pass undefined to restore the real behaviour. Takes effect at the next start. */
+  setTestOverride(override: TestOverride | undefined): void;
+  /** The controller, so host tests can dispatch events and read snapshots. */
+  readonly controller: ServerController;
+}
+
+/** What `activate` returns. */
+export interface ExtensionApi {
+  /** Undefined outside Test mode. */
+  readonly testing?: ExtensionTestApi;
+}
+
+/** Activates the Extension; completes without waiting for the Server. */
+export function activate(context: vscode.ExtensionContext): ExtensionApi;
+
+/** Stops the Server within 5 seconds and disposes the channel and status item. */
+export function deactivate(): Promise<void>;
+```
+
+In Test mode the `resolve` port returns `{ found: true, path: override.uvxPath, source: 'uvPath' }` and `probeVersion` returns `{ available: false, reason: 'test override' }` while an override is set; `getTestOverride` of the client factory reads the same value. Host tests therefore set the override and then run `soase-validator.restartServer` (the activation auto-start has already run without it). `activation.ts` exports `registerActivation(deps: { controller: ServerController; configSync: ConfigSync; log: OutputLog }): vscode.Disposable[]`, and `commands.ts` exports `registerCommands(deps: { controller: ServerController; ui: UiPort }): vscode.Disposable[]`.
+
 ### Status item and output channel
+
+The UI adapters expose the following, all under `src/ui` and allowed to import `vscode`:
+
+```ts
+/** Owner of the single Output Channel (output-log.ts). */
+export interface OutputLog {
+  /** The channel, shared with the language client. */
+  readonly channel: vscode.OutputChannel;
+  /** Writes one Extension line through formatLogLine. */
+  log(level: LogLevel, message: string): void;
+  /** Writes a `warn` line once per distinct key and value pair. */
+  warnOnce(key: string, value: unknown, message: string): void;
+  /** Reveals the channel. */
+  show(): void;
+  dispose(): void;
+}
+export function createOutputLog(now?: () => number): OutputLog;
+
+/** Owner of the single Status Item (status-item.ts). */
+export interface StatusItem {
+  /** Updates text and background synchronously. */
+  setState(state: ServerState): void;
+  dispose(): void;
+}
+export function createStatusItem(): StatusItem;
+
+/** Error notifications and their buttons (notifications.ts). Button labels: "Open install instructions", "Set uvPath", "Show output", "Restart server". */
+export function showServerError(
+  kind: NotifyKind,
+  details: NotifyDetails,
+  actions: readonly NotifyAction[],
+): Promise<NotifyAction | undefined>;
+/** Opens the uv installation documentation with `env.openExternal`. */
+export function openInstallDocs(): Promise<void>;
+/** Runs `workbench.action.openSettings` filtered to `soase-validator.uvPath`. */
+export function openUvPathSetting(): Promise<void>;
+
+/** UiPort over the modules above (ui-port.ts). */
+export function createUiPort(log: OutputLog, status: StatusItem): UiPort;
+```
 
 - `output-log.ts` creates exactly one `OutputChannel` named `SoaSE Validator` and formats Extension lines as `<ISO-8601 timestamp> [<level>] <message>` with level in `error`, `warn`, `info`, `debug` (Requirements 8.1, 8.8). Raw Server stderr lines and library trace output are written by the client without this prefix; only Extension messages carry it.
 - `status-item.ts` owns one `StatusBarItem`, left-aligned, with command `soase-validator.showStatus` (Requirement 8.7). Text per state: `$(circle-slash) SoaSE: stopped`, `$(sync~spin) SoaSE: starting`, `$(check) SoaSE: running`, `$(error) SoaSE: error`. Error uses `statusBarItem.errorBackground`. The item is updated synchronously in the `setState` port call (Requirement 8.3), shows `stopped` until the first start (Requirement 8.4), and is shown only while `window.activeTextEditor?.document.languageId === 'soase'` (Requirements 8.5, 8.6) through `window.onDidChangeActiveTextEditor`.
@@ -520,7 +957,55 @@ A change event starts a 250 ms quiet timer that restarts on each further change,
 | `soase-validator.showOutput` | SoaSE Validator: Show Output | `outputChannel.show(true)` |
 | `soase-validator.showStatus` | SoaSE Validator: Show Status | `window.showInformationMessage(formatStatus(snapshot), { modal: false })` |
 
-`status-text.ts` exports `formatStatus(snapshot: StatusSnapshot): string`, where the snapshot holds `state`, `uvxPath?`, `command?` and `serverVersion?`. Each missing value renders as `not available`. The Server version is the exception: when the Server is running and the `initialize` result has no `serverInfo.version`, it renders `unknown` (Requirement 12.4); when the Server is not running it renders `not available` (Requirement 7.7).
+The formatters are implemented as follows:
+
+```ts
+// format/log-line.ts
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+/** `<ISO-8601 timestamp> [<level>] <message>`; throws RangeError for an invalid time. */
+export function formatLogLine(level: LogLevel, message: string, at: Date | number): string;
+
+// format/status-text.ts
+export const NOT_AVAILABLE = 'not available';
+export const UNKNOWN_VERSION = 'unknown';
+export const STATUS_ITEM_LABELS: Readonly<Record<ServerState, string>>;
+export function statusItemLabel(state: ServerState): string;
+export function formatStatus(snapshot: StatusSnapshot): string;
+export function extractServerVersion(initializeResult: unknown): string | undefined;
+
+// format/line-splitter.ts
+export const DEFAULT_HEAD_LINES = 20;
+export const DEFAULT_TAIL_LINES = 20;
+/** Chunks (bytes or text) to lines on `\n` or `\r\n`; multi-byte sequences may span chunks. */
+export class LineSplitter {
+  push(chunk: Uint8Array | string): string[];
+  /** Flushes the decoder and returns the final partial line, if any. */
+  end(): string[];
+}
+/** Keeps the most recent lines. */
+export class TailBuffer {
+  constructor(capacity?: number);
+  add(lines: readonly string[]): void;
+  lines(): string[];
+}
+/** Keeps the first lines. */
+export class HeadBuffer {
+  constructor(capacity?: number);
+  add(lines: readonly string[]): void;
+  lines(): string[];
+}
+/** First and last lines of a process's stderr. */
+export class StderrCapture {
+  constructor(headLines?: number, tailLines?: number);
+  add(lines: readonly string[]): void;
+  headLines(): string[];
+  tailLines(): string[];
+  /** Total lines added, including those no longer kept. */
+  totalLines(): number;
+}
+```
+
+`StatusSnapshot` (in `status-text.ts`) holds `state: ServerState`, `uvxPath?: string`, `command?: string` and `serverVersion?: string`; an empty string counts as absent. `formatStatus` renders one `label: value` line each for State, uvx, Command and Server version. Each missing value renders as `not available`. The Server version is the exception: when the Server is running and the `initialize` result has no `serverInfo.version`, it renders `unknown` (Requirement 12.4); when the Server is not running it renders `not available` (Requirement 7.7).
 
 ## Data Models
 
@@ -574,7 +1059,6 @@ Configuration properties. Every Server Setting has `scope: "window"`, a type tak
 | `soase-validator.referenceRoots` | object, `additionalProperties: string` | none | example `{ "rebellion-1.98": "~/path/to/sins-rebellion-reference" }` |
 | `soase-validator.modRoots` | array of string | none | |
 | `soase-validator.layers` | array of string | none | |
-| `soase-validator.aliases` | object of string | none | |
 | `soase-validator.language` | string | none | |
 | `soase-validator.disabledCodes` | array of string | none | |
 | `soase-validator.numeric.integerStrict` | boolean | none | |
@@ -613,8 +1097,8 @@ Used verbatim for `initializationOptions` and for `settings` in `workspace/didCh
 export interface StatusSnapshot {
   readonly state: ServerState;
   readonly uvxPath?: string;
-  readonly command?: string;     // executable and arguments joined by spaces for display only
-  readonly serverVersion?: string | 'unknown';
+  readonly command?: string;     // formatCommand(command), display only
+  readonly serverVersion?: string;
 }
 ```
 
@@ -861,3 +1345,7 @@ These points could not be verified from the sources available, or the requiremen
 7. **Dynamic registration capability flags.** The server only registers file watchers when the client advertises `didChangeWatchedFiles.dynamicRegistration` and chooses relative patterns from `relativePatternSupport`. I expect `vscode-languageclient` 11 to advertise both. The host test with the stub confirms registration and notifications; whether relative patterns outside the workspace (Layer directories) deliver events is only exercised by the integration test and manual use.
 8. **Language ownership of generic extensions.** `.str`, `.constants` and `.particle` may already be claimed by other installed extensions. VS Code resolves such conflicts by its own rules, so Requirement 1.2 is verified on a clean profile and cannot be guaranteed on every installation.
 9. **`workspaceContains` with a brace glob.** The activation event uses `**/*.{entity,...}`. VS Code's glob support for braces in `workspaceContains` is documented behaviour, but the 500 ms activation budget and the scan cost on very large workspaces have not been measured.
+10. **Initial trace level.** `ClientFactoryDeps.getTrace` is meant to apply the trace level before the `initialize` request so that request is traced too. Whether `LanguageClient.setTrace` may be called before `start()` in version 11 has not been verified; if it cannot, the level is applied right after `start()` resolves and the `initialize` exchange is not traced. Requirements 8.9 to 8.13 do not require tracing of `initialize`.
+11. **Stderr delivery.** The design relies on the language client piping the stderr of a returned `ChildProcess` into its output channel while `spawnServer` also reads the same stream for the 20-line capture. This is read from the library source, not executed. The host test for Requirement 5.5 confirms each stderr line appears exactly once; if lines are duplicated or missing, `UiPort` gains a raw-line method and `spawnServer`'s listener becomes the single writer.
+12. **Initialize failure with a live process.** `startClient` rejecting while the process is alive is reported as `SpawnFailed`, which yields the `spawn-failed` notification text. The reducer has no separate event for it and no requirement distinguishes the cases; the notification text should say "failed to start" for both (Requirement 2.9).
+13. **Notification wording for `exited` before `running`.** Requirement 12.2 fixes the 20-line content but not the first line; the controller uses "The SoaSE Validator server exited before it finished starting."

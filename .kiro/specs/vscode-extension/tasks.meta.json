@@ -62,6 +62,138 @@
         "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
         "timestamp": 1794157735768
       }
+    ],
+    "3.1 Implement path expansion and the `uvx` resolver": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247825
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366003
+      }
+    ],
+    "3.3 Implement the Server Command builder": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247894
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366092
+      }
+    ],
+    "3.5 Implement the `uvx` version probe": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247946
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366513
+      }
+    ],
+    "3.6 Implement the Server Settings schema and payload builder": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158248003
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158367312
+      }
+    ],
+    "3.8 Implement Extension setting normalisers": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158248082
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158367811
+      }
+    ],
+    "3.10 Implement the restart policy and lifecycle reducer": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158368614
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505209
+      }
+    ],
+    "3.13 Implement the formatters": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158369076
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505286
+      }
+    ],
+    "3. Implement the pure core modules": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505372
+      }
+    ],
+    "4. Checkpoint - Core modules": [
+      {
+        "executionId": "20b5c185-3c9b-40fa-adb4-5e4acffb12b4",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158727106
+      },
+      {
+        "executionId": "a4648123-9711-4e3e-8cdc-f20bff0c487b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158919898
+      },
+      {
+        "executionId": "a99a99d5-defc-4037-a730-49ec80082e5e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158996303
+      },
+      {
+        "executionId": "a99a99d5-defc-4037-a730-49ec80082e5e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159058040
+      }
+    ],
+    "5.1 Implement the controller interpreter": [
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159586804
+      },
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159985945
+      }
+    ],
+    "5. Implement the server controller": [
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159986006
+      }
     ]
   }
 }
