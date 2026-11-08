@@ -536,7 +536,7 @@ Conventions for every task:
     - Fail if the README lacks any credited party named in the requirements (zombiesrus5, GoaFan77, Stardock Entertainment, Ironclad Games) or the unofficial-tool statement
     - _Requirements: 16.4, 16.5, 16.9_
 
-  - [ ] 17.4 Write smoke and repository hygiene tests
+  - [x] 17.4 Write smoke and repository hygiene tests
     - Check that `import soase_validator` works, the three entry points start and answer (LSP and MCP initialize), no network use occurs, and the repository tree contains no game asset extensions (`.mesh`, `.dds`, `.ogg`, base game `.entity` sets)
     - _Requirements: 10.1, 10.2, 10.3, 10.4, 12.6_
 
