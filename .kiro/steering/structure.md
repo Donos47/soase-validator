@@ -38,7 +38,7 @@ soase-validator/
     test_primitives.py           # primitive checkers
     test_registry.py, test_bundled_definitions.py, test_convert_definitions.py
     test_versions.py, test_engine_model.py, test_smoke.py, ...
-  vscode-extension/              # (planned) VS Code extension, TypeScript; see below
+  vscode-extension/              # VS Code extension, TypeScript; see below
     package.json, package-lock.json, tsconfig.json, eslint.config.mjs, README.md, LICENSE
     scripts/                     # package.mjs, check-vsix-contents.mjs
     src/                         # extension sources, kebab-case files
@@ -63,6 +63,7 @@ soase-validator/
 - The extension launches `soase-validator-lsp` as a separate process and contains no validation logic.
 - `out/`, `dist/`, `node_modules/`, `.vscode-test/` and `*.vsix` are build output and are git-ignored.
 - Work through `.kiro/specs/vscode-extension/tasks.md` in order for the extension.
+- Any change to the extension's shipped behaviour or manifest increments `version` in `vscode-extension/package.json` and `package-lock.json` under the 0.x rules in `tech.md`, and the `.vsix` is rebuilt with `npm run package`; a released version is never overwritten.
 
 ## Conventions
 

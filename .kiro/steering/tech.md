@@ -14,6 +14,7 @@ The Engine, LSP server, MCP server and CLI are Python. Node.js and npm are used 
 - `uv` manages the environment. Never install Python packages globally.
 - Distributed from GitHub and run via `uvx --from git+https://github.com/Donos47/soase-validator <entry-point>`. No PyPI publication.
 - Entry points: `soase-validator` (CLI), `soase-validator-lsp`, `soase-validator-mcp`.
+- Versioning: the package version in `pyproject.toml` follows semantic versioning. While the major is 0, increment the patch for bug fixes and for documentation, packaging or internal changes, and increment the minor for new or changed features, commands, settings, Diagnostic codes or supported file types, and for breaking changes. Any change to the shipped behaviour of the Engine, LSP server, MCP server or CLI increments the version. `SERVER_VERSION` in `src/soase_validator/lsp/server.py` carries the same number and changes in the same commit, because the LSP `serverInfo` reports it. A released version is never changed in place; run `uv lock` after a bump so `uv.lock` stays in step.
 
 ### VS Code extension (`vscode-extension/`)
 
@@ -22,6 +23,7 @@ The Engine, LSP server, MCP server and CLI are Python. Node.js and npm are used 
 - The extension starts `soase-validator-lsp` through `uvx` and contains no validation logic. It neither imports from nor ships with the Python package.
 - Run `npm ci` rather than `npm install` for a clean checkout. Run `npm audit` after changing dependencies and surface high-severity findings.
 - Style: 2-space indent, single quotes, semicolons, trailing commas in multiline literals, kebab-case file names, camelCase identifiers, PascalCase types, UPPER_SNAKE_CASE module-level constants, JSDoc on every exported symbol.
+- Versioning: any change to the extension's shipped behaviour or manifest increments `version` in `vscode-extension/package.json` and the matching entry in `package-lock.json` (`npm version --no-git-tag-version <patch|minor|major>` updates both). While the major is 0, increment the patch for bug fixes and for documentation or packaging-only changes that alter the `.vsix`. Increment the minor for new or changed settings, commands, activation behaviour, supported file types or engine requirements, for other user-visible features, and for breaking changes. Rebuild with `npm run package` so the `.vsix` name carries the new version. A released version is never rebuilt or overwritten under the same number.
 
 ## Libraries
 
