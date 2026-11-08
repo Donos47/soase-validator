@@ -1,0 +1,76 @@
+{
+  "scopeName": "source.soase",
+  "name": "SoaSE",
+  "patterns": [
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+(=)[ \\t]+(\"[^\"\\n]*\"?)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "keyword.operator.assignment.soase" },
+        "3": { "name": "string.quoted.double.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+([+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?)(?=[ \\t]*$)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "constant.numeric.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+([0-9a-fA-F]+)(?=[ \\t]*$)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "constant.other.color.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])(?=[ \\t]*$)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "constant.language.boolean.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+(\"[^\"\\n]*\"?)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "string.quoted.double.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)[ \\t]+(\\[)([^\\]\\n]*)(\\]?)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" },
+        "2": { "name": "punctuation.definition.list.soase" },
+        "3": { "patterns": [{ "include": "#items" }] },
+        "4": { "name": "punctuation.definition.list.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*(\\[)([^\\]\\n]*)(\\]?)",
+      "captures": {
+        "1": { "name": "punctuation.definition.list.soase" },
+        "2": { "patterns": [{ "include": "#items" }] },
+        "3": { "name": "punctuation.definition.list.soase" }
+      }
+    },
+    {
+      "match": "^[ \\t]*([^ \\t\\n\\[][^ \\t\\n]*)",
+      "captures": {
+        "1": { "name": "support.type.property-name.soase" }
+      }
+    }
+  ],
+  "repository": {
+    "items": {
+      "patterns": [
+        { "match": ",", "name": "punctuation.definition.list.soase" },
+        {
+          "match": "(?<![^ \\t,\\[])[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?(?![^ \\t,])",
+          "name": "constant.numeric.soase"
+        }
+      ]
+    }
+  }
+}

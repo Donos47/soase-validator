@@ -36,7 +36,7 @@ Python libraries:
 - CLI uses `argparse`. Definitions are bundled JSON (no XML dependency).
 - Check current versions on PyPI when adding dependencies. Use ranges that include the latest release. Run `pip-audit` after changes.
 
-Extension libraries (`vscode-extension/` only): `vscode-languageclient` is the only runtime dependency. Dev tooling is `typescript`, `eslint` with `typescript-eslint` and `eslint-plugin-n`, `mocha`, `fast-check`, `@vscode/test-electron` and `@vscode/vsce`. Check current versions on the npm registry and keep the ranges recorded in `.kiro/specs/vscode-extension/design.md`.
+Extension libraries (`vscode-extension/` only): `vscode-languageclient` is the only runtime dependency. Dev tooling is `typescript`, `eslint` with `typescript-eslint` and `eslint-plugin-n`, `mocha`, `fast-check`, `@vscode/test-electron`, `@vscode/vsce`, `vscode-textmate` and `vscode-oniguruma`. Check current versions on the npm registry and keep the ranges recorded in `.kiro/specs/vscode-extension/design.md`.
 
 ## Architecture rules
 

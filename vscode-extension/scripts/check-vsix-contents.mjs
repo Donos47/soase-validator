@@ -13,6 +13,9 @@ import { fileURLToPath } from 'node:url';
 import { NOTICES_FILE } from './generate-notices.mjs';
 import { listProductionDependencies } from './production-dependencies.mjs';
 
+/** The only first-party JSON data file the package may ship, matched by exact path. */
+const GRAMMAR_FILE = 'syntaxes/soase.tmLanguage.json';
+
 /** Files every package must contain. */
 const REQUIRED_FILES = [
   'package.json',
@@ -20,6 +23,7 @@ const REQUIRED_FILES = [
   'LICENSE',
   'out/src/extension.js',
   NOTICES_FILE,
+  GRAMMAR_FILE,
 ];
 
 /** Game file extensions, which the package never ships. */
@@ -90,7 +94,7 @@ function forbiddenReasons(file) {
   }
   // Dependencies ship their own JSON (schemas, manifests); only first-party JSON can be a Definition.
   const firstParty = !file.startsWith('node_modules/');
-  if (firstParty && extension === '.json' && !isPackageManifest(file)) {
+  if (firstParty && extension === '.json' && !isPackageManifest(file) && file !== GRAMMAR_FILE) {
     reasons.push(`Definition or data JSON must not be packaged: ${file}`);
   }
   if (extension === '.py' || extension === '.pyc') {

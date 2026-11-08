@@ -14,7 +14,8 @@ This is an unofficial community tool. It is not affiliated with or endorsed by
 Stardock Entertainment, Ironclad Games, zombiesrus5 or GoaFan77. See
 [Credits](#credits).
 
-The extension is installed from a `.vsix` file. It is not published on the
+The extension is installed from a `.vsix` file, downloaded from a GitHub release or
+built from source. It is not published on the
 Visual Studio Marketplace or Open VSX.
 
 ## Supported files
@@ -33,6 +34,32 @@ contains a `soase.json` or one of these files. In an untrusted workspace the
 server is not started, because the server command and the settings name
 executables and file paths. It starts once you trust the workspace, without a
 window reload.
+
+## Syntax coloring
+
+The extension colors the supported files with a TextMate grammar for the
+language `soase`. The grammar assigns these categories and leaves the actual
+colors to the active theme:
+
+- key
+- string
+- number
+- hex color
+- boolean
+- list punctuation (the `[` and `]` delimiters)
+- the `=` operator
+
+Coloring follows token shape only. The grammar looks at one line at a time and
+does not know which key a value belongs to, so it never judges whether a value
+is valid for its key. Definition-aware coloring is not provided; what the
+Definitions accept is reported as diagnostics by the server.
+
+Coloring works without the server. It is available in an untrusted workspace,
+before the server has started and when `uvx` is not found.
+
+Booleans are matched in any capitalization, so `TRUE`, `true` and `True` are all
+colored as booleans. The server reports lowercase booleans, so a colored
+boolean is not necessarily a valid one.
 
 ## Installing uv
 
@@ -69,19 +96,34 @@ install `uv` or change the setting, run **SoaSE Validator: Restart Server**.
 
 ## Installing the .vsix
 
-Build the `.vsix` from source (see [Building from source](#building-from-source)).
-`npm run package` writes it to `vscode-extension/dist/`, named
-`soase-validator-<version>.vsix`. Install it with:
+VS Code and Kiro both install extensions from a `.vsix` file. The
+recommended way is to download a released `.vsix`. If you want an unreleased
+change, or no release suits you, build one from source instead.
+
+1. Download `soase-validator-<version>.vsix` from the latest
+   [GitHub release](https://github.com/Donos47/soase-validator/releases). Use the
+   newest release unless you need an older one.
+   To build the file yourself, follow [Building from source](#building-from-source)
+   and use the file it writes to `vscode-extension/dist/`.
+2. Open the Extensions view.
+3. Choose the `...` menu at the top of the view and select **Install from
+   VSIX...**.
+4. Pick the `.vsix` file. Reload the window if the editor asks you to.
+
+In VS Code you can also install from a terminal:
 
 ```
 code --install-extension <file>.vsix
 ```
 
-You can also use the Extensions view: choose **Install from VSIX...** in the
-`...` menu. The extension needs VS Code 1.131.0 or later and runs on Windows,
-macOS and Linux. Kiro is a VS Code fork that reports VS Code 1.131.0 as its
-VS Code-compatible version (Kiro 1.4.121), which meets this minimum, so the
-same `.vsix` installs in Kiro.
+The extension needs VS Code 1.131.0 or later and runs on Windows, macOS and
+Linux. Kiro is a VS Code fork that reports VS Code 1.131.0 as its VS Code-compatible
+version (Kiro 1.4.121), which meets this minimum, so the same `.vsix` installs in
+Kiro through the Extensions view. The extension also needs [uv](#installing-uv)
+to run the server; coloring works without it.
+
+To update, install the newer `.vsix` the same way. A released version is never
+rebuilt under the same number.
 
 ## Settings
 
@@ -226,23 +268,31 @@ failure and does not retry on its own.
 
 ## Building from source
 
-You need Node.js 24 or newer and npm. From the `vscode-extension/` directory:
+Use this when you want a build of the current source. You need Node.js 24 or newer,
+npm and a clone of this repository. From the `vscode-extension/` directory:
 
 ```
 npm ci
+npm run package
+```
+
+`npm run package` compiles, lints, checks the package contents and writes
+`dist/soase-validator-<version>.vsix`. It exits with a non-zero code and leaves
+no partial file when a step fails. Install the file as described in
+[Installing the .vsix](#installing-the-vsix).
+
+The individual steps, which you can also run on their own:
+
+```
 npm run compile
 npm run lint
 npm run test
-npm run package
 ```
 
 - `npm run compile` builds the TypeScript sources into `out/`.
 - `npm run lint` runs ESLint.
 - `npm run test` compiles, then runs the unit and property tests and the VS Code
   host tests.
-- `npm run package` compiles, lints, checks the package contents and writes the
-  `.vsix` to `dist/`. It exits with a non-zero code and leaves no partial file
-  when a step fails.
 
 ## Credits
 

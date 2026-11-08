@@ -1145,6 +1145,8 @@ Checked on the npm registry when this design was written:
 | `mocha` | 12.0.3 | `^12.0.3` | dev; needs Node `^20.19 \|\| >=22.12` |
 | `@types/mocha` | 10.0.10 | `^10.0.10` | dev |
 | `fast-check` | 4.10.2 | `^4.10.2` | dev; property tests |
+| `vscode-textmate` | 9.3.2 | `^9.3.2` | dev; MIT; grammar interpreter for the grammar tests |
+| `vscode-oniguruma` | 2.0.1 | `^2.0.1` | dev; MIT; oniguruma WebAssembly engine for the grammar tests |
 | `vitest` | 5.1.0 | not used | mocha is the single runner |
 | `esbuild` | 0.28.2 | not used | no bundler |
 
