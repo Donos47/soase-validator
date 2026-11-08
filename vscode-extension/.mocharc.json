@@ -1,0 +1,5 @@
+{
+  "spec": ["out/test/unit/**/*.js", "out/test/properties/**/*.js"],
+  "ui": "bdd",
+  "timeout": 20000
+}

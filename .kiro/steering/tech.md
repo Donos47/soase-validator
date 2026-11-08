@@ -6,12 +6,28 @@ inclusion: always
 
 ## Language and tooling
 
+The Engine, LSP server, MCP server and CLI are Python. Node.js and npm are used only for the VS Code extension in `vscode-extension/`; nothing else in the repository depends on them.
+
+### Python (`soase_validator` package, `tests/`, `tools/`)
+
 - Python 3.14+ (`requires-python = ">=3.14"`), `src/` layout, package `soase_validator`.
-- `uv` manages the environment. Never install packages globally.
+- `uv` manages the environment. Never install Python packages globally.
 - Distributed from GitHub and run via `uvx --from git+https://github.com/Donos47/soase-validator <entry-point>`. No PyPI publication.
 - Entry points: `soase-validator` (CLI), `soase-validator-lsp`, `soase-validator-mcp`.
+- Versioning: the package version in `pyproject.toml` follows semantic versioning. While the major is 0, increment the patch for bug fixes and for documentation, packaging or internal changes, and increment the minor for new or changed features, commands, settings, Diagnostic codes or supported file types, and for breaking changes. Any change to the shipped behaviour of the Engine, LSP server, MCP server or CLI increments the version. `SERVER_VERSION` in `src/soase_validator/lsp/server.py` carries the same number and changes in the same commit, because the LSP `serverInfo` reports it. A released version is never changed in place; run `uv lock` after a bump so `uv.lock` stays in step.
+
+### VS Code extension (`vscode-extension/`)
+
+- TypeScript, built with `tsc` and managed with npm. Node.js 24 runs the build, lint and test tooling, and `@types/node` is the 24 line. The extension itself runs in the Node embedded in VS Code, which is also Node 24 for the minimum supported VS Code.
+- Tests use mocha (unit, property and extension host tests) and `fast-check` (property tests). `@vscode/test-electron` runs the host tests.
+- The extension starts `soase-validator-lsp` through `uvx` and contains no validation logic. It neither imports from nor ships with the Python package.
+- Run `npm ci` rather than `npm install` for a clean checkout. Run `npm audit` after changing dependencies and surface high-severity findings.
+- Style: 2-space indent, single quotes, semicolons, trailing commas in multiline literals, kebab-case file names, camelCase identifiers, PascalCase types, UPPER_SNAKE_CASE module-level constants, JSDoc on every exported symbol.
+- Versioning: any change to the extension's shipped behaviour or manifest increments `version` in `vscode-extension/package.json` and the matching entry in `package-lock.json` (`npm version --no-git-tag-version <patch|minor|major>` updates both). While the major is 0, increment the patch for bug fixes and for documentation or packaging-only changes that alter the `.vsix`. Increment the minor for new or changed settings, commands, activation behaviour, supported file types or engine requirements, for other user-visible features, and for breaking changes. Rebuild with `npm run package` so the `.vsix` name carries the new version. A released version is never rebuilt or overwritten under the same number.
 
 ## Libraries
+
+Python libraries:
 
 - `pygls` (>=2.1,<3) and `lsprotocol`: LSP server.
 - `mcp` (>=2.3,<3): official MCP SDK; use `MCPServer` from `mcp.server`. Keep all SDK code in `mcp_server/app.py`.
@@ -19,6 +35,8 @@ inclusion: always
 - Dev: `pytest`, `hypothesis`, `ruff`, `pip-audit`.
 - CLI uses `argparse`. Definitions are bundled JSON (no XML dependency).
 - Check current versions on PyPI when adding dependencies. Use ranges that include the latest release. Run `pip-audit` after changes.
+
+Extension libraries (`vscode-extension/` only): `vscode-languageclient` is the only runtime dependency. Dev tooling is `typescript`, `eslint` with `typescript-eslint` and `eslint-plugin-n`, `mocha`, `fast-check`, `@vscode/test-electron` and `@vscode/vsce`. Check current versions on the npm registry and keep the ranges recorded in `.kiro/specs/vscode-extension/design.md`.
 
 ## Architecture rules
 
@@ -35,6 +53,8 @@ inclusion: always
 
 ## Code style (Python)
 
+Applies to `src/soase_validator/`, `tests/` and `tools/`.
+
 - 4-space indent, double quotes, type hints (`dict[str, Any]`, `X | None`).
 - snake_case functions and modules, PascalCase classes, UPPER_SNAKE_CASE constants, underscore-prefixed private helpers.
 - Module and function docstrings with Args, Returns and Raises sections (plus Environment Variables for handlers that read them).
@@ -43,7 +63,7 @@ inclusion: always
 
 ## Comments and docstrings (PEP 8, PEP 257)
 
-Applies to `src/`, `tests/` and `tools/`. Strict: fix violations in any file you touch.
+Applies to the Python code in `src/soase_validator/`, `tests/` and `tools/`; the extension follows its own style above. Strict: fix violations in any file you touch.
 
 - Comments say why, never what. Delete a comment that restates the code.
 - Block comments start with `# `, sit at the indentation of the code they describe, and are complete sentences: capital first letter, ending in a period.
@@ -57,13 +77,22 @@ Applies to `src/`, `tests/` and `tools/`. Strict: fix violations in any file you
 
 ## Testing
 
+Python (`tests/`):
+
 - pytest plus Hypothesis (`@given`, `settings(max_examples=100)` minimum).
 - Property tests: one file each at `tests/properties/test_pNN_<name>.py`, tagged `# Feature: soase-validator, Property N: <text>`.
 - Strategies live in `tests/strategies/`. Shared fixtures in `tests/conftest.py`.
 - Tests needing game files read the path from config or `SOASE_REFERENCE_ROOT_<VERSION>` (for example `SOASE_REFERENCE_ROOT_REBELLION_198`) and `pytest.skip` when absent. Other tests build small synthetic mod trees under `tmp_path`.
 - Performance test is marked `perf` and excluded by default.
 
+Extension (`vscode-extension/test/`):
+
+- mocha runs the unit, property and host tests; `fast-check` supplies the property tests.
+- Unit and property tests run in plain Node without importing `vscode`. Host tests run in the extension host against a stub LSP server and synthetic mod files.
+
 ## Common commands
+
+Python, from the repository root:
 
 ```
 uv venv
@@ -79,4 +108,14 @@ uv run python tools/convert_definitions.py <xml-dir> --output <dir>
 
 The converter exits 2 and writes nothing when the output directory's `PROVENANCE.json` lists audit corrections; `--overwrite-corrections` overrides that (then re-apply every correction by hand).
 
-Run `ruff check`, `ruff format --check` and `pytest` before finishing a task.
+Extension, from `vscode-extension/`:
+
+```
+npm ci
+npm run compile
+npm run lint
+npm run test
+npm run package
+```
+
+Run `ruff check`, `ruff format --check` and `pytest` before finishing a Python task. Run `npm run compile`, `npm run lint` and `npm run test` before finishing an extension task.

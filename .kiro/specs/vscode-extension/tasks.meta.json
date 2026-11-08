@@ -1,0 +1,419 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Update the steering rules for the extension tooling": [
+      {
+        "executionId": "229c0eab-aebf-4ab8-9dea-c3c918e4b476",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157349418
+      },
+      {
+        "executionId": "229c0eab-aebf-4ab8-9dea-c3c918e4b476",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157410474
+      }
+    ],
+    "1.2 Update ignore files and Python tool exclusions": [
+      {
+        "executionId": "229c0eab-aebf-4ab8-9dea-c3c918e4b476",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157349533
+      },
+      {
+        "executionId": "229c0eab-aebf-4ab8-9dea-c3c918e4b476",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157410544
+      }
+    ],
+    "1. Update the steering rules and repository ignore files": [
+      {
+        "executionId": "229c0eab-aebf-4ab8-9dea-c3c918e4b476",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157410582
+      }
+    ],
+    "2.1 Create the npm project and base configuration": [
+      {
+        "executionId": "11b426e7-2c83-47f2-a26f-1bdd86449337",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157477187
+      },
+      {
+        "executionId": "11b426e7-2c83-47f2-a26f-1bdd86449337",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157592817
+      },
+      {
+        "executionId": "b5920f70-cc39-4c66-b4be-f7067e009e99",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162173463
+      },
+      {
+        "executionId": "b5920f70-cc39-4c66-b4be-f7067e009e99",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162553303
+      }
+    ],
+    "2.2 Configure ESLint and the embedded-Node guard": [
+      {
+        "executionId": "11b426e7-2c83-47f2-a26f-1bdd86449337",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157594538
+      },
+      {
+        "executionId": "11b426e7-2c83-47f2-a26f-1bdd86449337",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157735698
+      }
+    ],
+    "2. Scaffold the extension project": [
+      {
+        "executionId": "11b426e7-2c83-47f2-a26f-1bdd86449337",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794157735768
+      }
+    ],
+    "3.1 Implement path expansion and the `uvx` resolver": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247825
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366003
+      }
+    ],
+    "3.3 Implement the Server Command builder": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247894
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366092
+      }
+    ],
+    "3.5 Implement the `uvx` version probe": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158247946
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158366513
+      }
+    ],
+    "3.6 Implement the Server Settings schema and payload builder": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158248003
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158367312
+      }
+    ],
+    "3.8 Implement Extension setting normalisers": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158248082
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158367811
+      }
+    ],
+    "3.10 Implement the restart policy and lifecycle reducer": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158368614
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505209
+      }
+    ],
+    "3.13 Implement the formatters": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158369076
+      },
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505286
+      }
+    ],
+    "3. Implement the pure core modules": [
+      {
+        "executionId": "1498bd1e-05ec-4e0b-9326-a252fa4ad8e2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158505372
+      }
+    ],
+    "4. Checkpoint - Core modules": [
+      {
+        "executionId": "20b5c185-3c9b-40fa-adb4-5e4acffb12b4",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158727106
+      },
+      {
+        "executionId": "a4648123-9711-4e3e-8cdc-f20bff0c487b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158919898
+      },
+      {
+        "executionId": "a99a99d5-defc-4037-a730-49ec80082e5e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794158996303
+      },
+      {
+        "executionId": "a99a99d5-defc-4037-a730-49ec80082e5e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159058040
+      }
+    ],
+    "5.1 Implement the controller interpreter": [
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159586804
+      },
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159985945
+      }
+    ],
+    "5. Implement the server controller": [
+      {
+        "executionId": "42b9ae00-8d1a-4afc-b832-2b280ee8ff21",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794159986006
+      }
+    ],
+    "6.1 Implement the configuration reader": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160075766
+      },
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160191642
+      }
+    ],
+    "6.2 Implement the output channel, status item and notifications": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160076312
+      },
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160191754
+      }
+    ],
+    "6.3 Implement the server process spawner": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160076821
+      },
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160192201
+      }
+    ],
+    "6.5 Implement configuration change synchronisation": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160077411
+      },
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160192700
+      }
+    ],
+    "6.4 Implement trace mapping and the language client factory": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160195596
+      },
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160631854
+      }
+    ],
+    "6. Implement the VS Code adapters": [
+      {
+        "executionId": "586920c6-8e00-474f-a3b0-3ce54fb84cc2",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160631916
+      }
+    ],
+    "7.1 Implement activation, commands and `extension.ts`": [
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160672182
+      },
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160797114
+      }
+    ],
+    "7. Wire the extension entry point": [
+      {
+        "executionId": "d3f0acef-56b0-4365-bfeb-0c98e2cb959d",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160797195
+      }
+    ],
+    "8.1 Complete `package.json` contributions": [
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160830951
+      },
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161207145
+      }
+    ],
+    "8. Contribute the extension manifest": [
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161207222
+      }
+    ],
+    "9.1 Implement the stub LSP server": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161293876
+      },
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161484893
+      }
+    ],
+    "9.2 Implement the host test runner": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161293949
+      },
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161484966
+      }
+    ],
+    "9. Implement the stub server and host tests": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161485022
+      }
+    ],
+    "10. Checkpoint - Extension complete": [
+      {
+        "executionId": "50f3a32d-acf7-4cb8-9b3b-87a68e56ba76",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161518139
+      },
+      {
+        "executionId": "50f3a32d-acf7-4cb8-9b3b-87a68e56ba76",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161599642
+      }
+    ],
+    "12.1 Write the extension README, LICENSE and notices": [
+      {
+        "executionId": "3a0a523c-e814-4b69-8b71-9488c2287fda",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161634577
+      },
+      {
+        "executionId": "3a0a523c-e814-4b69-8b71-9488c2287fda",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161734129
+      }
+    ],
+    "11.1 Implement the packaging scripts": [
+      {
+        "executionId": "3a0a523c-e814-4b69-8b71-9488c2287fda",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161734201
+      },
+      {
+        "executionId": "3a0a523c-e814-4b69-8b71-9488c2287fda",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162023910
+      }
+    ],
+    "11. Implement packaging": [
+      {
+        "executionId": "3a0a523c-e814-4b69-8b71-9488c2287fda",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162023981
+      }
+    ],
+    "12.2 Update the project README": [
+      {
+        "executionId": "084e6721-5d0c-4170-9a48-4d3cd81f847f",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162566671
+      },
+      {
+        "executionId": "084e6721-5d0c-4170-9a48-4d3cd81f847f",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162591374
+      }
+    ],
+    "12. Integrate with the repository and write documentation": [
+      {
+        "executionId": "084e6721-5d0c-4170-9a48-4d3cd81f847f",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162591426
+      }
+    ],
+    "13. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "854f6091-6fdb-44db-9eeb-be46e417380e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162678033
+      },
+      {
+        "executionId": "854f6091-6fdb-44db-9eeb-be46e417380e",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794162785685
+      }
+    ]
+  }
+}
