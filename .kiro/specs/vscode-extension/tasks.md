@@ -33,7 +33,7 @@ Conventions for every task:
 
 - [x] 2. Scaffold the extension project
   - [x] 2.1 Create the npm project and base configuration
-    - Create `vscode-extension/package.json` with name, version, `engines` (`vscode` `^1.141.0`, `node` `>=24`), `main` `./out/extension.js`, MIT license, and the scripts `compile`, `lint`, `test:unit`, `test:host`, `test`, `audit` and `package` from the design
+    - Create `vscode-extension/package.json` with name, version, `engines` (`vscode` `^1.141.0`, `node` `>=24`), `main` `./out/src/extension.js`, MIT license, and the scripts `compile`, `lint`, `test:unit`, `test:host`, `test`, `audit` and `package` from the design
     - Add dev dependencies with the ranges in the design (`typescript` `~6.0.3`, `@types/vscode` `~1.140.0`, `@types/node` `^24.19.2`, `eslint`, `typescript-eslint`, `eslint-plugin-n`, `mocha`, `@types/mocha`, `fast-check`, `@vscode/vsce`, `@vscode/test-electron`, `vscode-languageserver`) and the runtime dependency `vscode-languageclient` `^11.0.0`. Re-check each version on npm first and record any deviation from the design table
     - Create `tsconfig.json` (`module` and `moduleResolution` `node16`, `target` `ES2022`, `strict`, `noUncheckedIndexedAccess`, `outDir` `out`, `rootDir` `.`, source maps, `lib` `ES2022`), `.node-version` containing `24`, `.mocharc.json` (specs under `out/test/unit` and `out/test/properties`), and `.vscodeignore` as listed in the design
     - Run `npm install` to create `package-lock.json`, then `npm audit`, and report findings of high or critical severity
@@ -186,8 +186,8 @@ Conventions for every task:
     - Create `src/extension.ts` with `activate` and `deactivate`: whole of `activate` in a try/catch that logs, shows one error notification and returns normally; completes without waiting for the Server; returns an `ExtensionApi` with a spawn override only when `context.extensionMode === vscode.ExtensionMode.Test`; `deactivate` stops the Server within 5 seconds and disposes the channel and status item
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.6, 2.7, 2.8, 7.1, 7.2, 7.5, 7.6, 7.8, 7.9, 7.10, 7.11, 11.6, 11.7, 15.11_
 
-- [ ] 8. Contribute the extension manifest
-  - [ ] 8.1 Complete `package.json` contributions
+- [x] 8. Contribute the extension manifest
+  - [x] 8.1 Complete `package.json` contributions
     - Add `displayName`, a placeholder `publisher`, `activationEvents` (`onLanguage:soase`, `workspaceContains:**/soase.json`, `workspaceContains:**/*.{entity,galaxy,brushes,sounddata,str,constants,galaxyScenarioDef,particle,explosiondata}`) and `capabilities.untrustedWorkspaces` with `supported` `limited` and `restrictedConfigurations` listing `soase-validator.uvPath` and `soase-validator.serverSource`
     - Contribute the language `soase` with exactly the nine extensions `.entity`, `.galaxy`, `.brushes`, `.sounddata`, `.str`, `.constants`, `.galaxyScenarioDef`, `.particle`, `.explosiondata` and no `.manifest`
     - Contribute one setting per `SERVER_SETTINGS` key with `scope` `window`, the declared JSON type, no `default`, no `enum`, and a description that ends with the precedence sentence and names accepted values using placeholder paths only; contribute `uvPath`, `serverSource`, `startupTimeoutSeconds` (default 180, minimum 10) and `trace.server` (`off`, `messages`, `verbose`, default `off`)
@@ -200,13 +200,13 @@ Conventions for every task:
     - File `test/unit/manifest.test.ts` (one example-based test of the manifest, tagged `// Feature: vscode-extension, Property 11: Manifest consistency`): language extensions equal the nine and exclude `.manifest`, contributed setting ids equal `SERVER_SETTINGS` plus the four Extension settings with none missing or extra, every Server Setting carries the precedence sentence and no default, command ids and titles, `engines.vscode`, `untrustedWorkspaces`, activation events, and no drive-letter or home-directory path in any default, description or example
     - _Requirements: 1.1, 1.6, 6.1, 6.2, 6.7, 6.10, 6.11, 7.1, 13.7, 15.7_
 
-- [ ] 9. Implement the stub server and host tests
-  - [ ] 9.1 Implement the stub LSP server
+- [x] 9. Implement the stub server and host tests
+  - [x] 9.1 Implement the stub LSP server
     - Create `test/stub/stub-lsp-server.ts` on `vscode-languageserver` 11, speaking LSP over stdio and driven by flags: `--log <file>` records every received message as JSON lines, `--no-server-info`, `--capabilities`, `--fail-requests`, `--initialize-delay <ms>`, exit-on-command with a chosen code, a stderr line at start
     - Behaviour: `serverInfo` `{ name: 'soase-validator', version: '0.0.0-stub' }`, publish a fixed Diagnostic on `didOpen` and an empty list on `didClose`, dynamically register and unregister `workspace/didChangeWatchedFiles`, return a quick fix for a `SOASE-M010` Diagnostic, write only protocol frames to stdout
     - _Requirements: 9.1, 9.2, 9.3, 9.5, 9.6, 9.7, 9.8, 15.5_
 
-  - [ ] 9.2 Implement the host test runner
+  - [x] 9.2 Implement the host test runner
     - Create `test/host/run-tests.ts` using `@vscode/test-electron` to run the host mocha suite on VS Code `1.141.0` and on `stable`, with a clean profile; log `process.versions.node` from inside the host and compare it with the value expected for the pinned VS Code
     - Add synthetic fixtures under `test/fixtures/` (a synthetic mod folder with a SoaSE File, a `.manifest` file and a `.txt` file) containing no game content
     - _Requirements: 13.6, 15.1, 15.5_
@@ -226,13 +226,13 @@ Conventions for every task:
     - When no checkout is found, call `this.skip()` with a message stating that the soase-validator checkout is missing, never fail
     - _Requirements: 12.3, 15.8, 15.9_
 
-- [ ] 10. Checkpoint - Extension complete
+- [x] 10. Checkpoint - Extension complete
   - Run `npm run compile`, `npm run lint`, `npm run test:unit` and `npm run test:host` in `vscode-extension/`. Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Implement packaging
   - [ ] 11.1 Implement the packaging scripts
     - Create `scripts/package.mjs` running, without a shell, in order: clean `out/`, `tsc` (step `compile`), `eslint` (step `lint`), `vsce ls` plus the contents check (step `contents`), `vsce package` into `dist/.build/`, then move the `.vsix` into `dist/`; any failure prints `package failed at step: <name>`, removes `dist/.build/` and any `.vsix` it wrote, and exits non-zero
-    - Create `scripts/check-vsix-contents.mjs` asserting from the `vsce ls` list that `package.json`, `README.md`, `LICENSE`, `out/extension.js` and each production dependency's license file are present, and that nothing from `src/soase_validator`, `reference/`, `tests/`, `.kiro/`, no `uv` binary, no Definition JSON and no game file is included
+    - Create `scripts/check-vsix-contents.mjs` asserting from the `vsce ls` list that `package.json`, `README.md`, `LICENSE`, `out/src/extension.js` and each production dependency's license file are present, and that nothing from `src/soase_validator`, `reference/`, `tests/`, `.kiro/`, no `uv` binary, no Definition JSON and no game file is included
     - Add the `NOTICE`-style third-party license text needed for `vscode-languageclient` and its dependencies to the package contents
     - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 15.10_
 

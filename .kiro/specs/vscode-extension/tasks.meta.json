@@ -280,6 +280,68 @@
         "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
         "timestamp": 1794160797195
       }
+    ],
+    "8.1 Complete `package.json` contributions": [
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794160830951
+      },
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161207145
+      }
+    ],
+    "8. Contribute the extension manifest": [
+      {
+        "executionId": "a5c43f7f-8c66-43aa-b7ba-9d4efdf0c78b",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161207222
+      }
+    ],
+    "9.1 Implement the stub LSP server": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161293876
+      },
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161484893
+      }
+    ],
+    "9.2 Implement the host test runner": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161293949
+      },
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161484966
+      }
+    ],
+    "9. Implement the stub server and host tests": [
+      {
+        "executionId": "d038434c-8292-462b-a481-fec8bc5421dc",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161485022
+      }
+    ],
+    "10. Checkpoint - Extension complete": [
+      {
+        "executionId": "50f3a32d-acf7-4cb8-9b3b-87a68e56ba76",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161518139
+      },
+      {
+        "executionId": "50f3a32d-acf7-4cb8-9b3b-87a68e56ba76",
+        "chatSessionId": "sess_4365fce6-32d9-415f-837c-7e610dc4487a",
+        "timestamp": 1794161599642
+      }
     ]
   }
 }

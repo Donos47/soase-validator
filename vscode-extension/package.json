@@ -1,12 +1,203 @@
 {
   "name": "soase-validator",
+  "displayName": "SoaSE Validator",
+  "description": "Validation, completion, hover help and go-to-definition for Sins of a Solar Empire mod files, powered by the soase-validator language server.",
+  "publisher": "publisher-placeholder",
   "version": "0.1.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Donos47/soase-validator.git"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "sins of a solar empire",
+    "soase",
+    "mod",
+    "language server",
+    "validation"
+  ],
   "engines": {
     "vscode": "^1.141.0",
     "node": ">=24"
   },
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
+  "activationEvents": [
+    "onLanguage:soase",
+    "workspaceContains:**/soase.json",
+    "workspaceContains:**/*.{entity,galaxy,brushes,sounddata,str,constants,galaxyScenarioDef,particle,explosiondata}"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "The Server is not started in an untrusted workspace, because the Server Command and settings name executables and file paths.",
+      "restrictedConfigurations": [
+        "soase-validator.uvPath",
+        "soase-validator.serverSource"
+      ]
+    }
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "soase",
+        "aliases": [
+          "SoaSE",
+          "Sins of a Solar Empire"
+        ],
+        "extensions": [
+          ".entity",
+          ".galaxy",
+          ".brushes",
+          ".sounddata",
+          ".str",
+          ".constants",
+          ".galaxyScenarioDef",
+          ".particle",
+          ".explosiondata"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "SoaSE Validator",
+      "properties": {
+        "soase-validator.gameVersion": {
+          "type": "string",
+          "scope": "window",
+          "description": "Game Version id: vanilla, entrenchment, diplomacy, rebellion-185, rebellion-193, rebellion-194 or rebellion-1.98. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.referenceRoots": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Object from Game Version id to the base game data directory, for example {\"rebellion-1.98\": \"~/path/to/sins-rebellion-reference\"}. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.modRoots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Mod Root directories, for example [\"~/path/to/my-mod\"]. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.layers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Parent Layers, lowest first: directory paths or @alias entries, for example [\"~/path/to/parent-mod\"]. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.language": {
+          "type": "string",
+          "scope": "window",
+          "description": "Localization folder name, such as en. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.disabledCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Diagnostic codes to hide, such as SOASE-C030. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.numeric.integerStrict": {
+          "type": "boolean",
+          "scope": "window",
+          "description": "Reject integers written with a decimal point. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.numeric.decimalAllowInteger": {
+          "type": "boolean",
+          "scope": "window",
+          "description": "Accept integers where decimals are expected. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.manifest.unreferencedSeverity": {
+          "type": "string",
+          "scope": "window",
+          "description": "Severity of SOASE-M020: error, warning or info. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.manifest.exemptUnlisted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Patterns exempt from SOASE-M010. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.manifest.exemptUnreferenced": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "scope": "window",
+          "description": "Patterns exempt from SOASE-M020. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.reportOverrides": {
+          "type": "boolean",
+          "scope": "window",
+          "description": "Report Project files that override a lower Layer (SOASE-C040). A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.suppressLimitedReferenceNotice": {
+          "type": "boolean",
+          "scope": "window",
+          "description": "Hide SOASE-C030. A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README."
+        },
+        "soase-validator.uvPath": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "description": "Path to the uvx executable, for example ~/path/to/uvx. Leave empty to search PATH and the standard uv install locations. A leading ~ and environment variables are expanded."
+        },
+        "soase-validator.serverSource": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "description": "Package source passed to uvx --from, for example a path such as ~/path/to/soase-validator or a git URL. Leave empty to use the default GitHub source."
+        },
+        "soase-validator.startupTimeoutSeconds": {
+          "type": "number",
+          "default": 180,
+          "minimum": 10,
+          "scope": "window",
+          "description": "Seconds to wait for the Server to answer the initialize request before reporting a startup failure. The first start can take long while uvx downloads packages."
+        },
+        "soase-validator.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "scope": "window",
+          "description": "Traces the messages between VS Code and the Server in the SoaSE Validator output channel."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "soase-validator.restartServer",
+        "title": "SoaSE Validator: Restart Server"
+      },
+      {
+        "command": "soase-validator.stopServer",
+        "title": "SoaSE Validator: Stop Server"
+      },
+      {
+        "command": "soase-validator.showOutput",
+        "title": "SoaSE Validator: Show Output"
+      },
+      {
+        "command": "soase-validator.showStatus",
+        "title": "SoaSE Validator: Show Status"
+      }
+    ]
+  },
   "scripts": {
     "compile": "tsc -p ./",
     "lint": "eslint .",

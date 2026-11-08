@@ -1018,11 +1018,11 @@ export class StderrCapture {
 {
   "name": "soase-validator",
   "displayName": "SoaSE Validator",
-  "publisher": "<publisher placeholder>",
+  "publisher": "publisher-placeholder",
   "version": "0.1.0",
   "license": "MIT",
   "engines": { "vscode": "^1.141.0", "node": ">=24" },
-  "main": "./out/extension.js",
+  "main": "./out/src/extension.js",
   "activationEvents": [
     "onLanguage:soase",
     "workspaceContains:**/soase.json",
@@ -1052,7 +1052,7 @@ export class StderrCapture {
 }
 ```
 
-The `publisher` value is not known; see Open Items. `activationEvents` also lists the four commands implicitly (VS Code generates `onCommand` events for contributed commands). The brace glob in `workspaceContains` is supported by VS Code's glob matcher.
+The `publisher` value is not known; see Open Items. The placeholder `publisher-placeholder` is an identifier-shaped value, because `vsce` rejects values that are not publisher identifiers (for example `<publisher placeholder>`). `activationEvents` also lists the four commands implicitly (VS Code generates `onCommand` events for contributed commands). The brace glob in `workspaceContains` is supported by VS Code's glob matcher.
 
 Configuration properties. Every Server Setting has `scope: "window"`, a type taken from `SERVER_SETTINGS`, and a description that ends with: "A project `soase.json` and the Server's environment variables take precedence over this value. See the configuration section of the soase-validator README." (Requirement 6.7). Examples use placeholders only (Requirement 6.10).
 
@@ -1121,7 +1121,7 @@ export interface StatusSnapshot {
 
 `scripts/package.mjs` runs these steps in order with `child_process.spawnSync(process.execPath, [binScript, ...args])`, no shell: (1) remove `out/`; (2) `tsc` (step name `compile`); (3) `eslint` (step name `lint`); (4) `vsce ls` and `check-vsix-contents.mjs` (step name `contents`); (5) `vsce package --out dist/.build/soase-validator-<version>.vsix`; (6) move the file to `dist/`. Any non-zero exit prints `package failed at step: <name>`, removes `dist/.build/` and any `.vsix` it wrote, and exits with a non-zero code, so no partial file stays in the output location (Requirements 13.5, 15.10). A clean checkout needs only `npm ci` and `npm run package` (Requirement 13.4).
 
-`check-vsix-contents.mjs` asserts from the `vsce ls` list: `package.json`, `README.md`, `LICENSE`, `out/extension.js` and the license file of each production dependency are present, and nothing under `src/soase_validator`, `reference/`, `tests/` or `.kiro/`, no `uv` binary and no `*.json` Definition is present (Requirements 13.2, 13.3).
+`check-vsix-contents.mjs` asserts from the `vsce ls` list: `package.json`, `README.md`, `LICENSE`, `out/src/extension.js` and the license file of each production dependency are present, and nothing under `src/soase_validator`, `reference/`, `tests/` or `.kiro/`, no `uv` binary and no `*.json` Definition is present (Requirements 13.2, 13.3).
 
 `.vscodeignore` excludes `src/**`, `test/**`, `scripts/**`, `out/test/**`, `**/*.map`, `.vscode-test/**`, `eslint.config.mjs`, `tsconfig.json` and `dist/**`, and does not exclude `node_modules/**/LICENSE*`.
 
@@ -1318,6 +1318,10 @@ The stub (`test/stub/stub-lsp-server.ts`) is a Node program built on `vscode-lan
 - Never writes to stdout except protocol frames.
 
 Because the spawn override exists only in `ExtensionMode.Test`, host tests start the production client factory, the real status item and the real commands against the stub, without a fake `uvx` binary. Host tests verify, in order (Requirement 15.5): the `initialize` request, the `initializationOptions` payload, the `didChangeConfiguration` notification after a setting change, and the restart sequence (the first stub receives `shutdown` and `exit` and ends; a second stub process receives a new `initialize`). Further host tests: one per file extension checks the language mode is `soase` (Requirement 1.2); document sync for a SoaSE File and silence for a `.manifest` and a `.txt` file (1.3, 1.4, 1.6); capabilities subset (9.1); Diagnostics shown, cleared, and unchanged in code, severity, message and range (9.2 to 9.4); watcher registration and unregistration (9.5, 9.6); quick fix title (9.7); failing request leaves Diagnostics unchanged (9.8); activation returns before a delayed `initialize` finishes and within 500 ms (2.8); no document text in the output channel at trace `off` and `messages` (8.10, 8.14); and that editing `soase.json` produces no notification (6.9). Whether VS Code recognises `.galaxyScenarioDef` case-insensitively, and whether another installed extension claims `.str`, `.constants` or `.particle` ahead of this one, are checked by the language-mode test on a clean VS Code profile and reported if they fail.
+
+#### Host runner
+
+`test/host/run-tests.ts` downloads VS Code with `downloadAndUnzipVSCode` from `@vscode/test-electron` and starts the executable itself instead of calling `runTests`, because `runTests` always appends `--disable-workspace-trust` and the host tests exercise trust behaviour (Requirements 2.6, 2.7). Each run opens `test/fixtures/mod` in a clean profile (`--user-data-dir` and `--extensions-dir` in a fresh temp directory removed afterwards, `--disable-extensions`) and leaves trust to the test. By default it runs `engines.vscode` (read from `package.json`) and `stable` one after the other and fails if either fails; `SOASE_HOST_VSCODE_VERSION` selects one version. With no `*.test.js` below `out/test/host` it prints a message and exits 0; `SOASE_HOST_TEST_DIR` points the search (runner and host) at another directory. The suite index (`test/host/suite/index.ts`) logs `process.versions.node` and writes it to the file named by `SOASE_HOST_NODE_REPORT`; the runner compares its major and minor with `MIN_EMBEDDED_NODE` for the pinned version and only reports the value for `stable`. `MIN_EMBEDDED_NODE` is loaded by dynamic `import()` of `scripts/min-embedded-node.mjs`, so the constant has one definition.
 
 ### Integration test (real Server)
 
