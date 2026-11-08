@@ -235,16 +235,17 @@ To start a new mod project, ask the agent to run the `configure` tool, or run
 
 ## Use from VS Code
 
-The language server speaks stdio. Any generic LSP client extension can run it
-with the command `uvx` and the arguments
-`--from git+https://github.com/Donos47/soase-validator soase-validator-lsp`,
-for the file types listed above. This repository does not ship a VS Code
-extension. Editor settings are passed as initialization options or through
-`workspace/didChangeConfiguration`, using the `soase.json` key names, either
-directly or under a `soase-validator` section.
+This repository ships a VS Code extension in
+[`vscode-extension/`](vscode-extension/README.md). It starts the language server
+for you and exposes the `soase.json` settings in the editor. Install it from a
+`.vsix` built with `npm run package`. It works in VS Code 1.131 or later and in
+Kiro, and it requires [uv](https://docs.astral.sh/uv/). See
+[`vscode-extension/README.md`](vscode-extension/README.md) for installation,
+settings, commands and states.
 
-The language server provides diagnostics, completion, hover help,
-go-to-definition and a quick fix that adds a file missing from its manifest.
+The language server (`soase-validator-lsp`) speaks LSP over stdio. It provides
+diagnostics, completion, hover help, go-to-definition and a quick fix that adds
+a file missing from its manifest.
 
 For VS Code's built-in MCP support, add the server to `.vscode/mcp.json`:
 
@@ -336,8 +337,6 @@ configuration, `M` manifest, `D` Definition load, `X` internal.
 
 Planned, not yet available:
 
-- A VS Code extension that starts the language server, registers the
-  supported file types and exposes the `soase.json` settings in the editor.
 - Syntax coloring for the supported file types in code editors.
 - Research tier cost standardization
 - Review and revise code severities, numbering, and descriptions. 
