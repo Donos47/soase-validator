@@ -18,25 +18,25 @@ Conventions for every task:
 
 ## Tasks
 
-- [ ] 1. Record dependencies and manifest changes
-  - [ ] 1.1 Add the test engine dev dependencies
+- [x] 1. Record dependencies and manifest changes
+  - [x] 1.1 Add the test engine dev dependencies
     - Read the current `vscode-extension/package.json`, `package-lock.json` and `git status` first; keep all existing uncommitted changes
     - Re-check `vscode-textmate` and `vscode-oniguruma` on npm; add them to `devDependencies` with the ranges `^9.3.2` and `^2.0.1` from the design (or the current ranges that include the latest release, noting any deviation), using `npm install --save-dev` in `vscode-extension/`
     - Confirm `dependencies` still lists only `vscode-languageclient`, then run `npm audit` and report findings of high or critical severity
     - _Requirements: 2.3, 11.6_
 
-  - [ ] 1.2 Contribute the grammar in the manifest
+  - [x] 1.2 Contribute the grammar in the manifest
     - Read the current `vscode-extension/package.json`; add `contributes.grammars` with exactly one entry: `language` `soase`, `scopeName` `source.soase`, `path` `./syntaxes/soase.tmLanguage.json`
     - Leave the `languages` entry, its nine file extensions, `activationEvents` and `.vscodeignore` as they are; add no `semanticTokenTypes`, `semanticTokenModifiers`, `semanticTokenScopes` or `configurationDefaults`
     - _Requirements: 1.1, 1.3, 1.4, 1.8, 2.3, 2.4_
 
-  - [ ] 1.3 Bump the Extension version
+  - [x] 1.3 Bump the Extension version
     - Read the current `version` in `package.json` and `package-lock.json`, then run `npm version --no-git-tag-version minor` in `vscode-extension/`
     - Confirm `package.json` `version` and both root entries in `package-lock.json` (`version` and `packages[""].version`) read `0.2.0`, and that the rest of the uncommitted changes in both files is intact
     - _Requirements: 12.1, 12.2_
 
-- [ ] 2. Write the grammar
-  - [ ] 2.1 Create the TextMate grammar file
+- [x] 2. Write the grammar
+  - [x] 2.1 Create the TextMate grammar file
     - Create `vscode-extension/syntaxes/soase.tmLanguage.json` with the JSON from the design section "Grammar file": scope name `source.soase`, the eight flat line-anchored rules in the given order (Equals Form, Number, Hex, Bool, String, List with Key, Keyless Row, Key only) and the `items` repository entry; no `begin` or `end` property at any depth, no comment scope, ASCII character classes only
     - Use exactly the seven Scope Names of the design table (`support.type.property-name.soase`, `string.quoted.double.soase`, `constant.numeric.soase`, `constant.other.color.soase`, `constant.language.boolean.soase`, `punctuation.definition.list.soase`, `keyword.operator.assignment.soase`)
     - Check the file with `get_diagnostics`; keep it free of counts, file names and paths
@@ -114,41 +114,41 @@ Conventions for every task:
     - Same file, tagged `Property 10`, terminated and unterminated strings, and the attached `=` variant with no operator scope
     - _Requirements: 4.8, 9.1, 9.2, 9.3, 9.5_
 
-- [ ] 5. Packaging contents check
-  - [ ] 5.1 Add the grammar to the contents-check allow-list
+- [x] 5. Packaging contents check
+  - [x] 5.1 Add the grammar to the contents-check allow-list
     - Read `vscode-extension/scripts/check-vsix-contents.mjs` first. Add the constant `GRAMMAR_FILE = 'syntaxes/soase.tmLanguage.json'`, add it to `REQUIRED_FILES`, and exempt that exact path in the first-party JSON rule (`file !== GRAMMAR_FILE`); an exact path match, not a directory or pattern
     - Keep every other first-party data file, `definitions` directory, game extension and Python file rejected, with a non-zero exit code and the rejected file named
     - Keep JSDoc and comments in the script free of change history
     - _Requirements: 12.3, 12.4_
 
-  - [ ] 5.2 Run the one-time manual negative check
+  - [x] 5.2 Run the one-time manual negative check
     - Run once, outside the test suite: add a second first-party JSON file (for example `vscode-extension/syntaxes/extra.json`), run `node node_modules/@vscode/vsce/vsce ls | node scripts/check-vsix-contents.mjs` in `vscode-extension/` using the design's command adapted to PowerShell, observe a non-zero exit code and the file named, then delete the file
     - Run the same command with the file removed: exit code 0 and `syntaxes/soase.tmLanguage.json` listed exactly once
     - Leave no stray file in the repository; do not add this check to the test suite
     - _Requirements: 12.3, 12.4_
 
-- [ ] 6. Documentation and steering updates
-  - [ ] 6.1 Update the Extension README
+- [x] 6. Documentation and steering updates
+  - [x] 6.1 Update the Extension README
     - Add a "Syntax coloring" section to `vscode-extension/README.md` naming the categories (key, string, number, hex color, boolean, list punctuation) and the `=` operator, stating that coloring follows token shape only, that Definition-aware coloring is not provided, that coloring works without the Server, and that booleans are matched in any capitalization although the Server reports lowercase ones; leave "Supported files" as it is; placeholder paths only
     - _Requirements: 12.7, 12.9_
 
-  - [ ] 6.2 Update the project README
+  - [x] 6.2 Update the project README
     - In the root `README.md`, remove the "Syntax coloring for the supported file types in code editors." bullet from the planned list and state syntax coloring as available in the VS Code section; read the current file first and keep unrelated edits
     - _Requirements: 12.6, 12.9_
 
-  - [ ] 6.3 Update the structure steering file
+  - [x] 6.3 Update the structure steering file
     - In `.kiro/steering/structure.md` add `syntaxes/  # soase.tmLanguage.json, the contributed TextMate grammar` and `test/support/` to the `vscode-extension/` tree
     - _Requirements: 12.8_
 
-  - [ ] 6.4 Update the tech steering file
+  - [x] 6.4 Update the tech steering file
     - In `.kiro/steering/tech.md` add `vscode-textmate` and `vscode-oniguruma` to the "Extension libraries" dev tooling list and keep the wording otherwise; this is a steering change the user may want to review
     - _Requirements: 11.2, 12.9_
 
-  - [ ] 6.5 Update the extension design dependency table
+  - [x] 6.5 Update the extension design dependency table
     - In `.kiro/specs/vscode-extension/design.md` add the rows for `vscode-textmate` and `vscode-oniguruma` (dev, ranges `^9.3.2` and `^2.0.1`, MIT, role: grammar interpreter and oniguruma for tests) to the dependency table, matching the existing row format
     - _Requirements: 11.2, 12.9_
 
-- [ ] 7. Final checkpoint - Ensure all tests pass
+- [x] 7. Final checkpoint - Ensure all tests pass
   - Run in `vscode-extension/`: `npm ci`, `npm run compile`, `npm run lint`, `npm run test`, `npm audit` and `npm run package`. Confirm `dist/soase-validator-0.2.0.vsix` exists, `dist/soase-validator-0.1.0.vsix` is unchanged if present, and the VSIX holds `syntaxes/soase.tmLanguage.json` exactly once (list it with `vsce ls` or by inspecting the package). Report any `npm audit` finding of high or critical severity. Confirm `git status` still shows the pre-existing `package.json` and `package-lock.json` changes and untracked `images/` as found. Ensure all tests pass, ask the user if questions arise.
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
 

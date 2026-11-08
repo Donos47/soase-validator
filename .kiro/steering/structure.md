@@ -42,6 +42,7 @@ soase-validator/
     package.json, package-lock.json, tsconfig.json, eslint.config.mjs, README.md, LICENSE
     scripts/                     # package.mjs, check-vsix-contents.mjs
     src/                         # extension sources, kebab-case files
+    syntaxes/                    # soase.tmLanguage.json, the contributed TextMate grammar
     test/                        # unit/, properties/, host/, stub/, fixtures/
     out/                         # git-ignored, tsc output
     dist/                        # git-ignored, packaged .vsix

@@ -237,11 +237,25 @@ To start a new mod project, ask the agent to run the `configure` tool, or run
 
 This repository ships a VS Code extension in
 [`vscode-extension/`](vscode-extension/README.md). It starts the language server
-for you and exposes the `soase.json` settings in the editor. Install it from a
-`.vsix` built with `npm run package`. It works in VS Code 1.131 or later and in
-Kiro, and it requires [uv](https://docs.astral.sh/uv/). See
-[`vscode-extension/README.md`](vscode-extension/README.md) for installation,
-settings, commands and states.
+for you, exposes the `soase.json` settings in the editor and colors the
+supported file types (syntax coloring follows token shape only and works
+without the language server). It works in VS Code 1.131 or later and in
+Kiro, and it requires [uv](https://docs.astral.sh/uv/).
+
+The extension is installed from a `.vsix` file, in VS Code and in Kiro:
+
+1. Download `soase-validator-<version>.vsix` from the latest
+   [GitHub release](https://github.com/Donos47/soase-validator/releases). If no release suits you, build it from
+   source instead (see
+   [Building from source](vscode-extension/README.md#building-from-source)).
+2. Open the Extensions view, choose the `...` menu and select
+   **Install from VSIX...**, then pick the file. In VS Code you can instead run
+   `code --install-extension <file>.vsix`.
+3. Install [uv](https://docs.astral.sh/uv/) if you have not yet, then open a
+   SoaSE file.
+
+See [`vscode-extension/README.md`](vscode-extension/README.md) for the full
+installation steps, settings, commands and states.
 
 The language server (`soase-validator-lsp`) speaks LSP over stdio. It provides
 diagnostics, completion, hover help, go-to-definition and a quick fix that adds
@@ -337,7 +351,6 @@ configuration, `M` manifest, `D` Definition load, `X` internal.
 
 Planned, not yet available:
 
-- Syntax coloring for the supported file types in code editors.
 - Research tier cost standardization
 - Review and revise code severities, numbering, and descriptions. 
 

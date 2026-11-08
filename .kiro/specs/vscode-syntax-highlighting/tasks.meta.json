@@ -1,0 +1,232 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add the test engine dev dependencies": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556078
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165562301
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165633574
+      }
+    ],
+    "1.2 Contribute the grammar in the manifest": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556143
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165635534
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165654643
+      }
+    ],
+    "1.3 Bump the Extension version": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556196
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165656306
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165675795
+      }
+    ],
+    "2.1 Create the TextMate grammar file": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556241
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165562379
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165633704
+      }
+    ],
+    "5.1 Add the grammar to the contents-check allow-list": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556282
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165681028
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165710696
+      }
+    ],
+    "5.2 Run the one-time manual negative check": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556323
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165718441
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165755192
+      }
+    ],
+    "6.1 Update the Extension README": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556370
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165681087
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165710801
+      }
+    ],
+    "6.2 Update the project README": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556417
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165681142
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165714649
+      }
+    ],
+    "6.3 Update the structure steering file": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556459
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165681217
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165714713
+      }
+    ],
+    "6.4 Update the tech steering file": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556501
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165681693
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165714762
+      }
+    ],
+    "6.5 Update the extension design dependency table": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556543
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165714818
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165755742
+      }
+    ],
+    "7. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165556584
+      },
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165757662
+      }
+    ],
+    "2. Write the grammar": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165633758
+      }
+    ],
+    "1. Record dependencies and manifest changes": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165675840
+      }
+    ],
+    "5. Packaging contents check": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165755241
+      }
+    ],
+    "6. Documentation and steering updates": [
+      {
+        "executionId": "96ece9a0-b750-4ccf-badf-ac98180c5536",
+        "chatSessionId": "sess_9e6dfe00-9e2c-413b-8045-0025a66b09da",
+        "timestamp": 1794165755788
+      }
+    ]
+  }
+}
