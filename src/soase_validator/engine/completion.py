@@ -56,6 +56,7 @@ from soase_validator.engine.registry import (
     StructureReferenceDef,
 )
 from soase_validator.engine.registry import Node as DefNode
+from soase_validator.engine.structure import Expander, place
 from soase_validator.engine.validator import (
     ARCHIVE_VERSION_KEY,
     ENTITY_EXTENSION,
@@ -242,9 +243,14 @@ class _View:
         """
         self.ctx = ctx
         self.registry = ctx.registry
-        self.roots = parsed.nodes
+        self.roots: Sequence[Node] = parsed.nodes
         self.version = _file_version(parsed, ctx.version)
         self._declared: dict[str, tuple[str, ...]] = {}
+        step = self.root()
+        if step is not None:
+            expander = Expander(self.registry, self.allowed)
+            header_keys = frozenset({ENTITY_TYPE_KEY, ARCHIVE_VERSION_KEY})
+            self.roots = place(parsed.nodes, step[0], expander, header_keys).nodes
 
     def allowed(self, gate: str | None) -> bool:
         """Evaluate a version gate for the file's version.
@@ -573,28 +579,34 @@ def _matches(label: str, prefix: str) -> bool:
 def _ancestors(roots: Sequence[Node], line: int, indent: int) -> list[Node]:
     """Find the block nodes that enclose a new line.
 
-    Uses the parser's rule: a line nests under the nearest earlier block
-    header with a smaller indentation.
+    The nodes are the placed tree. A line already in the tree belongs to the
+    block it was placed in. A line without a node (an empty line) joins the
+    block of the last earlier line when it is indented deeper than that block.
 
     Args:
-        roots: Top-level nodes.
+        roots: Top-level nodes of the placed tree.
         line: Zero-based line of the cursor.
         indent: Indentation width of the cursor line.
 
     Returns:
         Enclosing block nodes, outermost first.
     """
-    stack: list[Node] = []
+    previous: Node | None = None
     for node in _walk(roots):
-        if node.key_span.line >= line:
-            break
-        while stack and stack[-1].indent >= node.indent:
-            stack.pop()
-        if node.value is None:
-            stack.append(node)
-    while stack and stack[-1].indent >= indent:
-        stack.pop()
-    return stack
+        if node.key_span.line == line:
+            return _parents(node)
+        if node.key_span.line < line and (
+            previous is None or node.key_span.line > previous.key_span.line
+        ):
+            previous = node
+    if previous is None:
+        return []
+    chain = _parents(previous)
+    if previous.value is None:
+        chain.append(previous)
+    while chain and chain[-1].indent >= indent:
+        chain.pop()
+    return chain
 
 
 def _parents(node: Node) -> list[Node]:
@@ -711,8 +723,8 @@ def complete(text: str, position: Position, ctx: AssistContext) -> list[Completi
         return []
     parsed = parse(text, ctx.file, ctx.version)
     view = _View(ctx, parsed)
-    ancestors = _ancestors(parsed.nodes, position.line, line.indent)
-    pool = ancestors[-1].children if ancestors else parsed.nodes
+    ancestors = _ancestors(view.roots, position.line, line.indent)
+    pool = ancestors[-1].children if ancestors else view.roots
     siblings = [n for n in pool if n.key_span.line != position.line]
 
     is_entity_root = ctx.file.suffix.casefold() == ENTITY_EXTENSION and not ancestors
@@ -799,15 +811,15 @@ def _target(
         undefined key or an undescribed block.
     """
     parsed = parse(text, ctx.file, ctx.version)
-    hit = _node_at(parsed.nodes, position)
+    view = _View(ctx, parsed)
+    hit = _node_at(view.roots, position)
     if hit is None:
         return None
     node, on_value = hit
-    view = _View(ctx, parsed)
     block = view.block_at(_parents(node))
     if block is None:
         return None
-    siblings = node.parent.children if node.parent is not None else parsed.nodes
+    siblings = node.parent.children if node.parent is not None else view.roots
     definition = _find_definition(view.expand(block[0], siblings), node.key)
     if definition is None:
         return None

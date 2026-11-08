@@ -122,7 +122,7 @@ Conventions for every task:
     - Cover the "verified format facts" in the design using synthetic snippets (`TXT` and `TXT2` headers, `Level:0 0.000000`, `pos [ 234 , 219 ]`, empty strings, zero counts), unknown extensions being ignored, and unterminated quotes
     - _Requirements: 2.1, 2.2, 2.3, 2.5, 2.9, 2.10_
 
-- [ ] 5. Primitives and validator
+- [x] 5. Primitives and validator
   - [x] 5.1 Implement `engine/primitives.py`
     - Implement one pure checker per primitive type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`) with `NumericPrefs` and `PrimitiveResult`; signature `check_<type>(raw, prefs, constraint=None)`, except `check_orientation(node, prefs, constraint=None)`, which takes the header node and checks its child rows
     - Follow the approved rules in the design (Validator, "Primitive rules and evidence"): Color is 8, 6 or 4 hex digits (any case, every digit checked) or a lone `0`, with no `0x` prefix and no quotes; Position is a comma separated integer list whose count comes from the field `constraint` `count=N` (2 for `pos`, 4 for `pixelBox`, `area`, `mainViewIconAreaOffsetFromCenter`); Coordinate is exactly 3 space separated numbers; Orientation is a value-less header with exactly 3 keyless Coordinate rows; numbers reject exponents, a leading `+` and a trailing `.`
@@ -224,12 +224,12 @@ Conventions for every task:
     - Rewrite the design.md paragraphs on shallow members, unexpected indentation and the Reference Root `SOASE-V080` facts to the new rule with the survey results, and update the `validator.py` docstring
     - _Requirements: 3.5, 3.6, 3.7, 3.11, 3.12, 3.13, 3.14, 3.15, 3.16_
 
-  - [ ] 5.17 Use the same placement for completion, hover and go-to-definition
+  - [x] 5.17 Use the same placement for completion, hover and go-to-definition
     - Locate the enclosing structure of a position from the placed blocks instead of the indentation tree
     - Tests: a cursor after a shallow member and after an over-indented header resolves to the block validation uses
     - _Requirements: 3.17, 6.4, 6.5, 7.1_
 
-  - [ ] 5.18 Rewrite the indentation tests
+  - [x] 5.18 Rewrite the indentation tests
     - Synthetic, real-shaped tests per shape: shallow planet `owner`; a `.constants` count line one level short; an over-indented `brush` header with an under-indented first member; a counted repeat less indented than its count line; a block shifted as a whole (one finding); random-map `starCount` written after `randomizerParams` (tie-break, no finding); an unknown key with deeper lines (`SOASE-V020`, no `SOASE-V080`); a correctly indented file gives no `SOASE-V080`
     - Update the Reference Root tests to the counts recorded by task 5.15 and remove tests of the removed rules; keep at least one rejected shape per rule
     - _Requirements: 3.14, 3.15, 3.16, 11.3_

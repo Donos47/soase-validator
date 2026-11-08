@@ -619,6 +619,11 @@
         "executionId": "0cd6115a-851f-4100-9ade-6982a2412fdc",
         "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
         "timestamp": 1794092461467
+      },
+      {
+        "executionId": "2dd92300-6f87-4b5e-bfbb-6912d4fcebad",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794105792978
       }
     ],
     "5.13 Remove survey counts and findings history from code comments": [
@@ -1282,6 +1287,35 @@
         "executionId": "3abee376-dec6-4a19-bd16-9ab1b0ad7e53",
         "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
         "timestamp": 1794099768190
+      }
+    ],
+    "5.17 Use the same placement for completion, hover and go-to-definition": [
+      {
+        "executionId": "fcb20fcd-40ba-413a-af64-d5c487b4f291",
+        "chatSessionId": "sess_94ad4c2d-ba8d-4ad2-a79b-6307f3bdb025",
+        "timestamp": 1794105401798
+      },
+      {
+        "executionId": "2dd92300-6f87-4b5e-bfbb-6912d4fcebad",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794105430049
+      },
+      {
+        "executionId": "2dd92300-6f87-4b5e-bfbb-6912d4fcebad",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794105791963
+      }
+    ],
+    "5.18 Rewrite the indentation tests": [
+      {
+        "executionId": "2dd92300-6f87-4b5e-bfbb-6912d4fcebad",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794105430463
+      },
+      {
+        "executionId": "2dd92300-6f87-4b5e-bfbb-6912d4fcebad",
+        "chatSessionId": "sess_63d25cd4-090d-43c1-97de-22592d7d5f96",
+        "timestamp": 1794105792918
       }
     ]
   }

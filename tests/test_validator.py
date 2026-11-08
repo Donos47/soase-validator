@@ -10,6 +10,7 @@ value lines (``SoundID``) and unquoted ``TRUE``/``FALSE`` enumeration values.
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -1179,13 +1180,66 @@ def test_files_without_a_root_definition_give_no_v080() -> None:
     assert _run(registry, "a 1\n\tb 2\n", name="x.window") == []
 
 
+def _bundled(body: str, name: str) -> list[Diagnostic]:
+    """Validate ``body`` against the bundled Definitions as a file called ``name``."""
+    return _run(load_registry(), body, header="TXT", name=name)
+
+
+def test_constants_count_line_one_level_short_gives_one_v080() -> None:
+    short = (
+        "GameplayConstants\n\tDamageData\n"
+        "\t\tHullPointPercentageIncreasePerArmorPoint 0.1\n"
+        '\tNumCriticalHitEffectNames 1\n\t\tEffectName "a"\n'
+    )
+    diags = _bundled(short, "x.constants")
+    assert [(d.code, d.range.start.line) for d in diags] == [(dg.V080, 4)]
+    aligned = short.replace("\tNumCriticalHitEffectNames", "\t\tNumCriticalHitEffectNames")
+    assert _bundled(aligned, "x.constants") == []
+
+
+def test_over_indented_brush_header_with_under_indented_member_gives_one_v080() -> None:
+    body = 'brushCount 1\n\t\tbrush\n\tname "a"\n\tcontent "Simple"\n'
+    diags = _bundled(body, "x.brushes")
+    assert [(d.code, d.range.start.line) for d in diags] == [(dg.V080, 3)]
+    assert "'brush'" in diags[0].message
+    assert (
+        _bundled('brushCount 1\n\tbrush\n\t\tname "a"\n\t\tcontent "Simple"\n', "x.brushes") == []
+    )
+
+
+def test_random_map_star_count_after_randomizer_params_belongs_to_the_root() -> None:
+    body = (
+        "useRandomGenerator TRUE\nrandomizerParams\n\tstarPosOffsetRange\n"
+        "\t\tminPercentage 0.1\n\t\tmaxPercentage 0.2\n"
+        'starCount 1\nstar\n\ttype "a"\n'
+    )
+    assert _bundled(body, "x.galaxy") == []
+
+
+def test_unknown_key_with_deeper_lines_is_v020_once_and_never_v080() -> None:
+    diags = _bundled("useRandomGenerator TRUE\nzzz\n\tqq 2\n\t\trr 3\n", "x.galaxy")
+    assert [(d.code, d.range.start.line) for d in diags] == [(dg.V020, 2)]
+
+
 def test_reference_root_v080_total(reference_root: Path) -> None:
-    v080 = [
+    findings = _reference_root_findings(reference_root)
+    v080 = [(path, diag) for path, diag in findings if diag.code == dg.V080]
+    assert len(v080) == 132
+    not_owner = [
         (path, diag.range.start.line + 1)
-        for path, diag in _reference_root_findings(reference_root)
-        if diag.code == dg.V080
+        for path, diag in v080
+        if not Path(path)
+        .read_text(encoding="utf-8-sig", errors="replace")
+        .splitlines()[diag.range.start.line]
+        .strip()
+        .startswith("owner ")
     ]
-    assert len(v080) == 132, v080[:5]
+    assert not_owner == []
+    assert dict(Counter(diag.code for _, diag in findings)) == {
+        dg.V080: 132,
+        dg.V050: 58,
+        dg.V010: 1,
+    }
 
 
 _R193 = GameVersion.REBELLION_193
