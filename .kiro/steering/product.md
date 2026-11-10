@@ -4,7 +4,7 @@ inclusion: always
 
 # Product
 
-`soase-validator` is Java-free language tooling for Sins of a Solar Empire (Sins 1) mod files. It reproduces the validation and field-discovery features of zombiesrus5's Eclipse SoaSE plugin for modern editors and AI tools.
+`soase-validator` is Java-free language tooling for Sins of a Solar Empire (Sins 1) mod files. It reproduces the validation and field-discovery features of ZombiesRus5's Eclipse SoaSE plugin for modern editors and AI tools.
 
 ## Capabilities
 
@@ -33,5 +33,5 @@ Definitions are audited against a base game Reference Root by a developer-only s
 - Reference Roots and parent Layers are optional. Without them, everything not dependent on other Layers still works. Unresolved references are still reported against the Layers that are configured, including the Project alone, so a reference to a base game name reports as unresolved until a Reference Root provides it. Reference checks are limited (no unresolved-reference errors, one `SOASE-C030` notice per file) only when a declared Layer is missing or unusable.
 - Never include or copy game assets or base game files into the repo, tests or docs. Read them in place only.
 - Never put machine-specific absolute paths in source, tests, fixtures or docs. Use placeholders like `~/path/to/sins-rebellion-reference`.
-- Unofficial community tool. Credit zombiesrus5 (original plugin and Definitions), GoaFan77 (manifest updater script) and Stardock Entertainment / Ironclad Games (the game).
+- Unofficial community tool. Credit ZombiesRus5 (original plugin and Definitions), GoaFan77 (manifest updater script) and Stardock Entertainment / Ironclad Games (the game).
 - The feature spec lives in `.kiro/specs/soase-validator/` (requirements, design, tasks). Consult it before implementing.

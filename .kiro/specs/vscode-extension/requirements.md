@@ -238,7 +238,7 @@ Out of scope: any change to the validation rules or to the server's settings mod
 6. THE Extension SHALL activate without error on VS Code for Windows, macOS and Linux.
 7. THE Extension manifest SHALL declare the minimum supported VS Code engine version `^1.131.0`, which is the VS Code version that Kiro 1.4.121 reports in its `product.json` `vsCodeVersion`, so the same `.vsix` installs in VS Code and in Kiro.
 8. IF the installed VS Code version is lower than the declared minimum engine version, THEN VS Code SHALL refuse to install the `.vsix` and THE Extension SHALL NOT activate.
-9. THE Extension SHALL carry the same MIT license as the project's original code, and its README SHALL repeat the unofficial-community-tool statement and the Credits of the `soase-validator` README (zombiesrus5, GoaFan77, Stardock Entertainment and Ironclad Games).
+9. THE Extension SHALL carry the same MIT license as the project's original code, and its README SHALL repeat the unofficial-community-tool statement and the Credits of the `soase-validator` README (ZombiesRus5, GoaFan77, Stardock Entertainment and Ironclad Games).
 10. THE Extension's dependencies SHALL be version-pinned by a lockfile, and WHEN dependencies are added or updated, THE project SHALL run `npm audit` and report every finding of high or critical severity.
 11. THE Extension SHALL use the `vscode-languageclient` library as its language client, at the current stable release from the npm registry when the design is written.
 12. THE Extension sources, its `package.json` and its npm lockfile SHALL reside in the Extension Directory.

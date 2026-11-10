@@ -15,7 +15,7 @@ identical Diagnostics everywhere:
   versions).
 
 This is an unofficial community tool. It is not affiliated with or endorsed by
-Stardock Entertainment, Ironclad Games, zombiesrus5 or GoaFan77. See
+Stardock Entertainment, Ironclad Games, ZombiesRus5 or GoaFan77. See
 [Credits](#credits).
 
 The tool runs fully offline and never transmits mod content.
@@ -377,9 +377,11 @@ Tests that need game files read the Reference Root from configuration or from
 
 ## Credits
 
-This project builds on the work of others.
+This project builds on the work of others. ZombiesRus5 and GoaFan77 have
+given the maintainer permission to use their work here. Their works remain the
+property of their authors. See also `NOTICE`.
 
-- zombiesrus5 wrote the Eclipse SoaSE plugin. Its Definitions and validation
+- ZombiesRus5 wrote the Eclipse SoaSE plugin. Its Definitions and validation
   behaviour are what this project reproduces. The bundled Definitions in
   `src/soase_validator/definitions/` are converted from the plugin's XML
   Definitions, and the Engine follows the plugin's validation behaviour.
@@ -391,14 +393,16 @@ This project builds on the work of others.
   game content is included here.
 
 This is an unofficial community tool. It is not affiliated with or endorsed by
-Stardock Entertainment, Ironclad Games, zombiesrus5 or GoaFan77.
+Stardock Entertainment, Ironclad Games, ZombiesRus5 or GoaFan77.
 
 ## License
 
 The project's original code is released under the MIT License (see
 `LICENSE`). That license does not cover the third-party works credited above:
-the zombiesrus5 Definitions and behaviour from which the bundled Definitions
+the ZombiesRus5 Definitions and behaviour from which the bundled Definitions
 are derived, the GoaFan77 manifest updater script behaviour, and Sins of a
-Solar Empire itself, which remains the property of its owners. The terms under
-which zombiesrus5 and GoaFan77 allow reuse of their work are not stated in this
-repository.
+Solar Empire itself, which remains the property of its owners. ZombiesRus5 and
+GoaFan77 have given the maintainer permission to use their work in this
+project, and those works remain the property of their authors. The MIT License
+covers only the project's original code. `NOTICE` lists the third-party
+attribution.

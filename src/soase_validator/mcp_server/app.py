@@ -42,7 +42,7 @@ from soase_validator.reports import (
 )
 
 SERVER_NAME = "soase-validator"
-SERVER_VERSION = "0.1.0"
+SERVER_VERSION = "0.1.1"
 
 _LOG = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`soase-validator` is a Java-free language tooling package for Sins of a Solar Empire (Sins 1) mod files. It supports the same game versions as the original Eclipse SoaSE plugin by zombiesrus5: Vanilla, Entrenchment, Diplomacy, and Rebellion, including the Rebellion gate levels 185, 193, and 194 used by the original plugin's definitions, and adds Rebellion 1.98 (the current game version) as its primary target. It reproduces the two capabilities of the legacy Eclipse SoaSE plugin in a form usable from modern editors and AI coding tools:
+`soase-validator` is a Java-free language tooling package for Sins of a Solar Empire (Sins 1) mod files. It supports the same game versions as the original Eclipse SoaSE plugin by ZombiesRus5: Vanilla, Entrenchment, Diplomacy, and Rebellion, including the Rebellion gate levels 185, 193, and 194 used by the original plugin's definitions, and adds Rebellion 1.98 (the current game version) as its primary target. It reproduces the two capabilities of the legacy Eclipse SoaSE plugin in a form usable from modern editors and AI coding tools:
 
 1. Validation of mod files when they are saved, reported as editor diagnostics.
 2. Discovery of valid options for a field (for example `entityType`), offered as completions and hover help.
@@ -86,7 +86,7 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 3. WHEN a field has a primitive validation type (`Boolean`, `Integer`, `Decimal`, `Color`, `Position`, `Coordinate`, `Orientation`, `Any`), THE Engine SHALL verify the value conforms to that type.
    1. THE Engine SHALL accept as a `Color` only an unquoted token of exactly 8, 6 or 4 hexadecimal digits in either letter case, or a lone `0`, SHALL check every digit, and SHALL reject a `0x` prefix, a quoted value and any other length.
    2. THE Engine SHALL accept as a `Position` only a bracketed, comma separated list of integers, and WHERE the field's Definition `constraint` is `count=N`, SHALL require exactly N items.
-   3. THE Engine SHALL accept as a `Coordinate` only a bracketed, whitespace separated list of exactly 3 numbers, each written in integer or decimal form (integer items are accepted by decision, to match the zombiesrus5 plugin).
+   3. THE Engine SHALL accept as a `Coordinate` only a bracketed, whitespace separated list of exactly 3 numbers, each written in integer or decimal form (integer items are accepted by decision, to match the ZombiesRus5 plugin).
    4. THE Engine SHALL accept as an `Orientation` only a header with no value that has exactly 3 keyless child rows, each a `Coordinate`.
    5. THE Engine SHALL reject a number written with an exponent, with a leading `+`, or with a trailing `.`, for `Integer`, `Decimal` and `Coordinate` items, under every numeric preference setting, and SHALL accept a number with no digit before the point (`.5`, `-.5`).
    6. THE Engine SHALL accept `TRUE` and `FALSE` only, in capitals, as `Boolean` values.
@@ -255,9 +255,9 @@ Out of scope: Sins of a Solar Empire II, binary asset validation (`.mesh`, `.dds
 
 1. THE project SHALL record the origin, author, and version of the Definitions it bundles.
 2. THE project SHALL keep Definitions in a format that can be updated independently of the Engine code.
-3. THE repository SHALL include attribution crediting zombiesrus5 as the author of the original Eclipse plugin, whose Definitions and validation behaviour this project reproduces, and crediting GoaFan77 as the author of the Sins manifest updater script whose behaviour `manifest sync` incorporates.
+3. THE repository SHALL include attribution crediting ZombiesRus5 as the author of the original Eclipse plugin, whose Definitions and validation behaviour this project reproduces, and crediting GoaFan77 as the author of the Sins manifest updater script whose behaviour `manifest sync` incorporates.
 4. THE repository SHALL include attribution crediting Stardock Entertainment and Ironclad Games as the creators of Sins of a Solar Empire.
-5. THE README SHALL state that the project is an unofficial community tool, not affiliated with or endorsed by Stardock, Ironclad Games, or zombiesrus5.
+5. THE README SHALL state that the project is an unofficial community tool, not affiliated with or endorsed by Stardock, Ironclad Games, or ZombiesRus5.
 6. THE repository SHALL NOT include any game assets or base game files from Sins of a Solar Empire.
 7. THE project SHALL make every Definition correction only in the bundled JSON, and SHALL record each one in `PROVENANCE.json` `audit_corrections` with the Game Version, the evidence (shapes and counts only) and a machine-checkable `verify` entry.
 8. THE conversion tool SHALL refuse to write into a directory whose `PROVENANCE.json` lists audit corrections unless an explicit option is given, and SHALL state the reason on standard error.
@@ -352,7 +352,7 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
 2. THE README SHALL describe what the tool does, the supported Game Versions with the audit status of each, and what is validated.
 3. THE README SHALL document installation with `uvx` from the GitHub URL, configuration of Reference Roots, parent Layers, and the Game Version (including `init` and the user-level file), and use from Kiro, VS Code, and MCP clients.
 4. THE README SHALL contain a Credits section that names each credited party, states what they contributed, and states where that contribution is used in this project. The section SHALL credit:
-   1. zombiesrus5, for the Eclipse SoaSE plugin whose Definitions and validation behaviour this project reproduces;
+   1. ZombiesRus5, for the Eclipse SoaSE plugin whose Definitions and validation behaviour this project reproduces;
    2. GoaFan77, for the Sins manifest updater script whose behaviour `manifest sync` incorporates; and
    3. Stardock Entertainment and Ironclad Games, as the creators of Sins of a Solar Empire.
 5. THE README SHALL state that the project is an unofficial community tool and is not affiliated with or endorsed by any credited party.
@@ -372,8 +372,8 @@ For example, a project's Chain might be the Sins 1.98 base game, then E4X, then 
 7. **Manifest checking and synchronisation are in scope** (Requirement 15), replacing the legacy single-purpose Python script.
 8. **The reference data is Rebellion 1.98.** The audit and the reference checks use a Rebellion 1.98 base game copy with its binary data files converted to text by the game's own `ConvertData_Rebellion` tool. Compared with the earlier 1.94 data it has the same `GameInfo`, `Galaxy`, `Mesh` and `Sound` file lists, the same `entityType` values and an identical `entity.manifest`, and adds only `explosion_techstarbase2.particle` and `playersetup.window`.
 9. **Manifest types differ in structure, not in rule.** Surveying the Rebellion 1.98 reference set and the E4X and Interregnum mods showed six manifest types with different key names. In the base game, `entity.manifest` omits 29 of 1,872 entity files, none referenced by any loaded file; `galaxy.manifest` omits 9 of 126 files (the front end, tutorials, and a random template); `skybox.manifest` names the 7 meshes used as skybox backdrops out of 430 `.mesh` files; and the `brush`, `playerPictures`, and `playerThemes` manifests match their files exactly. The maintainer regards the base game's unlisted files as artifacts of its development, so for mod validation a governed file missing from its manifest is an error for every manifest type (Requirement 15.3).
-10. **Credits for incorporated tooling.** zombiesrus5 and GoaFan77 are credited for the portions of their tooling that this project incorporates (Requirements 12 and 16).
-11. **Version gates are best effort.** Most mod development targets current Rebellion, so Rebellion 1.98 is verified against the reference data and earlier versions follow zombiesrus5's definitions on a best-effort basis (Requirement 13.8). Only Rebellion 1.98 is audited (Requirement 13.7).
+10. **Credits for incorporated tooling.** ZombiesRus5 and GoaFan77 are credited for the portions of their tooling that this project incorporates (Requirements 12 and 16).
+11. **Version gates are best effort.** Most mod development targets current Rebellion, so Rebellion 1.98 is verified against the reference data and earlier versions follow ZombiesRus5's definitions on a best-effort basis (Requirement 13.8). Only Rebellion 1.98 is audited (Requirement 13.7).
 12. **Per-folder configuration.** A Chain is set by the nearest `soase.json`. A repository of overlay mods places one in each overlay folder, and no path-pattern chain selection is provided (Requirement 14.18).
-13. **Permissions are handled outside this project.** The maintainer arranges any redistribution permission with the original authors separately; the project records credit (Requirements 12 and 16).
+13. **Permission has been granted.** ZombiesRus5 and GoaFan77 have given the maintainer permission to use their work. The terms of that permission are not recorded in the repository; their works remain the property of their authors, and the project records credit (Requirements 12 and 16).
 14. **The project's original code is MIT licensed** (Requirement 16.7).

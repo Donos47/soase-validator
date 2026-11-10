@@ -1,4 +1,4 @@
-"""One-off converter from the original zombiesrus5 XML Definitions to bundled JSON.
+"""One-off converter from the original ZombiesRus5 XML Definitions to bundled JSON.
 
 This is a development-time tool and is not shipped at runtime. It reads the
 ``*.xml`` Definition files from a directory given on the command line and

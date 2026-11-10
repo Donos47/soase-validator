@@ -1,10 +1,10 @@
-﻿# Requirements Document
+# Requirements Document
 
 ## Introduction
 
 The VS Code Extension in `vscode-extension/` registers the language identifier `soase` for nine SoaSE file types and connects them to the `soase-validator-lsp` Server for diagnostics, completion, hover help and go-to-definition. It contributes no syntax coloring, so mod files appear as plain text until the Server answers. The project README lists syntax coloring as planned.
 
-This feature adds a static TextMate grammar (Option A) to the Extension. The Grammar colors by token shape only: a line is split into a key and a value, and the value is classified as a quoted string, a number, a hexadecimal color token, a boolean or a bracket list. The Grammar does not use the Engine, the Server or the Definitions, so it works before the Server starts, when `uv` is missing and in untrusted workspaces. It reproduces the four color categories of the original zombiesrus5 Eclipse SoaSE plugin (key word, string value, number and boolean) and adds a fifth category for hexadecimal color tokens.
+This feature adds a static TextMate grammar (Option A) to the Extension. The Grammar colors by token shape only: a line is split into a key and a value, and the value is classified as a quoted string, a number, a hexadecimal color token, a boolean or a bracket list. The Grammar does not use the Engine, the Server or the Definitions, so it works before the Server starts, when `uv` is missing and in untrusted workspaces. It reproduces the four color categories of the original ZombiesRus5 Eclipse SoaSE plugin (key word, string value, number and boolean) and adds a fifth category for hexadecimal color tokens.
 
 ### Evidence basis
 
@@ -12,7 +12,7 @@ The surface syntax below is derived from these sources, in order of authority. N
 
 1. The Rebellion 1.98 Reference Root (`~/path/to/sins-rebellion-reference`), surveyed read-only over every file type the Extension registers. Observed: every file begins with a line `TXT` or `TXT2`. Every other non-blank line begins, after optional tab or space indentation, with a letter or with `[`. Keys consist of letters, digits, `:`, `-` and `_`. Values are quoted strings (which may contain apostrophes and backslashes), unsigned and signed integers and decimals, the uppercase words `TRUE` and `FALSE`, bracket lists (comma separated or whitespace separated numbers), and runs of hexadecimal digits for colors. No line starts with a comment marker, no value is single-quoted, and no boolean is written in lowercase or mixed case. A few lines carry text after the closing quote of a string. A `key = "value"` form occurs in the constants file type.
 2. The Engine parser (`src/soase_validator/engine/parser.py`) and its verified-format tests (`tests/test_parser_facts.py`): key is the text before the first tab or space; a number is tried before a hexadecimal run; a quoted string ends at the next `"`; `TRUE` and `FALSE` are accepted only in uppercase; a list is `[` numbers `]`; a row beginning with `[` is a keyless list row; the `=` form is accepted only as `key = "value"`; the parser defines no comment syntax.
-3. The zombiesrus5 plugin (compiled jar, class files only; notes in `reference/plugin-bytecode-findings.md`): the editor colors four categories, labelled in its preferences page as key word, string value, number and boolean; it defines no comment syntax.
+3. The ZombiesRus5 plugin (compiled jar, class files only; notes in `reference/plugin-bytecode-findings.md`): the editor colors four categories, labelled in its preferences page as key word, string value, number and boolean; it defines no comment syntax.
 
 Where the plugin and the game data differ, the game data wins (see Decisions 3 and 5). One user decision deliberately goes beyond the game data: the Grammar matches booleans case-insensitively (Decision 5). Coloring never judges validity, and the Server still reports what the Engine rejects.
 

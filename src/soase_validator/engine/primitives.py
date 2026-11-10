@@ -9,7 +9,7 @@ primitives and are handled elsewhere.
 
 The checkers accept exactly the shapes listed below and reject everything
 else. In several places this is deliberately
-stricter than the zombiesrus5 plugin (see "Differences from the plugin").
+stricter than the ZombiesRus5 plugin (see "Differences from the plugin").
 
 Accepted shapes
 ---------------

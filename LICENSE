@@ -19,3 +19,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Scope
+
+This license applies to the original code of this project. It does not apply
+to the third-party works credited in NOTICE and README.md: the ZombiesRus5
+Definitions and validation behaviour from which the bundled Definitions are
+derived, the GoaFan77 manifest updater script behaviour, and Sins of a Solar
+Empire itself. Those works remain the property of their authors and owners.
+The authors named above have given the maintainer permission to use their
+work in this project.

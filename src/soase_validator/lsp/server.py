@@ -35,7 +35,7 @@ from soase_validator.engine.model import (
 )
 
 SERVER_NAME = "soase-validator"
-SERVER_VERSION = "0.1.0"
+SERVER_VERSION = "0.1.1"
 SETTINGS_SECTION = "soase-validator"
 WATCH_REGISTRATION_ID = "soase-validator-file-watchers"
 

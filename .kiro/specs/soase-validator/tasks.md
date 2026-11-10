@@ -69,13 +69,13 @@ Conventions for every task:
     - **Validates: Requirements 1.2**
 
   - [x] 3.5 Implement `tools/convert_definitions.py`
-    - Convert the original zombiesrus5 XML Definitions to the bundled JSON schema, taking the XML source directory as a command-line argument and never embedding game files
+    - Convert the original ZombiesRus5 XML Definitions to the bundled JSON schema, taking the XML source directory as a command-line argument and never embedding game files
     - If the original XML is not available in the workspace, ask the user for its location before running the conversion
     - Write the converted files and `enums.json` into `src/soase_validator/definitions/` and report any element it could not convert
     - _Requirements: 1.2, 1.5, 12.1, 12.2_
 
   - [x] 3.6 Add bundled data files and a registry smoke test
-    - Create `definitions/PROVENANCE.json` (origin, author zombiesrus5, source version, conversion date, empty audit corrections list), `definitions/versions.json`, and `definitions/manifest_rules.json` exactly as the design lists them
+    - Create `definitions/PROVENANCE.json` (origin, author ZombiesRus5, source version, conversion date, empty audit corrections list), `definitions/versions.json`, and `definitions/manifest_rules.json` exactly as the design lists them
     - Write a unit test that loads every bundled Definition with zero warnings and that each Definition node type is present
     - _Requirements: 1.1, 1.4, 1.5, 11.3, 12.1, 15.1.1_
 
@@ -166,7 +166,7 @@ Conventions for every task:
     - Work from `reference/primitive-survey.md` and re-survey the Reference Root read-only; correct the bundled JSON for each gap below, and record every correction in `PROVENANCE.json` with game version Rebellion 1.98 and evidence (shapes and counts only)
     - Gaps: `Starscape` structure versus the `.starscapedata` files (mismatch); `.galaxy` `star[]` keys not placed in the Definition (about 2,150 uses); `ResearchSubject` `researchModifier` keys (about 1,281 uses) and 589 selector values with no match; `Player` (about 180); `.constants` `outlawSectorsData` (12); `.randomeventdefs` (12, including line 89 `racialBuffCount` with its `race` line one level deeper, which gives the only non-galaxy `SOASE-V080` in the Reference Root); `Buff` (1)
     - Also list the Position fields the survey never reached (`BrushType` `pixelBox`, `GalaxyStarType` `pos` and `planet[]` `pos`, `GalaxyPlanetType` `pos`, `ResearchBlock` `area`) and decide each constraint from evidence, or leave it unset
-    - The zombiesrus5 plugin may not have validated `.galaxy`, so weak `galaxy.xml` coverage is expected. `plugin.xml` registers a Galaxy Editor for `galaxy` and the Definitions ship `galaxy.xml`, but the builder's handling of `.galaxy` is not covered by `reference/plugin-bytecode-findings.md`; verify it before treating a gap as a plugin omission
+    - The ZombiesRus5 plugin may not have validated `.galaxy`, so weak `galaxy.xml` coverage is expected. `plugin.xml` registers a Galaxy Editor for `galaxy` and the Definitions ship `galaxy.xml`, but the builder's handling of `.galaxy` is not covered by `reference/plugin-bytecode-findings.md`; verify it before treating a gap as a plugin omission
     - _Requirements: 12.1, 13.5_
 
   - [x] 5.10 Report the shallow planet `owner` line once, without follow-on findings
@@ -522,18 +522,18 @@ Conventions for every task:
     - Create `tests/test_golden.py` running the audit routine of `tools/audit.py` (loaded by file path) over each available Reference Root (configuration or `SOASE_REFERENCE_ROOT_<VERSION>`), asserting zero errors, and skipping with an explanatory message when none is available
     - _Requirements: 11.2, 11.2.1_
 
-- [ ] 17. Documentation, attribution and distribution checks
+- [x] 17. Documentation, attribution and distribution checks
   - [x] 17.1 Write `README.md`
     - Describe the tool, supported Game Versions with audit status, what is validated, `uvx --from git+https://github.com/Donos47/soase-validator` installation, configuration (`init`, `soase.json`, user file, Reference Roots, parent Layers, Game Version), use from Kiro, VS Code and MCP clients with and without a Reference Root, the diagnostic code catalogue, and the unofficial-tool and no-game-assets statements
-    - Add the Credits section naming zombiesrus5, GoaFan77, and Stardock Entertainment and Ironclad Games with what each contributed and where it is used, and the scope of the MIT license versus third-party works
+    - Add the Credits section naming ZombiesRus5, GoaFan77, and Stardock Entertainment and Ironclad Games with what each contributed and where it is used, and the scope of the MIT license versus third-party works
     - _Requirements: 10.5, 12.3, 12.4, 12.5, 12.6, 13.7, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.8_
 
-  - [ ] 17.2 Add `LICENSE`, `NOTICE` and finalize provenance
+  - [x] 17.2 Add `LICENSE`, `NOTICE` and finalize provenance
     - Add the MIT `LICENSE`, a `NOTICE` file listing the third-party attribution, and make sure `PROVENANCE.json` records origin, author, version and audit corrections
     - _Requirements: 12.1, 12.3, 12.4, 16.7, 16.8_
 
   - [ ]* 17.3 Write the credits test
-    - Fail if the README lacks any credited party named in the requirements (zombiesrus5, GoaFan77, Stardock Entertainment, Ironclad Games) or the unofficial-tool statement
+    - Fail if the README lacks any credited party named in the requirements (ZombiesRus5, GoaFan77, Stardock Entertainment, Ironclad Games) or the unofficial-tool statement
     - _Requirements: 16.4, 16.5, 16.9_
 
   - [x] 17.4 Write smoke and repository hygiene tests

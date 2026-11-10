@@ -1,10 +1,11 @@
 {
-  "origin": "Converted from the declarative XML Definitions of the SoaSE Eclipse plugin by zombiesrus5.",
-  "author": "zombiesrus5",
+  "origin": "Converted from the declarative XML Definitions of the SoaSE Eclipse plugin by ZombiesRus5.",
+  "author": "ZombiesRus5",
   "source_version": "1.0.0.202007231528",
   "conversion_date": "2026-11-06",
   "converter": "tools/convert_definitions.py",
-  "notice": "Unofficial community tool. Definitions derive from zombiesrus5's plugin; the game is by Stardock Entertainment / Ironclad Games.",
+  "notice": "Unofficial community tool. Definitions derive from ZombiesRus5's plugin; the game is by Stardock Entertainment / Ironclad Games.",
+  "permission": "ZombiesRus5 has given the maintainer permission to use the Definitions. They remain the property of their author; the project's MIT license covers only its original code.",
   "audit_corrections": [
     {
       "structure": "GroupType.condition",

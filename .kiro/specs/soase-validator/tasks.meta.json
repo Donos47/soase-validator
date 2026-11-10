@@ -1329,6 +1329,25 @@
         "chatSessionId": "sess_7cea5de7-e050-4281-a39d-b287517cf7d1",
         "timestamp": 1794164058398
       }
+    ],
+    "17.2 Add `LICENSE`, `NOTICE` and finalize provenance": [
+      {
+        "executionId": "08c456a4-b959-4e95-9154-dd583cde136a",
+        "chatSessionId": "sess_9e825c72-7c32-4956-8cb9-19e9383995e5",
+        "timestamp": 1794317895539
+      },
+      {
+        "executionId": "08c456a4-b959-4e95-9154-dd583cde136a",
+        "chatSessionId": "sess_9e825c72-7c32-4956-8cb9-19e9383995e5",
+        "timestamp": 1794318011911
+      }
+    ],
+    "17. Documentation, attribution and distribution checks": [
+      {
+        "executionId": "08c456a4-b959-4e95-9154-dd583cde136a",
+        "chatSessionId": "sess_9e825c72-7c32-4956-8cb9-19e9383995e5",
+        "timestamp": 1794318011976
+      }
     ]
   }
 }

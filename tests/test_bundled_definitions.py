@@ -99,7 +99,7 @@ def test_condition_reference_covered_synthetically() -> None:
 
 def test_provenance_content() -> None:
     prov = _read("PROVENANCE.json")
-    assert prov["author"] == "zombiesrus5"
+    assert prov["author"] == "ZombiesRus5"
     assert prov["source_version"] == "1.0.0.202007231528"
     assert prov["conversion_date"]
     assert prov["origin"]
