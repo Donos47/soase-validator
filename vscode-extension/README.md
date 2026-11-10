@@ -11,7 +11,7 @@ extension registers the file types, finds `uvx`, starts the server over stdio,
 forwards editor settings and offers commands to restart and inspect it.
 
 This is an unofficial community tool. It is not affiliated with or endorsed by
-Stardock Entertainment, Ironclad Games, zombiesrus5 or GoaFan77. See
+Stardock Entertainment, Ironclad Games, ZombiesRus5 or GoaFan77. See
 [Credits](#credits).
 
 The extension is installed from a `.vsix` file, downloaded from a GitHub release or
@@ -298,7 +298,7 @@ npm run test
 
 This extension builds on the work of others.
 
-- zombiesrus5 wrote the Eclipse SoaSE plugin. Its Definitions and validation
+- ZombiesRus5 wrote the Eclipse SoaSE plugin. Its Definitions and validation
   behaviour are what the `soase-validator` Engine reproduces.
 - GoaFan77 wrote the Sins manifest updater script, whose behaviour is
   incorporated in the Engine's manifest sync.
@@ -307,7 +307,7 @@ This extension builds on the work of others.
   content is included here.
 
 This is an unofficial community tool. It is not affiliated with or endorsed by
-Stardock Entertainment, Ironclad Games, zombiesrus5 or GoaFan77.
+Stardock Entertainment, Ironclad Games, ZombiesRus5 or GoaFan77.
 
 ## License
 
